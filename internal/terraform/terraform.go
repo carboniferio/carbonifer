@@ -3,7 +3,6 @@ package terraform
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"strings"
@@ -122,7 +121,7 @@ func TerraformPlan() (*tfjson.Plan, error) {
 		}
 	}()
 
-	tfPlanFile, err := ioutil.TempFile(cfDir, "plan-*.tfplan")
+	tfPlanFile, err := os.CreateTemp(cfDir, "plan-*.tfplan")
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -39,7 +39,7 @@ func estimateWattGCPCPU(resource resources.ComputeResource) decimal.Decimal {
 	// Get average CPU usage
 	averageCPUUse := decimal.NewFromFloat(viper.GetFloat64("avg_cpu_use"))
 
-	avgWatts := decimal.Zero
+	var avgWatts decimal.Decimal
 	// Average Watts = Min Watts + Avg vCPU Utilization * (Max Watts - Min Watts)
 	cpu_platform := resource.CPUType
 	if cpu_platform != "" {

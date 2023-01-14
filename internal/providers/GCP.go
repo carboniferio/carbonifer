@@ -2,7 +2,7 @@ package providers
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -67,8 +67,11 @@ func GetGCPMachineType(machineTypeStr string, zone string) MachineType {
 		}
 		defer jsonFile.Close()
 
-		byteValue, _ := ioutil.ReadAll(jsonFile)
-		json.Unmarshal([]byte(byteValue), &gcpInstanceTypes)
+		byteValue, _ := io.ReadAll(jsonFile)
+		err = json.Unmarshal([]byte(byteValue), &gcpInstanceTypes)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	return gcpInstanceTypes[zone][machineTypeStr]

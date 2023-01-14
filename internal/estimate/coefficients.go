@@ -2,7 +2,7 @@ package estimate
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 
@@ -39,8 +39,11 @@ func GetEnergyCoefficients() *CoefficientsProviders {
 		}
 		defer jsonFile.Close()
 
-		byteValue, _ := ioutil.ReadAll(jsonFile)
-		json.Unmarshal([]byte(byteValue), &coefficientsPerProviders)
+		byteValue, _ := io.ReadAll(jsonFile)
+		err = json.Unmarshal([]byte(byteValue), &coefficientsPerProviders)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 	return coefficientsPerProviders
 }

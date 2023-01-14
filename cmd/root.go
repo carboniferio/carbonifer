@@ -72,18 +72,26 @@ func initConfig() {
 
 		// Search config in home directory with name ".carbonifer" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigType("yaml")
-		viper.SetConfigName(".carbonifer")
+		if viper.ConfigFileUsed() == "" {
+			viper.SetConfigType("yaml")
+			viper.SetConfigName(".carbonifer/config.yaml")
+		}
+
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	viper.ReadInConfig()
+	if err := viper.ReadInConfig(); err != nil {
+		log.Panic(err)
+	}
 
 	// Setup Logrus
 	var logrusConfig = logrusHelper.UnmarshalConfiguration(viper.GetViper().Sub("log")) // Unmarshal configuration from Viper
-	logrusHelper.SetConfig(log.StandardLogger(), logrusConfig)                          // for e.g. apply it to logrus default instance
+	err := logrusHelper.SetConfig(log.StandardLogger(), logrusConfig)
+	if err != nil {
+		log.Panic(err)
+	}
 
 	if viper.ConfigFileUsed() != "" {
 		log.Infof("Using config file: %v", viper.ConfigFileUsed())
@@ -115,7 +123,12 @@ func initConfig() {
 	viper.SetDefault("data.path", "./data") // Path to data files (provider coefficients...)
 
 	// Bind Viper and Cobra flags
-	viper.BindPFlag("out.format", RootCmd.PersistentFlags().Lookup("format"))
-	viper.BindPFlag("out.file", RootCmd.PersistentFlags().Lookup("output"))
+	if err := viper.BindPFlag("out.format", RootCmd.PersistentFlags().Lookup("format")); err != nil {
+		log.Panic(err)
+	}
+
+	if err := viper.BindPFlag("out.file", RootCmd.PersistentFlags().Lookup("output")); err != nil {
+		log.Panic(err)
+	}
 
 }

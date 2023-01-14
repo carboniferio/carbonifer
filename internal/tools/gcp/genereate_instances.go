@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"strings"
 
@@ -59,8 +59,11 @@ func getCPUTypes(machineType string) []string {
 		}
 
 		cpuTypes = make(map[string]MachineFamily)
-		byteValue, _ := ioutil.ReadAll(jsonFile)
-		json.Unmarshal(byteValue, &cpuTypes)
+		byteValue, _ := io.ReadAll(jsonFile)
+		err = json.Unmarshal(byteValue, &cpuTypes)
+		if err != nil {
+			log.Panic(err)
+		}
 
 		// defer the closing of our jsonFile so that we can parse it later on
 		defer jsonFile.Close()

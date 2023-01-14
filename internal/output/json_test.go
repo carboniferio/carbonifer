@@ -1,7 +1,8 @@
 package output
 
 import (
-	"io/ioutil"
+	"io"
+	"os"
 	"path"
 	"strings"
 	"testing"
@@ -44,7 +45,12 @@ func TestGenerateReportJson_Empty(t *testing.T) {
 }
 
 func loadOutput(name string) string {
-	content, err := ioutil.ReadFile(path.Join(testutils.RootDir, "test/outputs", name))
+	jsonFile, err := os.Open(path.Join(testutils.RootDir, "test/outputs", name))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer jsonFile.Close()
+	content, err := io.ReadAll(jsonFile)
 	if err != nil {
 		log.Fatal(err)
 	}
