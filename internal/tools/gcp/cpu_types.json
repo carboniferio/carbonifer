@@ -1,0 +1,62 @@
+{
+    "a2": {
+        "Name": "a2",
+        "CPU types": ["Cascade Lake"],
+        "Architecture": "x86"
+    },
+    "c2": {
+        "Name": "c2",
+        "CPU types": ["Cascade Lake"],
+        "Architecture": "x86"
+    },
+    "c2d": {
+        "Name": "c2d",
+        "CPU types": ["AMD EPYC Milan"],
+        "Architecture": "x86"
+    },
+    "e2": {
+        "Name": "e2",
+        "CPU types": ["Skylake", "Broadwell", "Haswell", "AMD EPYC Rome", "AMD EPYC Milan"],
+        "Architecture": "x86"
+    },
+    "m1": {
+        "Name": "m1",
+        "CPU types": ["Skylake", "Broadwell"],
+        "Architecture": "x86"
+    },
+    "m2": {
+        "Name": "m2",
+        "CPU types": ["Cascade Lake"],
+        "Architecture": "x86"
+    },
+    "m3": {
+        "Name": "m3",
+        "CPU types": ["Ice Lake"],
+        "Architecture": "x86"
+    },
+    "n1": {
+        "Name": "n1",
+        "CPU types": ["Skylake", "Broadwell", "Haswell", "Sandy Bridge", "Ivy Bridge"],
+        "Architecture": "x86"
+    },
+    "n2": {
+        "Name": "n2",
+        "CPU types":[ "Cascade Lake", "Ice Lake"],
+        "Architecture": "x86"
+    },
+    "n2d": {
+        "Name": "n2d",
+        "CPU types": ["AMD EPYC Rome", "AMD EPYC Milan"],
+        "Architecture": "x86"
+    },
+    "t2a": {
+        "Name": "t2a",
+        "CPU types": ["Ampere Altra"],
+        "Architecture": "Arm"
+    },
+    "t2d": {
+        "Name": "t2d",
+        "CPU types": ["AMD EPYC Milan"],
+        "Architecture": "x86"
+    }
+}
