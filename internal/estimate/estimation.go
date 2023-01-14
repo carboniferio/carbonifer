@@ -8,13 +8,14 @@ import (
 )
 
 type EstimationReport struct {
-	Info      EstimationInfo
-	Resources []EstimationResource
-	Total     EstimationTotal
+	Info                 EstimationInfo
+	Resources            []EstimationResource
+	UnsupportedResources []resources.Resource
+	Total                EstimationTotal
 }
 
 type EstimationResource struct {
-	Resource        resources.ComputeResource
+	Resource        resources.Resource
 	Power           decimal.Decimal
 	CarbonEmissions decimal.Decimal
 	AverageCPUUsage decimal.Decimal

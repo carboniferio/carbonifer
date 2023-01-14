@@ -12,21 +12,27 @@ import (
 	"github.com/spf13/viper"
 )
 
-func EstimateResources(resources []resources.ComputeResource) EstimationReport {
+func EstimateResources(resourceList []resources.Resource) EstimationReport {
 
 	var estimationResources []EstimationResource
+	var unsupportedResources []resources.Resource
 	estimationTotal := EstimationTotal{
 		Power:           decimal.Zero,
 		CarbonEmissions: decimal.Zero,
 		ResourcesCount:  0,
 	}
-	for _, resource := range resources {
+	for _, resource := range resourceList {
 		estimationResource, uerr := EstimateResource(resource)
 		if uerr != nil {
-			logrus.Warnf("Skipping unsupported provider %v: %v.%v", uerr.Provider, resource.ResourceType, resource.Name)
+			logrus.Warnf("Skipping unsupported provider %v: %v.%v", uerr.Provider, resource.GetIndentification().ResourceType, resource.GetIndentification().Name)
 		}
 
-		estimationResources = append(estimationResources, *estimationResource)
+		if resource.IsSupported() {
+			estimationResources = append(estimationResources, *estimationResource)
+		} else {
+			unsupportedResources = append(unsupportedResources, resource)
+		}
+
 		estimationTotal.Power = estimationTotal.Power.Add(estimationResource.CarbonEmissions)
 		estimationTotal.CarbonEmissions = estimationTotal.CarbonEmissions.Add(estimationResource.CarbonEmissions)
 		estimationTotal.ResourcesCount += 1
@@ -39,24 +45,30 @@ func EstimateResources(resources []resources.ComputeResource) EstimationReport {
 			UnitCarbonEmissionsTime: fmt.Sprintf("%sCO2eq/%s", viper.Get("unit.carbon"), viper.Get("unit.time")),
 			DateTime:                time.Now(),
 		},
-		Resources: estimationResources,
-		Total:     estimationTotal,
+		Resources:            estimationResources,
+		UnsupportedResources: unsupportedResources,
+		Total:                estimationTotal,
 	}
 
 }
 
-func EstimateResource(resource resources.ComputeResource) (*EstimationResource, *providers.UnsupportedProviderError) {
-	switch resource.Provider {
+func EstimateResource(resource resources.Resource) (*EstimationResource, *providers.UnsupportedProviderError) {
+	if !resource.IsSupported() {
+		return estimateNotSupported(resource.(resources.UnsupportedResource)), nil
+	}
+	switch resource.GetIndentification().Provider {
 	case providers.GCP:
 		return estimateGCP(resource), nil
+	default:
+		return nil, &providers.UnsupportedProviderError{Provider: resource.GetIndentification().Provider.String()}
 	}
-	return nil, &providers.UnsupportedProviderError{Provider: resource.Provider.String()}
 }
 
 // Get the carbon emissions of a GCP resource
-func estimateGCP(resource resources.ComputeResource) *EstimationResource {
+func estimateGCP(resource resources.Resource) *EstimationResource {
+	var computeResource resources.ComputeResource = resource.(resources.ComputeResource)
 	// Electric power used per unit of time
-	avgWatt := EstimateWattHourGCP(resource) // Watt hour
+	avgWatt := EstimateWattHourGCP(&computeResource) // Watt hour
 	if viper.Get("unit.power").(string) == "kW" {
 		avgWatt = avgWatt.Div(decimal.NewFromInt(1000))
 	}
@@ -68,7 +80,7 @@ func estimateGCP(resource resources.ComputeResource) *EstimationResource {
 	}
 
 	// Regional grid emission per unit of time
-	regionEmissions := GCPRegionEmission(resource.Region) // gCO2eq /kWh
+	regionEmissions := GCPRegionEmission(resource.GetIndentification().Region) // gCO2eq /kWh
 	if viper.Get("unit.power").(string) == "W" {
 		regionEmissions.GridCarbonIntensity = regionEmissions.GridCarbonIntensity.Div(decimal.NewFromInt(1000))
 	}
@@ -87,8 +99,8 @@ func estimateGCP(resource resources.ComputeResource) *EstimationResource {
 
 	log.Debugf(
 		"estimating resource %v.%v (%v): %v %v%v * %v %vCO2/%v%v = %v %vCO2/%v%v",
-		resource.ResourceType,
-		resource.Name,
+		computeResource.Identification.ResourceType,
+		computeResource.Identification.Name,
 		regionEmissions.Region,
 		avgWatt,
 		viper.Get("unit.power").(string),
@@ -104,9 +116,18 @@ func estimateGCP(resource resources.ComputeResource) *EstimationResource {
 	)
 
 	return &EstimationResource{
-		Resource:        resource,
+		Resource:        &computeResource,
 		Power:           avgWatt.RoundFloor(10),
 		CarbonEmissions: carbonEmissionPerTime.RoundFloor(10),
 		AverageCPUUsage: decimal.NewFromFloat(viper.GetFloat64("avg_cpu_use")).RoundFloor(10),
+	}
+}
+
+func estimateNotSupported(resource resources.UnsupportedResource) *EstimationResource {
+	return &EstimationResource{
+		Resource:        resource,
+		Power:           decimal.Zero,
+		CarbonEmissions: decimal.Zero,
+		AverageCPUUsage: decimal.Zero,
 	}
 }

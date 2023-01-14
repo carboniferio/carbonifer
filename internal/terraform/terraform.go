@@ -147,30 +147,30 @@ func TerraformPlan() (*tfjson.Plan, error) {
 	return tfplan, nil
 }
 
-func GetResources() []resources.ComputeResource {
+func GetResources() []resources.Resource {
 	log.Debug("Reading planned resources from Terraform plan")
 	tfPlan, err := TerraformPlan()
 	if err != nil {
 		log.Fatal(err)
 	}
 	log.Debugf("Reading resources from Terraform plan: %d resources", len(tfPlan.PlannedValues.RootModule.Resources))
-	var computeResources []resources.ComputeResource
+	var resources []resources.Resource
 	for _, res := range tfPlan.PlannedValues.RootModule.Resources {
 		log.Debugf("Reading resource %v", res.Address)
 		if strings.HasPrefix(res.Type, "google") {
-			computeResource := GetResource(*res)
+			resource := GetResource(*res)
 			if log.IsLevelEnabled(log.DebugLevel) {
 				computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"
-				if computeResource != nil {
-					computeJson, _ := json.Marshal(computeResource)
+				if resource.IsSupported() {
+					computeJson, _ := json.Marshal(resource)
 					computeJsonStr = string(computeJson)
 				}
 				log.Debugf("  Compute resource : %v", string(computeJsonStr))
 			}
-			if computeResource != nil {
-				computeResources = append(computeResources, *computeResource)
-			}
+
+			resources = append(resources, resource)
+
 		}
 	}
-	return computeResources
+	return resources
 }
