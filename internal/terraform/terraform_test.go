@@ -77,6 +77,7 @@ func TestTerraformPlan_NoFile(t *testing.T) {
 func TestTerraformPlan_NoTfFile(t *testing.T) {
 	// reset
 	terraformExec = nil
+	logrus.SetLevel(logrus.DebugLevel)
 
 	wd := path.Join(testutils.RootDir, "test/terraform/notTf")
 	logrus.Infof("workdir: %v", wd)
@@ -97,12 +98,13 @@ func TestTerraformPlan_BadTfFile(t *testing.T) {
 
 	_, err := TerraformPlan()
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "Unsupported block")
+	assert.Contains(t, err.Error(), "configuration is invalid")
 }
 
 func TestGetResources(t *testing.T) {
 	// reset
 	terraformExec = nil
+	logrus.SetLevel(logrus.DebugLevel)
 
 	wd := path.Join(testutils.RootDir, "test/terraform/gcp_1")
 	viper.Set("workdir", wd)

@@ -93,13 +93,24 @@ func TerraformPlan() (*tfjson.Plan, error) {
 		return nil, err
 	}
 
-	_, err = tf.Validate(context.Background())
+	log.Debug("Running terraform plan in ", tf.WorkingDir())
+
+	ctx := context.Background()
+
+	// Terraform init
+	err = tf.Init(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Terraform Validate
+	_, err = tf.Validate(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	// Create Temp out plan file
-	cfDir, err := os.MkdirTemp(viper.GetString("workdir"), ".carbonifer")
+	cfDir, err := os.MkdirTemp(tf.WorkingDir(), ".carbonifer")
 	if err != nil {
 		log.Panic(err)
 	}
@@ -116,16 +127,23 @@ func TerraformPlan() (*tfjson.Plan, error) {
 		log.Fatal(err)
 	}
 
-	log.Debugf("Running terraform plan in %v", viper.GetString("workdir"))
+	// Log useful info
+	log.Debugf("Using temp terraform plan file %v", tfPlanFile.Name())
+	log.Debugf("Running terraform plan in %v", tf.WorkingDir())
+	log.Debugf("Running terraform exec %v", tf.ExecPath())
+
+	// Run Terraform Plan with an output file
 	out := tfexec.Out(tfPlanFile.Name())
-	_, err = tf.Plan(context.Background(), out)
+	_, err = tf.Plan(ctx, out)
 	if err != nil {
 		return nil, err
 	}
 
-	tfplan, err := tf.ShowPlanFile(context.Background(), tfPlanFile.Name())
+	// Run Terraform Show reading file outputed in step above
+	tfplan, err := tf.ShowPlanFile(ctx, tfPlanFile.Name())
 	if err != nil {
-		log.Panicf("error running  Terraform Show: %s", err)
+		log.Infof("error running  Terraform Show: %s", err)
+		return nil, err
 	}
 	return tfplan, nil
 }
