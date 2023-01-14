@@ -1,0 +1,36 @@
+{
+  "europe-west9-a": {
+    "e2-standard-2": {
+      "name": "e2-standard-2",
+      "vcpus": 2,
+      "gpus": 0,
+      "memoryMb": 8192,
+      "cpuTypes": [
+        "Skylake",
+        "Broadwell",
+        "Haswell",
+        "AMD EPYC Rome",
+        "AMD EPYC Milan"
+      ]
+    },
+    "n2d-highcpu-2": {
+      "name": "n2d-highcpu-2",
+      "vcpus": 2,
+      "gpus": 0,
+      "memoryMb": 2048,
+      "cpuTypes": [
+        "AMD EPYC Rome",
+        "AMD EPYC Milan"
+      ]
+    },
+    "c2-standard-4": {
+      "name": "c2-standard-4",
+      "vcpus": 4,
+      "gpus": 0,
+      "memoryMb": 16384,
+      "cpuTypes": [
+        "Cascade Lake"
+      ]
+    }
+  }
+}

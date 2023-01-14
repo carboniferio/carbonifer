@@ -1,0 +1,29 @@
+{
+    "AWS": {
+        "cpu_min_wh": 0.746,
+        "cpu_max_wh": 3.56,
+        "storage_hdd_wh_tb": 0.656,
+        "storage_ssd_wh_tb": 1.26,
+        "networking_wh_gb": 1.6,
+        "memory_wh_gb": 0.3926,
+        "pue_average": 1.1356
+    },
+    "GCP": {
+        "cpu_min_wh": 0.716,
+        "cpu_max_wh": 4.266,
+        "storage_hdd_wh_tb": 0.656,
+        "storage_ssd_wh_tb": 1.26,
+        "networking_wh_gb": 1.6,
+        "memory_wh_gb": 0.3926,
+        "pue_average": 1.16
+    },
+    "Azure": {
+        "cpu_min_wh": 0.786,
+        "cpu_max_wh": 3.766,
+        "storage_hdd_wh_tb": 0.656,
+        "storage_ssd_wh_tb": 1.26,
+        "networking_wh_gb": 1.6,
+        "memory_wh_gb": 0.3926,
+        "pue_average": 1.1256
+    }
+}
