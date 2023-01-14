@@ -18,37 +18,37 @@ import (
 
 var gcpEmissionsPerRegion map[string]GCPEmissions
 
-func EstimateWattHourGCP(resource resources.ComputeResource) decimal.Decimal {
+func EstimateWattHourGCP(resource *resources.ComputeResource) decimal.Decimal {
 	cpuEstimationInWh := estimateWattGCPCPU(resource)
-	log.Debugf("%v.%v CPU in Wh: %v", resource.ResourceType, resource.Name, cpuEstimationInWh)
+	log.Debugf("%v.%v CPU in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, cpuEstimationInWh)
 	memoryEstimationInWH := estimateWattMem(resource)
-	log.Debugf("%v.%v Memory in Wh: %v", resource.ResourceType, resource.Name, memoryEstimationInWH)
+	log.Debugf("%v.%v Memory in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, memoryEstimationInWH)
 	pue := GetEnergyCoefficients().GCP.PueAverage
-	log.Debugf("%v.%v PUE %v", resource.ResourceType, resource.Name, pue)
+	log.Debugf("%v.%v PUE %v", resource.Identification.ResourceType, resource.Identification.Name, pue)
 	rawCarbonEstimate := cpuEstimationInWh.Add(memoryEstimationInWH)
 	carbonEstimateIngCO2h := pue.Mul(rawCarbonEstimate)
-	log.Debugf("%v.%v Carbon in gCO2/h: %v", resource.ResourceType, resource.Name, carbonEstimateIngCO2h)
+	log.Debugf("%v.%v Carbon in gCO2/h: %v", resource.Identification.ResourceType, resource.Identification.Name, carbonEstimateIngCO2h)
 	return carbonEstimateIngCO2h
 }
 
-func estimateWattMem(resource resources.ComputeResource) decimal.Decimal {
-	return decimal.NewFromInt32(resource.MemoryMb).Div(decimal.NewFromInt32(1024)).Mul(GetEnergyCoefficients().GCP.MemoryWhGb)
+func estimateWattMem(resource *resources.ComputeResource) decimal.Decimal {
+	return decimal.NewFromInt32(resource.Specs.MemoryMb).Div(decimal.NewFromInt32(1024)).Mul(GetEnergyCoefficients().GCP.MemoryWhGb)
 }
 
-func estimateWattGCPCPU(resource resources.ComputeResource) decimal.Decimal {
+func estimateWattGCPCPU(resource *resources.ComputeResource) decimal.Decimal {
 	// Get average CPU usage
 	averageCPUUse := decimal.NewFromFloat(viper.GetFloat64("avg_cpu_use"))
 
 	var avgWatts decimal.Decimal
 	// Average Watts = Min Watts + Avg vCPU Utilization * (Max Watts - Min Watts)
-	cpu_platform := resource.CPUType
+	cpu_platform := resource.Specs.CPUType
 	if cpu_platform != "" {
 		cpu_platform := providers.GetCPUWatt(strings.ToLower(cpu_platform))
 		avgWatts = cpu_platform.MinWatts.Add(averageCPUUse.Mul(cpu_platform.MaxWatts.Sub(cpu_platform.MinWatts)))
 	} else {
 		avgWatts = GetEnergyCoefficients().GCP.CPUMinWh.Add(averageCPUUse.Mul(GetEnergyCoefficients().GCP.CPUMaxWh.Sub(GetEnergyCoefficients().GCP.CPUMinWh)))
 	}
-	return avgWatts.Mul(decimal.NewFromInt32(resource.VCPUs))
+	return avgWatts.Mul(decimal.NewFromInt32(resource.Specs.VCPUs))
 }
 
 type gcpEmissionsCSV struct {

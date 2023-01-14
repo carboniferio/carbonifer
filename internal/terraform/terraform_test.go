@@ -109,36 +109,60 @@ func TestGetResources(t *testing.T) {
 	wd := path.Join(testutils.RootDir, "test/terraform/gcp_1")
 	viper.Set("workdir", wd)
 
-	wantResources := []resources.ComputeResource{
-		{
-			Name:         "default",
-			ResourceType: "google_compute_instance",
-			Provider:     providers.GCP,
-			Region:       "europe-west9",
-			Gpu:          0,
-			HddStorage:   decimal.Decimal{},
-			SsdStorage:   decimal.Decimal{},
-			MemoryMb:     2480,
-			VCPUs:        1,
-			CPUType:      "",
+	wantResources := []resources.Resource{
+		resources.ComputeResource{
+			Identification: &resources.ComputeResourceIdentification{
+				Name:         "default",
+				ResourceType: "google_compute_instance",
+				Provider:     providers.GCP,
+				Region:       "europe-west9",
+			},
+			Specs: &resources.ComputeResourceSpecs{
+				Gpu:        0,
+				HddStorage: decimal.Decimal{},
+				SsdStorage: decimal.Decimal{},
+				MemoryMb:   2480,
+				VCPUs:      1,
+				CPUType:    "",
+			},
 		},
-		{
-			Name:         "foo",
-			ResourceType: "google_compute_instance",
-			Provider:     providers.GCP,
-			Region:       "europe-west9",
-			Gpu:          0,
-			HddStorage:   decimal.Decimal{},
-			SsdStorage:   decimal.Decimal{},
-			MemoryMb:     4098,
-			VCPUs:        2,
-			CPUType:      "",
+		resources.ComputeResource{
+			Identification: &resources.ComputeResourceIdentification{
+				Name:         "foo",
+				ResourceType: "google_compute_instance",
+				Provider:     providers.GCP,
+				Region:       "europe-west9",
+			},
+			Specs: &resources.ComputeResourceSpecs{
+				Gpu:        0,
+				HddStorage: decimal.Decimal{},
+				SsdStorage: decimal.Decimal{},
+				MemoryMb:   4098,
+				VCPUs:      2,
+				CPUType:    "",
+			},
+		},
+		resources.UnsupportedResource{
+			Identification: &resources.ComputeResourceIdentification{
+				Name:         "vpc_network",
+				ResourceType: "google_compute_network",
+				Provider:     providers.GCP,
+				Region:       "",
+			},
+		},
+		resources.UnsupportedResource{
+			Identification: &resources.ComputeResourceIdentification{
+				Name:         "default",
+				ResourceType: "google_compute_subnetwork",
+				Provider:     providers.GCP,
+				Region:       "",
+			},
 		},
 	}
 
 	resources := GetResources()
+	assert.Equal(t, len(resources), len(wantResources))
 	for i, resource := range resources {
-		log.Debugf("Hdd: " + resource.HddStorage.String())
 		assert.Equal(t, resource, wantResources[i])
 	}
 }

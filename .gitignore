@@ -34,3 +34,5 @@ go.work
 # Crash log files
 crash.log
 crash.*.log
+
+**/__debug_bin

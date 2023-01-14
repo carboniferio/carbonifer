@@ -19,9 +19,17 @@ func GenerateReportText(report estimate.EstimationReport) string {
 
 	for _, resource := range report.Resources {
 		table.Append([]string{
-			resource.Resource.ResourceType,
-			resource.Resource.Name,
+			resource.Resource.GetIndentification().ResourceType,
+			resource.Resource.GetIndentification().Name,
 			fmt.Sprintf(" %v %v", resource.CarbonEmissions.StringFixed(4), report.Info.UnitCarbonEmissionsTime),
+		})
+	}
+
+	for _, resource := range report.UnsupportedResources {
+		table.Append([]string{
+			resource.GetIndentification().ResourceType,
+			resource.GetIndentification().Name,
+			"unsupported",
 		})
 	}
 

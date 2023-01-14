@@ -13,31 +13,43 @@ import (
 )
 
 var resourceGCPComputeBasic = resources.ComputeResource{
-	Name:         "machine-name-1",
-	ResourceType: "type-1",
-	Provider:     providers.GCP,
-	Region:       "europe-west9",
-	VCPUs:        2,
-	MemoryMb:     4096,
+	Identification: &resources.ComputeResourceIdentification{
+		Name:         "machine-name-1",
+		ResourceType: "type-1",
+		Provider:     providers.GCP,
+		Region:       "europe-west9",
+	},
+	Specs: &resources.ComputeResourceSpecs{
+		VCPUs:    2,
+		MemoryMb: 4096,
+	},
 }
 
 var resourceGCPComputeCPUType = resources.ComputeResource{
-	Name:         "machine-name-2",
-	ResourceType: "type-1",
-	Provider:     providers.GCP,
-	Region:       "europe-west9",
-	VCPUs:        2,
-	MemoryMb:     4096,
-	CPUType:      "Broadwell",
+	Identification: &resources.ComputeResourceIdentification{
+		Name:         "machine-name-2",
+		ResourceType: "type-1",
+		Provider:     providers.GCP,
+		Region:       "europe-west9",
+	},
+	Specs: &resources.ComputeResourceSpecs{
+		VCPUs:    2,
+		MemoryMb: 4096,
+		CPUType:  "Broadwell",
+	},
 }
 
 var resourceAWSComputeBasic = resources.ComputeResource{
-	Name:         "machine-name-1",
-	ResourceType: "type-1",
-	Provider:     providers.AWS,
-	Region:       "europe-west9",
-	VCPUs:        2,
-	MemoryMb:     4096,
+	Identification: &resources.ComputeResourceIdentification{
+		Name:         "machine-name-1",
+		ResourceType: "type-1",
+		Provider:     providers.AWS,
+		Region:       "europe-west9",
+	},
+	Specs: &resources.ComputeResourceSpecs{
+		VCPUs:    2,
+		MemoryMb: 4096,
+	},
 }
 
 func TestEstimateResource(t *testing.T) {
@@ -54,7 +66,7 @@ func TestEstimateResource(t *testing.T) {
 			name: "gcp_basic",
 			args: args{resourceGCPComputeBasic},
 			want: &EstimationResource{
-				Resource:        resourceGCPComputeBasic,
+				Resource:        &resourceGCPComputeBasic,
 				Power:           decimal.NewFromFloat(7.600784000).Round(10),
 				CarbonEmissions: decimal.NewFromFloat(0.448446256).Round(10),
 				AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
@@ -64,7 +76,7 @@ func TestEstimateResource(t *testing.T) {
 			name: "gcp_specific_cpu_type",
 			args: args{resourceGCPComputeCPUType},
 			want: &EstimationResource{
-				Resource:        resourceGCPComputeCPUType,
+				Resource:        &resourceGCPComputeCPUType,
 				Power:           decimal.NewFromFloat(6.5760185741),
 				CarbonEmissions: decimal.NewFromFloat(0.3879850958),
 				AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
@@ -95,7 +107,7 @@ func TestEstimateResourceKilo(t *testing.T) {
 			name: "gcp_basic",
 			args: args{resourceGCPComputeBasic},
 			want: &EstimationResource{
-				Resource:        resourceGCPComputeBasic,
+				Resource:        &resourceGCPComputeBasic,
 				Power:           decimal.NewFromFloat(7.600784000 * 24 * 30).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(232.4745391104).RoundFloor(10),
 				AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
@@ -105,7 +117,7 @@ func TestEstimateResourceKilo(t *testing.T) {
 			name: "gcp_specific_cpu_type",
 			args: args{resourceGCPComputeCPUType},
 			want: &EstimationResource{
-				Resource:        resourceGCPComputeCPUType,
+				Resource:        &resourceGCPComputeCPUType,
 				Power:           decimal.NewFromFloat(4734.7333733647).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(201.1314737005).RoundFloor(10),
 				AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
@@ -169,7 +181,7 @@ func TestEstimateResources(t *testing.T) {
 	viper.Set("unit.carbon", "g")
 	viper.Set("unit.time", "h")
 	type args struct {
-		resources []resources.ComputeResource
+		resources []resources.Resource
 	}
 	tests := []struct {
 		name string
@@ -179,7 +191,7 @@ func TestEstimateResources(t *testing.T) {
 		{
 			name: "gcp_array",
 			args: args{
-				[]resources.ComputeResource{
+				[]resources.Resource{
 					resourceGCPComputeBasic,
 					resourceGCPComputeCPUType,
 				},
@@ -192,13 +204,13 @@ func TestEstimateResources(t *testing.T) {
 				},
 				Resources: []EstimationResource{
 					{
-						Resource:        resourceGCPComputeBasic,
+						Resource:        &resourceGCPComputeBasic,
 						Power:           decimal.NewFromFloat(7.600784000).Round(10),
 						CarbonEmissions: decimal.NewFromFloat(0.448446256).Round(10),
 						AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
 					},
 					{
-						Resource:        resourceGCPComputeCPUType,
+						Resource:        &resourceGCPComputeCPUType,
 						Power:           decimal.NewFromFloat(6.5760185741),
 						CarbonEmissions: decimal.NewFromFloat(0.3879850958),
 						AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
