@@ -23,9 +23,14 @@ func EstimateWattHourGCP(resource *resources.ComputeResource) decimal.Decimal {
 	log.Debugf("%v.%v CPU in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, cpuEstimationInWh)
 	memoryEstimationInWH := estimateWattMem(resource)
 	log.Debugf("%v.%v Memory in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, memoryEstimationInWH)
+	storageInWh := estimateWattStorage(resource)
 	pue := GetEnergyCoefficients().GCP.PueAverage
 	log.Debugf("%v.%v PUE %v", resource.Identification.ResourceType, resource.Identification.Name, pue)
-	rawCarbonEstimate := cpuEstimationInWh.Add(memoryEstimationInWH)
+	rawCarbonEstimate := decimal.Sum(
+		cpuEstimationInWh,
+		memoryEstimationInWH,
+		storageInWh,
+	)
 	carbonEstimateIngCO2h := pue.Mul(rawCarbonEstimate)
 	log.Debugf("%v.%v Carbon in gCO2/h: %v", resource.Identification.ResourceType, resource.Identification.Name, carbonEstimateIngCO2h)
 	return carbonEstimateIngCO2h
@@ -37,7 +42,7 @@ func estimateWattMem(resource *resources.ComputeResource) decimal.Decimal {
 
 func estimateWattGCPCPU(resource *resources.ComputeResource) decimal.Decimal {
 	// Get average CPU usage
-	averageCPUUse := decimal.NewFromFloat(viper.GetFloat64("avg_cpu_use"))
+	averageCPUUse := decimal.NewFromFloat(viper.GetFloat64("provider.gcp.avg_cpu_use"))
 
 	var avgWatts decimal.Decimal
 	// Average Watts = Min Watts + Avg vCPU Utilization * (Max Watts - Min Watts)
@@ -49,6 +54,13 @@ func estimateWattGCPCPU(resource *resources.ComputeResource) decimal.Decimal {
 		avgWatts = GetEnergyCoefficients().GCP.CPUMinWh.Add(averageCPUUse.Mul(GetEnergyCoefficients().GCP.CPUMaxWh.Sub(GetEnergyCoefficients().GCP.CPUMinWh)))
 	}
 	return avgWatts.Mul(decimal.NewFromInt32(resource.Specs.VCPUs))
+}
+
+func estimateWattStorage(resource *resources.ComputeResource) decimal.Decimal {
+	provider := resource.Identification.Provider.String()
+	storageSsdWhTb := GetEnergyCoefficients().GetByName(provider).StorageSsdWhTb.Div(decimal.NewFromInt32(1024))
+	storageHddWhTb := GetEnergyCoefficients().GetByName(provider).StorageHddWhTb.Div(decimal.NewFromInt32(1024))
+	return storageHddWhTb.Add(storageSsdWhTb)
 }
 
 type gcpEmissionsCSV struct {

@@ -17,7 +17,9 @@ package cmd
 
 import (
 	"os"
+	"path"
 
+	"github.com/carboniferio/carbonifer/internal/utils"
 	"github.com/heirko/go-contrib/logrusHelper"
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
@@ -70,13 +72,13 @@ func initConfig() {
 		home, err := os.UserHomeDir()
 		cobra.CheckErr(err)
 
-		// Search config in home directory with name ".carbonifer" (without extension).
-		viper.AddConfigPath(home)
+		viper.AddConfigPath(path.Join(home, ".carbonifer"))
+		viper.AddConfigPath("/etc/carbonifer/")
+		viper.AddConfigPath("./.carbonifer")
 		if viper.ConfigFileUsed() == "" {
 			viper.SetConfigType("yaml")
-			viper.SetConfigName(".carbonifer/config.yaml")
+			viper.SetConfigName("config")
 		}
-
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
@@ -114,13 +116,7 @@ func initConfig() {
 		log.Fatal(err)
 	}
 	viper.SetDefault("workdir", currentDir)
-	viper.SetDefault("out.format", "text")
-	viper.SetDefault("unit.time", "h")      // h or m
-	viper.SetDefault("unit.power", "W")     // W or kW
-	viper.SetDefault("unit.carbon", "g")    // g or kg
-	viper.SetDefault("avg_cpu_use", 0.5)    // g or kg
-	viper.SetDefault("out.file", "")        // Path of report file. Default stdout
-	viper.SetDefault("data.path", "./data") // Path to data files (provider coefficients...)
+	utils.LoadViperDefaults()
 
 	// Bind Viper and Cobra flags
 	if err := viper.BindPFlag("out.format", RootCmd.PersistentFlags().Lookup("format")); err != nil {

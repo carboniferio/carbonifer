@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
@@ -46,4 +47,10 @@ func GetEnergyCoefficients() *CoefficientsProviders {
 		}
 	}
 	return coefficientsPerProviders
+}
+
+func (cps *CoefficientsProviders) GetByName(name string) Coefficients {
+	r := reflect.ValueOf(cps)
+	coefficients := reflect.Indirect(r).FieldByName(name)
+	return coefficients.Interface().(Coefficients)
 }

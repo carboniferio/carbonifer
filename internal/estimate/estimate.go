@@ -119,7 +119,7 @@ func estimateGCP(resource resources.Resource) *EstimationResource {
 		Resource:        &computeResource,
 		Power:           avgWatt.RoundFloor(10),
 		CarbonEmissions: carbonEmissionPerTime.RoundFloor(10),
-		AverageCPUUsage: decimal.NewFromFloat(viper.GetFloat64("avg_cpu_use")).RoundFloor(10),
+		AverageCPUUsage: decimal.NewFromFloat(viper.GetFloat64("provider.gcp.avg_cpu_use")).RoundFloor(10),
 	}
 }
 

@@ -6,6 +6,7 @@ import (
 	"path"
 	"runtime"
 
+	"github.com/carboniferio/carbonifer/internal/utils"
 	"github.com/spf13/viper"
 )
 
@@ -18,7 +19,10 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	viper.SetConfigFile("test/config/default_conf.yaml")
+	utils.LoadViperDefaults()
+	viper.AddConfigPath(path.Join(RootDir, "test/config"))
+	viper.SetConfigName("default_conf")
+	viper.SetConfigType("yaml")
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal(err)
 	}

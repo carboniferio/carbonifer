@@ -1,0 +1,17 @@
+# Default config read by viper
+## Can be override with ENV var, yaml file or flags
+out:
+  format: text
+  file:
+data:
+  path: "./data"
+unit:
+  time: h
+  power: W
+  carbon: g
+provider:
+  gcp:
+    avg_cpu_use: 0.5
+    boot_disk:
+      size: 10
+      type: pd-standard
