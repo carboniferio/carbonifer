@@ -20,7 +20,16 @@ resource "google_compute_instance" "default" {
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-11"
+      size = 567
+      type = "pd-balanced"
     }
+  }
+
+  scratch_disk {
+    interface = "NVME"
+  }
+  scratch_disk {
+    interface = "NVME"
   }
 
   # Install Flask

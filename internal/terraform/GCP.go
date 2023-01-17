@@ -6,6 +6,9 @@ import (
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	tfjson "github.com/hashicorp/terraform-json"
+	"github.com/shopspring/decimal"
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 func GetResource(tfResource tfjson.StateResource) resources.Resource {
@@ -45,10 +48,70 @@ func getComputeResourceSpecs(resource tfjson.StateResource) *resources.ComputeRe
 	if !ok {
 		CPUType = ""
 	}
-	return &resources.ComputeResourceSpecs{
-		Gpu:      machineType.Gpus,
-		VCPUs:    machineType.Vcpus,
-		MemoryMb: machineType.MemoryMb,
-		CPUType:  CPUType,
+
+	var disks []disk
+	bootDisks := resource.AttributeValues["boot_disk"].([]interface{})
+	for _, bootDiskBlock := range bootDisks {
+		bootDisk := getBootDisk(resource.Address, bootDiskBlock.(map[string]interface{}))
+		disks = append(disks, bootDisk)
 	}
+
+	scratchDisks := resource.AttributeValues["scratch_disk"].([]interface{})
+	for range scratchDisks {
+		// Each scratch disk is 375GB
+		//  source: https://cloud.google.com/compute/docs/disks#localssds
+		disks = append(disks, disk{isSSD: true, sizeGb: 375})
+	}
+
+	hddSize := decimal.Zero
+	ssdSize := decimal.Zero
+	for _, disk := range disks {
+		if disk.isSSD {
+			ssdSize = ssdSize.Add(decimal.NewFromFloat(disk.sizeGb))
+		} else {
+			hddSize = hddSize.Add(decimal.NewFromFloat(disk.sizeGb))
+		}
+	}
+	return &resources.ComputeResourceSpecs{
+		Gpu:        machineType.Gpus,
+		VCPUs:      machineType.Vcpus,
+		MemoryMb:   machineType.MemoryMb,
+		CPUType:    CPUType,
+		SsdStorage: ssdSize,
+		HddStorage: hddSize,
+	}
+}
+
+type disk struct {
+	sizeGb float64
+	isSSD  bool
+}
+
+func getBootDisk(resourceAddress string, bootDiskBlock map[string]interface{}) disk {
+	disk := disk{
+		sizeGb: viper.GetFloat64("provider.gcp.boot_disk.size"),
+		isSSD:  true,
+	}
+	initParams := bootDiskBlock["initialize_params"]
+	for _, iP := range initParams.([]interface{}) {
+		initParam := iP.(map[string]interface{})
+
+		diskType := initParam["type"]
+		if diskType == nil {
+			diskType = viper.GetString("provider.gcp.boot_disk.type")
+		}
+		if diskType == "pd-standard" {
+			disk.isSSD = false
+		}
+
+		sizeParam := initParam["size"]
+		if sizeParam != nil {
+			disk.sizeGb = sizeParam.(float64)
+
+		} else {
+			log.Warningf("%v : Boot disk size not declared. Please set it! (otherwise we set it to 10gb) ", resourceAddress)
+			// TODO if size not provided we can try to get it from image
+		}
+	}
+	return disk
 }

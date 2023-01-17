@@ -119,8 +119,8 @@ func TestGetResources(t *testing.T) {
 			},
 			Specs: &resources.ComputeResourceSpecs{
 				Gpu:        0,
-				HddStorage: decimal.Decimal{},
-				SsdStorage: decimal.Decimal{},
+				HddStorage: decimal.Zero,
+				SsdStorage: decimal.NewFromFloat(567).Add(decimal.NewFromFloat(375).Add(decimal.NewFromFloat(375))),
 				MemoryMb:   2480,
 				VCPUs:      1,
 				CPUType:    "",
@@ -135,8 +135,8 @@ func TestGetResources(t *testing.T) {
 			},
 			Specs: &resources.ComputeResourceSpecs{
 				Gpu:        0,
-				HddStorage: decimal.Decimal{},
-				SsdStorage: decimal.Decimal{},
+				HddStorage: decimal.NewFromFloat(10),
+				SsdStorage: decimal.Zero,
 				MemoryMb:   4098,
 				VCPUs:      2,
 				CPUType:    "",
