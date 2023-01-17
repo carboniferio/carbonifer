@@ -63,12 +63,6 @@ func estimateWattStorage(resource *resources.ComputeResource) decimal.Decimal {
 	return storageHddWhTb.Add(storageSsdWhTb)
 }
 
-func estimateWattHdd(resource *resources.ComputeResource) decimal.Decimal {
-	provider := resource.Identification.Provider.String()
-	storageHddWhTb := GetEnergyCoefficients().GetByName(provider).StorageHddWhTb
-	return resource.Specs.SsdStorage.Div(decimal.NewFromInt32(1024).Mul(storageHddWhTb))
-}
-
 type gcpEmissionsCSV struct {
 	Region              string  `name:"Google Cloud Region"`
 	Location            string  `name:"Location"`
