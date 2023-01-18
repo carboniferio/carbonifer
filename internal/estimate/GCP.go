@@ -1,6 +1,8 @@
 package estimate
 
 import (
+	"errors"
+	"fmt"
 	"path/filepath"
 	"strings"
 
@@ -24,6 +26,7 @@ func EstimateWattHourGCP(resource *resources.ComputeResource) decimal.Decimal {
 	memoryEstimationInWH := estimateWattMem(resource)
 	log.Debugf("%v.%v Memory in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, memoryEstimationInWH)
 	storageInWh := estimateWattStorage(resource)
+	log.Debugf("%v.%v Storage in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, storageInWh)
 	pue := GetEnergyCoefficients().GCP.PueAverage
 	log.Debugf("%v.%v PUE %v", resource.Identification.ResourceType, resource.Identification.Name, pue)
 	rawCarbonEstimate := decimal.Sum(
@@ -31,7 +34,11 @@ func EstimateWattHourGCP(resource *resources.ComputeResource) decimal.Decimal {
 		memoryEstimationInWH,
 		storageInWh,
 	)
-	carbonEstimateIngCO2h := pue.Mul(rawCarbonEstimate)
+	replicationFactor := resource.Specs.ReplicationFactor
+	if replicationFactor == 0 {
+		replicationFactor = 1
+	}
+	carbonEstimateIngCO2h := pue.Mul(rawCarbonEstimate).Mul(decimal.NewFromInt32(replicationFactor))
 	log.Debugf("%v.%v Carbon in gCO2/h: %v", resource.Identification.ResourceType, resource.Identification.Name, carbonEstimateIngCO2h)
 	return carbonEstimateIngCO2h
 }
@@ -58,9 +65,11 @@ func estimateWattGCPCPU(resource *resources.ComputeResource) decimal.Decimal {
 
 func estimateWattStorage(resource *resources.ComputeResource) decimal.Decimal {
 	provider := resource.Identification.Provider.String()
-	storageSsdWhTb := GetEnergyCoefficients().GetByName(provider).StorageSsdWhTb.Div(decimal.NewFromInt32(1024))
-	storageHddWhTb := GetEnergyCoefficients().GetByName(provider).StorageHddWhTb.Div(decimal.NewFromInt32(1024))
-	return storageHddWhTb.Add(storageSsdWhTb)
+	storageSsdWhGb := GetEnergyCoefficients().GetByName(provider).StorageSsdWhTb.Div(decimal.NewFromInt32(1024))
+	storageHddWhGb := GetEnergyCoefficients().GetByName(provider).StorageHddWhTb.Div(decimal.NewFromInt32(1024))
+	storageSSDWh := resource.Specs.SsdStorage.Mul(storageSsdWhGb)
+	storageHddWh := resource.Specs.HddStorage.Mul(storageHddWhGb)
+	return storageSSDWh.Add(storageHddWh)
 }
 
 type gcpEmissionsCSV struct {
@@ -106,9 +115,16 @@ func loadEmissionsPerRegion() map[string]GCPEmissions {
 	return data
 }
 
-func GCPRegionEmission(region string) GCPEmissions {
+func GCPRegionEmission(region string) (*GCPEmissions, error) {
 	if gcpEmissionsPerRegion == nil {
 		gcpEmissionsPerRegion = loadEmissionsPerRegion()
 	}
-	return gcpEmissionsPerRegion[region]
+	if region == "" {
+		return nil, errors.New("Region cannot be empty")
+	}
+	emissions, ok := gcpEmissionsPerRegion[region]
+	if !ok {
+		return nil, errors.New(fmt.Sprint("Region does not exist: ", region))
+	}
+	return &emissions, nil
 }

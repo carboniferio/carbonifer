@@ -33,7 +33,7 @@ func EstimateResources(resourceList []resources.Resource) EstimationReport {
 			unsupportedResources = append(unsupportedResources, resource)
 		}
 
-		estimationTotal.Power = estimationTotal.Power.Add(estimationResource.CarbonEmissions)
+		estimationTotal.Power = estimationTotal.Power.Add(estimationResource.Power)
 		estimationTotal.CarbonEmissions = estimationTotal.CarbonEmissions.Add(estimationResource.CarbonEmissions)
 		estimationTotal.ResourcesCount += 1
 	}
@@ -80,7 +80,10 @@ func estimateGCP(resource resources.Resource) *EstimationResource {
 	}
 
 	// Regional grid emission per unit of time
-	regionEmissions := GCPRegionEmission(resource.GetIndentification().Region) // gCO2eq /kWh
+	regionEmissions, err := GCPRegionEmission(resource.GetIndentification().Region) // gCO2eq /kWh
+	if err != nil {
+		log.Fatalf("Error while getting region emissions for %v: %v", resource.GetAddress(), err)
+	}
 	if viper.Get("unit.power").(string) == "W" {
 		regionEmissions.GridCarbonIntensity = regionEmissions.GridCarbonIntensity.Div(decimal.NewFromInt(1000))
 	}

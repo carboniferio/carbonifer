@@ -20,8 +20,8 @@ resource "google_compute_instance" "first" {
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-11"
-      size = 567
-      type = "pd-balanced"
+      size  = 567
+      type  = "pd-balanced"
     }
   }
 
@@ -44,17 +44,37 @@ resource "google_compute_instance" "first" {
   }
 }
 
+resource "google_compute_disk" "first" {
+  name = "cbf-disk-first"
+  type = "pd-standard"
+  zone = "europe-west9-a"
+  size = 1024
+}
+
+resource "google_compute_region_disk" "regional-first" {
+  name          = "cbf-disk-regional-first"
+  type          = "pd-standard"
+  region        = "europe-west9"
+  replica_zones = ["europe-west9-a", "europe-west9-b"]
+  size = 1024
+}
+
+
 resource "google_compute_instance" "second" {
-  name         = "cbf-test-other"
-  machine_type = "custom-2-4098"
+  name             = "cbf-test-other"
+  machine_type     = "custom-2-4098"
   min_cpu_platform = "Intel Cascade Lake"
-  zone         = "europe-west9-a"
-  tags         = ["ssh"]
+  zone             = "europe-west9-a"
+  tags             = ["ssh"]
 
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-11"
     }
+  }
+
+  attached_disk {
+    source = google_compute_disk.first.self_link
   }
 
   # Install Flask

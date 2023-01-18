@@ -1,6 +1,7 @@
 package terraform
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/carboniferio/carbonifer/internal/providers"
@@ -20,23 +21,39 @@ func GetResource(tfResource tfjson.StateResource) resources.Resource {
 			Specs:          specs,
 		}
 	}
+	if resourceId.ResourceType == "google_compute_disk" ||
+		resourceId.ResourceType == "google_compute_region_disk" {
+		specs := getComputeDiskResourceSpecs(tfResource)
+		return resources.ComputeResource{
+			Identification: resourceId,
+			Specs:          specs,
+		}
+	}
 	return resources.UnsupportedResource{
 		Identification: resourceId,
 	}
 }
 
 func getResourceIdentification(resource tfjson.StateResource) *resources.ComputeResourceIdentification {
-	var region string
-	if resource.AttributeValues["zone"] != nil {
-		zone := resource.AttributeValues["zone"].(string)
-		region = strings.Join(strings.Split(zone, "-")[:2], "-")
+	region := resource.AttributeValues["region"]
+	if region == nil {
+		if resource.AttributeValues["zone"] != nil {
+			zone := resource.AttributeValues["zone"].(string)
+			region = strings.Join(strings.Split(zone, "-")[:2], "-")
+		} else if resource.AttributeValues["replica_zones"] != nil {
+			replica_zones := resource.AttributeValues["replica_zones"].([]interface{})
+			// should be all in the same region
+			region = strings.Join(strings.Split(replica_zones[0].(string), "-")[:2], "-")
+		} else {
+			region = ""
+		}
 	}
 
 	return &resources.ComputeResourceIdentification{
 		Name:         resource.Name,
 		ResourceType: resource.Type,
 		Provider:     providers.GCP,
-		Region:       region,
+		Region:       fmt.Sprint(region),
 	}
 }
 
@@ -82,36 +99,75 @@ func getComputeResourceSpecs(resource tfjson.StateResource) *resources.ComputeRe
 	}
 }
 
+func getComputeDiskResourceSpecs(resource tfjson.StateResource) *resources.ComputeResourceSpecs {
+	disk := getDisk(resource.Address, resource.AttributeValues, false)
+	hddSize := decimal.Zero
+	ssdSize := decimal.Zero
+	if disk.isSSD {
+		ssdSize = ssdSize.Add(decimal.NewFromFloat(disk.sizeGb))
+	} else {
+		hddSize = hddSize.Add(decimal.NewFromFloat(disk.sizeGb))
+	}
+	return &resources.ComputeResourceSpecs{
+		SsdStorage:        ssdSize,
+		HddStorage:        hddSize,
+		ReplicationFactor: disk.replicationFactor,
+	}
+}
+
 type disk struct {
-	sizeGb float64
-	isSSD  bool
+	sizeGb            float64
+	isSSD             bool
+	replicationFactor int32
 }
 
 func getBootDisk(resourceAddress string, bootDiskBlock map[string]interface{}) disk {
-	disk := disk{
-		sizeGb: viper.GetFloat64("provider.gcp.boot_disk.size"),
-		isSSD:  true,
-	}
+	var disk disk
 	initParams := bootDiskBlock["initialize_params"]
 	for _, iP := range initParams.([]interface{}) {
 		initParam := iP.(map[string]interface{})
+		disk = getDisk(resourceAddress, initParam, true)
 
-		diskType := initParam["type"]
-		if diskType == nil {
+	}
+	return disk
+}
+
+func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDisk bool) disk {
+	disk := disk{
+		sizeGb:            viper.GetFloat64("provider.gcp.boot_disk.size"),
+		isSSD:             true,
+		replicationFactor: 1,
+	}
+	diskType := diskBlock["type"]
+	if diskType == nil {
+		if isBootDisk {
 			diskType = viper.GetString("provider.gcp.boot_disk.type")
-		}
-		if diskType == "pd-standard" {
-			disk.isSSD = false
-		}
-
-		sizeParam := initParam["size"]
-		if sizeParam != nil {
-			disk.sizeGb = sizeParam.(float64)
-
 		} else {
-			log.Warningf("%v : Boot disk size not declared. Please set it! (otherwise we set it to 10gb) ", resourceAddress)
-			// TODO if size not provided we can try to get it from image
+			diskType = viper.GetString("provider.gcp.disk.type")
 		}
 	}
+	if diskType == "pd-standard" {
+		disk.isSSD = false
+	}
+
+	sizeParam := diskBlock["size"]
+	if sizeParam != nil {
+		disk.sizeGb = sizeParam.(float64)
+	} else {
+		if isBootDisk {
+			disk.sizeGb = viper.GetFloat64("provider.gcp.boot_disk.size")
+		} else {
+			disk.sizeGb = viper.GetFloat64("provider.gcp.disk.size")
+		}
+		log.Warningf("%v : Boot disk size not declared. Please set it! (otherwise we set it to 10gb) ", resourceAddress)
+		// TODO if size not provided we can try to get it from image
+	}
+
+	replicaZones := diskBlock["replica_zones"]
+	if replicaZones != nil {
+		rz := replicaZones.([]interface{})
+		disk.replicationFactor = int32(len(rz))
+	}
+
 	return disk
 }

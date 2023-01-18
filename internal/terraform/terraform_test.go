@@ -113,6 +113,23 @@ func TestGetResources(t *testing.T) {
 		resources.ComputeResource{
 			Identification: &resources.ComputeResourceIdentification{
 				Name:         "first",
+				ResourceType: "google_compute_disk",
+				Provider:     providers.GCP,
+				Region:       "europe-west9",
+			},
+			Specs: &resources.ComputeResourceSpecs{
+				Gpu:               0,
+				HddStorage:        decimal.NewFromInt(1024),
+				SsdStorage:        decimal.Zero,
+				MemoryMb:          0,
+				VCPUs:             0,
+				CPUType:           "",
+				ReplicationFactor: 1,
+			},
+		},
+		resources.ComputeResource{
+			Identification: &resources.ComputeResourceIdentification{
+				Name:         "first",
 				ResourceType: "google_compute_instance",
 				Provider:     providers.GCP,
 				Region:       "europe-west9",
@@ -150,12 +167,29 @@ func TestGetResources(t *testing.T) {
 				Region:       "",
 			},
 		},
+		resources.ComputeResource{
+			Identification: &resources.ComputeResourceIdentification{
+				Name:         "regional-first",
+				ResourceType: "google_compute_region_disk",
+				Provider:     providers.GCP,
+				Region:       "europe-west9",
+			},
+			Specs: &resources.ComputeResourceSpecs{
+				Gpu:               0,
+				HddStorage:        decimal.NewFromInt(1024),
+				SsdStorage:        decimal.Zero,
+				MemoryMb:          0,
+				VCPUs:             0,
+				CPUType:           "",
+				ReplicationFactor: 2,
+			},
+		},
 		resources.UnsupportedResource{
 			Identification: &resources.ComputeResourceIdentification{
 				Name:         "first",
 				ResourceType: "google_compute_subnetwork",
 				Provider:     providers.GCP,
-				Region:       "",
+				Region:       "europe-west9",
 			},
 		},
 	}
@@ -163,6 +197,7 @@ func TestGetResources(t *testing.T) {
 	resources := GetResources()
 	assert.Equal(t, len(resources), len(wantResources))
 	for i, resource := range resources {
-		assert.Equal(t, resource, wantResources[i])
+		wantResource := wantResources[i]
+		assert.Equal(t, wantResource, resource)
 	}
 }

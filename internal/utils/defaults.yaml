@@ -15,3 +15,6 @@ provider:
     boot_disk:
       size: 10
       type: pd-standard
+    disk:
+      size: 500
+      type: pd-standard
