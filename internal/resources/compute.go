@@ -1,17 +1,20 @@
 package resources
 
 import (
+	"fmt"
+
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/shopspring/decimal"
 )
 
 type ComputeResourceSpecs struct {
-	Gpu        int32
-	HddStorage decimal.Decimal
-	SsdStorage decimal.Decimal
-	MemoryMb   int32
-	VCPUs      int32
-	CPUType    string
+	Gpu               int32
+	HddStorage        decimal.Decimal
+	SsdStorage        decimal.Decimal
+	MemoryMb          int32
+	VCPUs             int32
+	CPUType           string
+	ReplicationFactor int32
 }
 
 type ComputeResourceIdentification struct {
@@ -35,6 +38,10 @@ func (r ComputeResource) GetIndentification() *ComputeResourceIdentification {
 	return r.Identification
 }
 
+func (r ComputeResource) GetAddress() string {
+	return fmt.Sprintf("%v.%v", r.GetIndentification().ResourceType, r.GetIndentification().Name)
+}
+
 type UnsupportedResource struct {
 	Identification *ComputeResourceIdentification
 }
@@ -47,7 +54,12 @@ func (r UnsupportedResource) GetIndentification() *ComputeResourceIdentification
 	return r.Identification
 }
 
+func (r UnsupportedResource) GetAddress() string {
+	return fmt.Sprintf("%v.%v", r.GetIndentification().ResourceType, r.GetIndentification().Name)
+}
+
 type Resource interface {
 	IsSupported() bool
 	GetIndentification() *ComputeResourceIdentification
+	GetAddress() string
 }
