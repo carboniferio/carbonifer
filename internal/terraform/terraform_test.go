@@ -112,7 +112,7 @@ func TestGetResources(t *testing.T) {
 	wantResources := []resources.Resource{
 		resources.ComputeResource{
 			Identification: &resources.ComputeResourceIdentification{
-				Name:         "default",
+				Name:         "first",
 				ResourceType: "google_compute_instance",
 				Provider:     providers.GCP,
 				Region:       "europe-west9",
@@ -128,7 +128,7 @@ func TestGetResources(t *testing.T) {
 		},
 		resources.ComputeResource{
 			Identification: &resources.ComputeResourceIdentification{
-				Name:         "foo",
+				Name:         "second",
 				ResourceType: "google_compute_instance",
 				Provider:     providers.GCP,
 				Region:       "europe-west9",
@@ -152,7 +152,7 @@ func TestGetResources(t *testing.T) {
 		},
 		resources.UnsupportedResource{
 			Identification: &resources.ComputeResourceIdentification{
-				Name:         "default",
+				Name:         "first",
 				ResourceType: "google_compute_subnetwork",
 				Provider:     providers.GCP,
 				Region:       "",

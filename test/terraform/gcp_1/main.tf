@@ -4,14 +4,14 @@ resource "google_compute_network" "vpc_network" {
   mtu                     = 1460
 }
 
-resource "google_compute_subnetwork" "default" {
+resource "google_compute_subnetwork" "first" {
   name          = "cbf-subnet"
   ip_cidr_range = "10.0.1.0/24"
   region        = "europe-west9"
   network       = google_compute_network.vpc_network.id
 }
 
-resource "google_compute_instance" "default" {
+resource "google_compute_instance" "first" {
   name         = "cbf-test-vm"
   machine_type = "custom-1-2480"
   zone         = "europe-west9-a"
@@ -36,7 +36,7 @@ resource "google_compute_instance" "default" {
   metadata_startup_script = "sudo apt-get update; sudo apt-get install -yq build-essential python3-pip rsync; pip install flask"
 
   network_interface {
-    subnetwork = google_compute_subnetwork.default.id
+    subnetwork = google_compute_subnetwork.first.id
 
     access_config {
       # Include this section to give the VM an external IP address
@@ -44,7 +44,7 @@ resource "google_compute_instance" "default" {
   }
 }
 
-resource "google_compute_instance" "foo" {
+resource "google_compute_instance" "second" {
   name         = "cbf-test-other"
   machine_type = "custom-2-4098"
   min_cpu_platform = "Intel Cascade Lake"
@@ -61,7 +61,7 @@ resource "google_compute_instance" "foo" {
   metadata_startup_script = "sudo apt-get update; sudo apt-get install -yq build-essential python3-pip rsync; pip install flask"
 
   network_interface {
-    subnetwork = google_compute_subnetwork.default.id
+    subnetwork = google_compute_subnetwork.first.id
 
     access_config {
       # Include this section to give the VM an external IP address

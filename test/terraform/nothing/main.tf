@@ -4,7 +4,7 @@ resource "google_compute_network" "vpc_network" {
   mtu                     = 1460
 }
 
-resource "google_compute_subnetwork" "default" {
+resource "google_compute_subnetwork" "first" {
   name          = "cbf-subnet"
   ip_cidr_range = "10.0.1.0/24"
   region        = "europe-west9"
