@@ -21,7 +21,7 @@ go.work
 .DS_Store
 
 # Carbonifer
-**/.carbonifer*/*
+**/.carbonifer*
 
 # Local .terraform directories
 **/.terraform/*
