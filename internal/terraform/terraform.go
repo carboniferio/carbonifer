@@ -135,7 +135,8 @@ func TerraformPlan() (*tfjson.Plan, error) {
 	out := tfexec.Out(tfPlanFile.Name())
 	_, err = tf.Plan(ctx, out)
 	if err != nil {
-		if strings.Contains(err.Error(), "invalid authentication credentials") {
+		if strings.Contains(err.Error(), "invalid authentication credentials") ||
+			strings.Contains(err.Error(), "No credentials loaded") {
 			return nil, &ProviderAuthError{ParentError: err}
 		}
 		return nil, err
