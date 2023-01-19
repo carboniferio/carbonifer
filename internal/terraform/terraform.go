@@ -135,6 +135,9 @@ func TerraformPlan() (*tfjson.Plan, error) {
 	out := tfexec.Out(tfPlanFile.Name())
 	_, err = tf.Plan(ctx, out)
 	if err != nil {
+		if strings.Contains(err.Error(), "invalid authentication credentials") {
+			return nil, &ProviderAuthError{ParentError: err}
+		}
 		return nil, err
 	}
 
@@ -147,18 +150,35 @@ func TerraformPlan() (*tfjson.Plan, error) {
 	return tfplan, nil
 }
 
-func GetResources() []resources.Resource {
+func GetResources() ([]resources.Resource, error) {
 	log.Debug("Reading planned resources from Terraform plan")
 	tfPlan, err := TerraformPlan()
 	if err != nil {
-		log.Fatal(err)
+		if e, ok := err.(*ProviderAuthError); ok {
+			return nil, e
+		} else {
+			log.Fatal(err)
+		}
 	}
 	log.Debugf("Reading resources from Terraform plan: %d resources", len(tfPlan.PlannedValues.RootModule.Resources))
-	var resources []resources.Resource
+	var resourcesList []resources.Resource
+	dataResources := make(map[string]resources.DataResource)
+	if tfPlan.PriorState != nil {
+		for _, priorRes := range tfPlan.PriorState.Values.RootModule.Resources {
+			log.Debugf("Reading prior state resources %v", priorRes.Address)
+			if priorRes.Mode == "data" {
+				if strings.HasPrefix(priorRes.Type, "google") {
+					dataResource := GetDataResource(*priorRes)
+					dataResources[dataResource.GetKey()] = dataResource
+				}
+			}
+		}
+	}
+
 	for _, res := range tfPlan.PlannedValues.RootModule.Resources {
 		log.Debugf("Reading resource %v", res.Address)
 		if strings.HasPrefix(res.Type, "google") {
-			resource := GetResource(*res)
+			resource := GetResource(*res, &dataResources)
 			if log.IsLevelEnabled(log.DebugLevel) {
 				computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"
 				if resource.IsSupported() {
@@ -168,9 +188,9 @@ func GetResources() []resources.Resource {
 				log.Debugf("  Compute resource : %v", string(computeJsonStr))
 			}
 
-			resources = append(resources, resource)
+			resourcesList = append(resourcesList, resource)
 
 		}
 	}
-	return resources
+	return resourcesList, nil
 }

@@ -46,7 +46,10 @@ var planCmd = &cobra.Command{
 		log.Debugf("Workdir : %v", workdir)
 
 		// Read resources from terraform plan
-		resources := terraform.GetResources()
+		resources, err := terraform.GetResources()
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		// Estimate CO2 emissions
 		estimations := estimate.EstimateResources(resources)

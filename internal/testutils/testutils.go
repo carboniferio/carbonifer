@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"testing"
 
 	"github.com/carboniferio/carbonifer/internal/utils"
 	"github.com/spf13/viper"
@@ -30,4 +31,10 @@ func init() {
 	// Set fake GCP auth
 	os.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "foo")
 
+}
+
+func SkipWithCreds(t *testing.T) {
+	if os.Getenv("SKIP_WITH_CREDENTIALS") != "" {
+		t.Skip("Skipping testing requiring providers credentials")
+	}
 }

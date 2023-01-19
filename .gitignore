@@ -36,3 +36,6 @@ crash.log
 crash.*.log
 
 **/__debug_bin
+
+# vscode
+.vscode
