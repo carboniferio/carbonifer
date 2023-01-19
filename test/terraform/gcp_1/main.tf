@@ -56,7 +56,7 @@ resource "google_compute_region_disk" "regional-first" {
   type          = "pd-standard"
   region        = "europe-west9"
   replica_zones = ["europe-west9-a", "europe-west9-b"]
-  size = 1024
+  size          = 1024
 }
 
 

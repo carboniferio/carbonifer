@@ -34,7 +34,6 @@ func TestGetTerraformExec_NotExistingExactVersion(t *testing.T) {
 	wantedVersion := "1.2.0"
 	viper.Set("workdir", ".")
 	viper.Set("terraform.version", wantedVersion)
-	logrus.SetLevel(logrus.DebugLevel)
 	terraformExec = nil
 	tfExec, err := GetTerraformExec()
 	assert.NoError(t, err)
@@ -54,7 +53,6 @@ func TestGetTerraformExec_NotExistingNoVersion(t *testing.T) {
 	viper.Set("terraform.version", "")
 
 	viper.Set("workdir", ".")
-	logrus.SetLevel(logrus.DebugLevel)
 
 	tfExec, err := GetTerraformExec()
 	assert.NoError(t, err)
@@ -77,7 +75,6 @@ func TestTerraformPlan_NoFile(t *testing.T) {
 func TestTerraformPlan_NoTfFile(t *testing.T) {
 	// reset
 	terraformExec = nil
-	logrus.SetLevel(logrus.DebugLevel)
 
 	wd := path.Join(testutils.RootDir, "test/terraform/notTf")
 	logrus.Infof("workdir: %v", wd)
@@ -104,7 +101,6 @@ func TestTerraformPlan_BadTfFile(t *testing.T) {
 func TestGetResources(t *testing.T) {
 	// reset
 	terraformExec = nil
-	logrus.SetLevel(logrus.DebugLevel)
 
 	wd := path.Join(testutils.RootDir, "test/terraform/gcp_1")
 	viper.Set("workdir", wd)
