@@ -27,4 +27,7 @@ func init() {
 		log.Fatal(err)
 	}
 
+	// Set fake GCP auth
+	os.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "foo")
+
 }

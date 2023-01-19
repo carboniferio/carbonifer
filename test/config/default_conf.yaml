@@ -9,4 +9,4 @@ data:
   path: "test/data"
 avg_cpu_use: 0.5
 log:
-  level : "debug"
+  level : "warn"
