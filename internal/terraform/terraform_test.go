@@ -107,7 +107,7 @@ func TestGetResources(t *testing.T) {
 
 	wantResources := []resources.Resource{
 		resources.ComputeResource{
-			Identification: &resources.ComputeResourceIdentification{
+			Identification: &resources.ResourceIdentification{
 				Name:         "first",
 				ResourceType: "google_compute_disk",
 				Provider:     providers.GCP,
@@ -124,7 +124,7 @@ func TestGetResources(t *testing.T) {
 			},
 		},
 		resources.ComputeResource{
-			Identification: &resources.ComputeResourceIdentification{
+			Identification: &resources.ResourceIdentification{
 				Name:         "first",
 				ResourceType: "google_compute_instance",
 				Provider:     providers.GCP,
@@ -140,7 +140,7 @@ func TestGetResources(t *testing.T) {
 			},
 		},
 		resources.ComputeResource{
-			Identification: &resources.ComputeResourceIdentification{
+			Identification: &resources.ResourceIdentification{
 				Name:         "second",
 				ResourceType: "google_compute_instance",
 				Provider:     providers.GCP,
@@ -156,7 +156,7 @@ func TestGetResources(t *testing.T) {
 			},
 		},
 		resources.UnsupportedResource{
-			Identification: &resources.ComputeResourceIdentification{
+			Identification: &resources.ResourceIdentification{
 				Name:         "vpc_network",
 				ResourceType: "google_compute_network",
 				Provider:     providers.GCP,
@@ -164,7 +164,7 @@ func TestGetResources(t *testing.T) {
 			},
 		},
 		resources.ComputeResource{
-			Identification: &resources.ComputeResourceIdentification{
+			Identification: &resources.ResourceIdentification{
 				Name:         "regional-first",
 				ResourceType: "google_compute_region_disk",
 				Provider:     providers.GCP,
@@ -181,7 +181,7 @@ func TestGetResources(t *testing.T) {
 			},
 		},
 		resources.UnsupportedResource{
-			Identification: &resources.ComputeResourceIdentification{
+			Identification: &resources.ResourceIdentification{
 				Name:         "first",
 				ResourceType: "google_compute_subnetwork",
 				Provider:     providers.GCP,
@@ -190,10 +190,62 @@ func TestGetResources(t *testing.T) {
 		},
 	}
 
-	resources := GetResources()
+	resources, _ := GetResources()
 	assert.Equal(t, len(resources), len(wantResources))
 	for i, resource := range resources {
 		wantResource := wantResources[i]
 		assert.Equal(t, wantResource, resource)
 	}
+}
+
+func TestGetResources_MissingCreds(t *testing.T) {
+	// reset
+	terraformExec = nil
+
+	wd := path.Join(testutils.RootDir, "test/terraform/gcp_images")
+	viper.Set("workdir", wd)
+
+	_, err := GetResources()
+	assert.IsType(t, (*ProviderAuthError)(nil), err)
+}
+
+func TestGetResources_DiskImage(t *testing.T) {
+	testutils.SkipWithCreds(t)
+	// reset
+	terraformExec = nil
+
+	t.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "")
+
+	wd := path.Join(testutils.RootDir, "test/terraform/gcp_images")
+	viper.Set("workdir", wd)
+
+	wantResources := []resources.Resource{
+		resources.ComputeResource{
+			Identification: &resources.ResourceIdentification{
+				Name:         "diskImage",
+				ResourceType: "google_compute_disk",
+				Provider:     providers.GCP,
+				Region:       "europe-west9",
+			},
+			Specs: &resources.ComputeResourceSpecs{
+				Gpu:               0,
+				HddStorage:        decimal.NewFromFloat(10),
+				SsdStorage:        decimal.Zero,
+				MemoryMb:          0,
+				VCPUs:             0,
+				CPUType:           "",
+				ReplicationFactor: 1,
+			},
+		},
+	}
+
+	resources, err := GetResources()
+	if assert.NoError(t, err) {
+		assert.Equal(t, len(wantResources), len(resources))
+		for i, resource := range resources {
+			wantResource := wantResources[i]
+			assert.Equal(t, wantResource, resource)
+		}
+	}
+
 }

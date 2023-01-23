@@ -21,7 +21,7 @@ go.work
 .DS_Store
 
 # Carbonifer
-**/.carbonifer*/*
+**/.carbonifer*
 
 # Local .terraform directories
 **/.terraform/*
@@ -36,3 +36,9 @@ crash.log
 crash.*.log
 
 **/__debug_bin
+
+# vscode
+.vscode
+
+# Ignore generated credentials from google-github-actions/auth
+gha-creds-*.json

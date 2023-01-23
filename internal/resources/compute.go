@@ -17,16 +17,17 @@ type ComputeResourceSpecs struct {
 	ReplicationFactor int32
 }
 
-type ComputeResourceIdentification struct {
+type ResourceIdentification struct {
 	// Indentification
 	Name         string
 	ResourceType string
 	Provider     providers.Provider
 	Region       string
+	SelfLink     string
 }
 
 type ComputeResource struct {
-	Identification *ComputeResourceIdentification
+	Identification *ResourceIdentification
 	Specs          *ComputeResourceSpecs
 }
 
@@ -34,32 +35,32 @@ func (r ComputeResource) IsSupported() bool {
 	return true
 }
 
-func (r ComputeResource) GetIndentification() *ComputeResourceIdentification {
+func (r ComputeResource) GetIdentification() *ResourceIdentification {
 	return r.Identification
 }
 
 func (r ComputeResource) GetAddress() string {
-	return fmt.Sprintf("%v.%v", r.GetIndentification().ResourceType, r.GetIndentification().Name)
+	return fmt.Sprintf("%v.%v", r.GetIdentification().ResourceType, r.GetIdentification().Name)
 }
 
 type UnsupportedResource struct {
-	Identification *ComputeResourceIdentification
+	Identification *ResourceIdentification
 }
 
 func (r UnsupportedResource) IsSupported() bool {
 	return false
 }
 
-func (r UnsupportedResource) GetIndentification() *ComputeResourceIdentification {
+func (r UnsupportedResource) GetIdentification() *ResourceIdentification {
 	return r.Identification
 }
 
 func (r UnsupportedResource) GetAddress() string {
-	return fmt.Sprintf("%v.%v", r.GetIndentification().ResourceType, r.GetIndentification().Name)
+	return fmt.Sprintf("%v.%v", r.GetIdentification().ResourceType, r.GetIdentification().Name)
 }
 
 type Resource interface {
 	IsSupported() bool
-	GetIndentification() *ComputeResourceIdentification
+	GetIdentification() *ResourceIdentification
 	GetAddress() string
 }

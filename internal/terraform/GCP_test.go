@@ -60,7 +60,7 @@ func TestGetResource(t *testing.T) {
 				tfResource: persistenDisk,
 			},
 			want: resources.ComputeResource{
-				Identification: &resources.ComputeResourceIdentification{
+				Identification: &resources.ResourceIdentification{
 					Name:         "disk1",
 					ResourceType: "google_compute_disk",
 					Provider:     providers.GCP,
@@ -79,7 +79,7 @@ func TestGetResource(t *testing.T) {
 				tfResource: persistenDiskNoSize,
 			},
 			want: resources.ComputeResource{
-				Identification: &resources.ComputeResourceIdentification{
+				Identification: &resources.ResourceIdentification{
 					Name:         "disk2",
 					ResourceType: "google_compute_disk",
 					Provider:     providers.GCP,
@@ -98,7 +98,7 @@ func TestGetResource(t *testing.T) {
 				tfResource: regionDisk,
 			},
 			want: resources.ComputeResource{
-				Identification: &resources.ComputeResourceIdentification{
+				Identification: &resources.ResourceIdentification{
 					Name:         "diskr",
 					ResourceType: "google_compute_region_disk",
 					Provider:     providers.GCP,
@@ -114,7 +114,7 @@ func TestGetResource(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := GetResource(tt.args.tfResource)
+			got := GetResource(tt.args.tfResource, nil)
 			assert.Equal(t, tt.want, got)
 		})
 	}

@@ -24,7 +24,7 @@ func EstimateResources(resourceList []resources.Resource) EstimationReport {
 	for _, resource := range resourceList {
 		estimationResource, uerr := EstimateResource(resource)
 		if uerr != nil {
-			logrus.Warnf("Skipping unsupported provider %v: %v.%v", uerr.Provider, resource.GetIndentification().ResourceType, resource.GetIndentification().Name)
+			logrus.Warnf("Skipping unsupported provider %v: %v.%v", uerr.Provider, resource.GetIdentification().ResourceType, resource.GetIdentification().Name)
 		}
 
 		if resource.IsSupported() {
@@ -56,11 +56,11 @@ func EstimateResource(resource resources.Resource) (*EstimationResource, *provid
 	if !resource.IsSupported() {
 		return estimateNotSupported(resource.(resources.UnsupportedResource)), nil
 	}
-	switch resource.GetIndentification().Provider {
+	switch resource.GetIdentification().Provider {
 	case providers.GCP:
 		return estimateGCP(resource), nil
 	default:
-		return nil, &providers.UnsupportedProviderError{Provider: resource.GetIndentification().Provider.String()}
+		return nil, &providers.UnsupportedProviderError{Provider: resource.GetIdentification().Provider.String()}
 	}
 }
 
@@ -80,7 +80,7 @@ func estimateGCP(resource resources.Resource) *EstimationResource {
 	}
 
 	// Regional grid emission per unit of time
-	regionEmissions, err := GCPRegionEmission(resource.GetIndentification().Region) // gCO2eq /kWh
+	regionEmissions, err := GCPRegionEmission(resource.GetIdentification().Region) // gCO2eq /kWh
 	if err != nil {
 		log.Fatalf("Error while getting region emissions for %v: %v", resource.GetAddress(), err)
 	}

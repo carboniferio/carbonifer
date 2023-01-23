@@ -13,7 +13,7 @@ import (
 )
 
 var resourceGCPComputeBasic = resources.ComputeResource{
-	Identification: &resources.ComputeResourceIdentification{
+	Identification: &resources.ResourceIdentification{
 		Name:         "machine-name-1",
 		ResourceType: "type-1",
 		Provider:     providers.GCP,
@@ -26,7 +26,7 @@ var resourceGCPComputeBasic = resources.ComputeResource{
 }
 
 var resourceGCPComputeCPUType = resources.ComputeResource{
-	Identification: &resources.ComputeResourceIdentification{
+	Identification: &resources.ResourceIdentification{
 		Name:         "machine-name-2",
 		ResourceType: "type-1",
 		Provider:     providers.GCP,
@@ -42,7 +42,7 @@ var resourceGCPComputeCPUType = resources.ComputeResource{
 }
 
 var resourceAWSComputeBasic = resources.ComputeResource{
-	Identification: &resources.ComputeResourceIdentification{
+	Identification: &resources.ResourceIdentification{
 		Name:         "machine-name-1",
 		ResourceType: "type-1",
 		Provider:     providers.AWS,

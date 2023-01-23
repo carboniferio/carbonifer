@@ -12,10 +12,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-func GetResource(tfResource tfjson.StateResource) resources.Resource {
+func GetResource(tfResource tfjson.StateResource, dataResources *map[string]resources.DataResource) resources.Resource {
 	resourceId := getResourceIdentification(tfResource)
 	if resourceId.ResourceType == "google_compute_instance" {
-		specs := getComputeResourceSpecs(tfResource)
+		specs := getComputeResourceSpecs(tfResource, dataResources)
 		return resources.ComputeResource{
 			Identification: resourceId,
 			Specs:          specs,
@@ -23,7 +23,7 @@ func GetResource(tfResource tfjson.StateResource) resources.Resource {
 	}
 	if resourceId.ResourceType == "google_compute_disk" ||
 		resourceId.ResourceType == "google_compute_region_disk" {
-		specs := getComputeDiskResourceSpecs(tfResource)
+		specs := getComputeDiskResourceSpecs(tfResource, dataResources)
 		return resources.ComputeResource{
 			Identification: resourceId,
 			Specs:          specs,
@@ -34,7 +34,7 @@ func GetResource(tfResource tfjson.StateResource) resources.Resource {
 	}
 }
 
-func getResourceIdentification(resource tfjson.StateResource) *resources.ComputeResourceIdentification {
+func getResourceIdentification(resource tfjson.StateResource) *resources.ResourceIdentification {
 	region := resource.AttributeValues["region"]
 	if region == nil {
 		if resource.AttributeValues["zone"] != nil {
@@ -48,16 +48,24 @@ func getResourceIdentification(resource tfjson.StateResource) *resources.Compute
 			region = ""
 		}
 	}
+	selfLink := ""
+	if resource.AttributeValues["self_link"] != nil {
+		selfLink = resource.AttributeValues["self_link"].(string)
+	}
 
-	return &resources.ComputeResourceIdentification{
+	return &resources.ResourceIdentification{
 		Name:         resource.Name,
 		ResourceType: resource.Type,
 		Provider:     providers.GCP,
 		Region:       fmt.Sprint(region),
+		SelfLink:     selfLink,
 	}
 }
 
-func getComputeResourceSpecs(resource tfjson.StateResource) *resources.ComputeResourceSpecs {
+func getComputeResourceSpecs(
+	resource tfjson.StateResource,
+	dataResources *map[string]resources.DataResource) *resources.ComputeResourceSpecs {
+
 	machine_type := resource.AttributeValues["machine_type"].(string)
 	zone := resource.AttributeValues["zone"].(string)
 	machineType := providers.GetGCPMachineType(machine_type, zone)
@@ -69,7 +77,7 @@ func getComputeResourceSpecs(resource tfjson.StateResource) *resources.ComputeRe
 	var disks []disk
 	bootDisks := resource.AttributeValues["boot_disk"].([]interface{})
 	for _, bootDiskBlock := range bootDisks {
-		bootDisk := getBootDisk(resource.Address, bootDiskBlock.(map[string]interface{}))
+		bootDisk := getBootDisk(resource.Address, bootDiskBlock.(map[string]interface{}), dataResources)
 		disks = append(disks, bootDisk)
 	}
 
@@ -99,8 +107,11 @@ func getComputeResourceSpecs(resource tfjson.StateResource) *resources.ComputeRe
 	}
 }
 
-func getComputeDiskResourceSpecs(resource tfjson.StateResource) *resources.ComputeResourceSpecs {
-	disk := getDisk(resource.Address, resource.AttributeValues, false)
+func getComputeDiskResourceSpecs(
+	resource tfjson.StateResource,
+	dataResources *map[string]resources.DataResource) *resources.ComputeResourceSpecs {
+
+	disk := getDisk(resource.Address, resource.AttributeValues, false, dataResources)
 	hddSize := decimal.Zero
 	ssdSize := decimal.Zero
 	if disk.isSSD {
@@ -121,18 +132,18 @@ type disk struct {
 	replicationFactor int32
 }
 
-func getBootDisk(resourceAddress string, bootDiskBlock map[string]interface{}) disk {
+func getBootDisk(resourceAddress string, bootDiskBlock map[string]interface{}, dataResources *map[string]resources.DataResource) disk {
 	var disk disk
 	initParams := bootDiskBlock["initialize_params"]
 	for _, iP := range initParams.([]interface{}) {
 		initParam := iP.(map[string]interface{})
-		disk = getDisk(resourceAddress, initParam, true)
+		disk = getDisk(resourceAddress, initParam, true, dataResources)
 
 	}
 	return disk
 }
 
-func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDisk bool) disk {
+func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDisk bool, dataResources *map[string]resources.DataResource) disk {
 	disk := disk{
 		sizeGb:            viper.GetFloat64("provider.gcp.boot_disk.size"),
 		isSSD:             true,
@@ -159,8 +170,19 @@ func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDis
 		} else {
 			disk.sizeGb = viper.GetFloat64("provider.gcp.disk.size")
 		}
-		log.Warningf("%v : Boot disk size not declared. Please set it! (otherwise we set it to 10gb) ", resourceAddress)
-		// TODO if size not provided we can try to get it from image
+		diskImageLink, ok := diskBlock["image"]
+		if ok {
+			image, ok := (*dataResources)[diskImageLink.(string)]
+			if ok {
+				disk.sizeGb = (image.(resources.DataImageResource)).DataImageSpecs.DiskSizeGb
+			} else {
+				log.Warningf("%v : Disk image does not have a size declared, considering it default to be 10Gb ", resourceAddress)
+			}
+		} else {
+			log.Warningf("%v : Boot disk size not declared. Please set it! (otherwise we assume 10gb) ", resourceAddress)
+
+		}
+
 	}
 
 	replicaZones := diskBlock["replica_zones"]
