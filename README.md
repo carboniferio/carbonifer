@@ -1,3 +1,4 @@
+[![Go](https://github.com/carboniferio/carbonifer/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/carboniferio/carbonifer/actions/workflows/go.yml)
 # Carbonifer CLI
 
 Command Line Tool to control carbon emission of your cloud infrastructure
