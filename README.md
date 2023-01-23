@@ -17,7 +17,7 @@ It can estimate carbon emissions of:
   - [ ] RDS
   - [ ] AutoScaling Group
 - GCP
-  - [ ] Compute Engine
+  - [x] Compute Engine
   - [ ] Cloud SQL
   - [ ] Instance Group
 - Azure
