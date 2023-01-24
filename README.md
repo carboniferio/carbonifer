@@ -247,8 +247,8 @@ The targeted terraform folder is provided as the only argument. By default, it u
 | `unit.time` |   | `h` | Time unit: `h` (hour), `m` (month), `y` (year)
 | `unit.power` |   | `w` | Power unit: `W` (watt) or `kW`
 | `unit.carbon` |   | `g` | Carbon emission in `g` (gram) or `kg`
-| `out.format` | `-f` `--format` | `text` | `text` or `json`
-| `out.file` | `-o` `--output`|  | file to write report to
+| `out.format` | `-f <format>` `--format=<format>` | `text` | `text` or `json`
+| `out.file` | `-o <filename>` `--output=<filename>`|  | file to write report to. Default is standard output.
 | `data.path` | `<arg>` |  | path of terraform files to analyse
 | `avg_cpu_use` |  | `0.5` | planned [average percentage of CPU used](doc/methodology.md#cpu)
 | `log` |  | `warn` | level of logs `info`, `debug`, `warn`, `error`
