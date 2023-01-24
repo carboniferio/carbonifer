@@ -2,9 +2,9 @@ unit:
   time: "h"
   power: "W"
   carbon: "g"
-  out:
-    file: ""
-    format: "text"
+out:
+  file: ""
+  format: "text"
 data:
   path: "test/data"
 avg_cpu_use: 0.5
