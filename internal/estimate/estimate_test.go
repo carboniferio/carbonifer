@@ -55,7 +55,7 @@ var resourceAWSComputeBasic = resources.ComputeResource{
 }
 
 func TestEstimateResource(t *testing.T) {
-	avg_cpu_use := viper.GetFloat64("provider.gcp.avg_cpu_use")
+	avg_cpu_use := viper.GetFloat64("avg_cpu_use")
 	type args struct {
 		resource resources.ComputeResource
 	}
