@@ -14,14 +14,21 @@ This tool can analyze Infrastructure as Code definitions such as:
 
 It can estimate Carbon Emissions of:
 
-- AWS
+- **Google Cloud Platform**
+  - [x] **Compute Engine**
+    - [x] Compute Instances (generic and custom machine types)
+    - [x] Disks (boot, persistent and region-persistent, hdd or ssd)
+    - [ ] Machines with GPUs
+
+The following will also be supported soon:
+
+- Google Cloud Platform
+  - [ ] Cloud SQL
+  - [ ] Instance Group
+- Amazon Web Services
   - [ ] EC2
   - [ ] RDS
   - [ ] AutoScaling Group
-- GCP
-  - [x] Compute Engine
-  - [ ] Cloud SQL
-  - [ ] Instance Group
 - Azure
   - [ ] Virtual Machines
   - [ ] Virtual Machine Scale Set
