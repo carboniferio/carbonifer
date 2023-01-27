@@ -37,6 +37,13 @@ The following will also be supported soon:
 NB: This list of resources will be extended in the future
 A list of supported resource types is available in the [Scope](doc/scope.md) document.
 
+## Install Carbonifer CLI
+
+```
+go install github.com/carboniferio/carbonifer@latest
+```
+Go will automatically install it in your $GOPATH/bin directory which should be in your $PATH.
+
 ## Plan
 
 `carbonifer plan` will read your Terraform folder and estimates Carbon Emissions.
