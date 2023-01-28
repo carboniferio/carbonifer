@@ -1,4 +1,4 @@
-[![Go](https://github.com/carboniferio/carbonifer/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/carboniferio/carbonifer/actions/workflows/go.yml)
+[![Go](https://github.com/carboniferio/carbonifer/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/carboniferio/carbonifer/actions/workflows/go.yml) [![Go Reference](https://pkg.go.dev/badge/github.com/carboniferio/carbonifer.svg)](https://pkg.go.dev/github.com/carboniferio/carbonifer)
 
 # Carbonifer CLI
 
