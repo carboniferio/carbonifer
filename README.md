@@ -1,6 +1,9 @@
 [![Go](https://github.com/carboniferio/carbonifer/actions/workflows/go.yml/badge.svg?branch=main)](https://github.com/carboniferio/carbonifer/actions/workflows/go.yml) [![Go Reference](https://pkg.go.dev/badge/github.com/carboniferio/carbonifer.svg)](https://pkg.go.dev/github.com/carboniferio/carbonifer)
 
-# Carbonifer CLI
+
+![Carbonifer Logo](https://user-images.githubusercontent.com/2562534/215261762-f3efb0a2-813b-43d9-a08c-53cdc8825112.png)
+
+https://carbonifer.io/
 
 Command Line Tool to control carbon emission of your cloud infrastructure.
 Reading Terraform files, `carbonifer plan` will estimate future Carbon Emissions of infrastructure and help make the right choices to reduce Carbon footprint.
