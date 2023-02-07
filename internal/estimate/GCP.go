@@ -27,20 +27,23 @@ func EstimateWattHourGCP(resource *resources.ComputeResource) decimal.Decimal {
 	log.Debugf("%v.%v Memory in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, memoryEstimationInWH)
 	storageInWh := estimateWattStorage(resource)
 	log.Debugf("%v.%v Storage in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, storageInWh)
+	gpuEstimationInWh := estimateWattGPU(resource)
+	log.Debugf("%v.%v GPUs in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, gpuEstimationInWh)
 	pue := GetEnergyCoefficients().GCP.PueAverage
 	log.Debugf("%v.%v PUE %v", resource.Identification.ResourceType, resource.Identification.Name, pue)
-	rawCarbonEstimate := decimal.Sum(
+	rawWattEstimate := decimal.Sum(
 		cpuEstimationInWh,
 		memoryEstimationInWH,
 		storageInWh,
+		gpuEstimationInWh,
 	)
 	replicationFactor := resource.Specs.ReplicationFactor
 	if replicationFactor == 0 {
 		replicationFactor = 1
 	}
-	carbonEstimateIngCO2h := pue.Mul(rawCarbonEstimate).Mul(decimal.NewFromInt32(replicationFactor))
-	log.Debugf("%v.%v Carbon in gCO2/h: %v", resource.Identification.ResourceType, resource.Identification.Name, carbonEstimateIngCO2h)
-	return carbonEstimateIngCO2h
+	wattEstimate := pue.Mul(rawWattEstimate).Mul(decimal.NewFromInt32(replicationFactor))
+	log.Debugf("%v.%v Energy in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, wattEstimate)
+	return wattEstimate
 }
 
 func estimateWattMem(resource *resources.ComputeResource) decimal.Decimal {

@@ -38,6 +38,10 @@ var resourceGCPComputeCPUType = resources.ComputeResource{
 		CPUType:    "Broadwell",
 		SsdStorage: decimal.NewFromFloat(1024),
 		HddStorage: decimal.NewFromFloat(2044),
+		GpuTypes: []string{
+			"nvidia-t4",
+			"nvidia-tesla-a100",
+		},
 	},
 }
 
@@ -79,8 +83,8 @@ func TestEstimateResource(t *testing.T) {
 			args: args{resourceGCPComputeCPUType},
 			want: &EstimationResource{
 				Resource:        &resourceGCPComputeCPUType,
-				Power:           decimal.NewFromFloat(9.5565660741),
-				CarbonEmissions: decimal.NewFromFloat(0.5638373983),
+				Power:           decimal.NewFromFloat(318.1165660741),
+				CarbonEmissions: decimal.NewFromFloat(18.7688773983),
 				AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
 			},
 		},
@@ -120,8 +124,8 @@ func TestEstimateResourceKilo(t *testing.T) {
 			args: args{resourceGCPComputeCPUType},
 			want: &EstimationResource{
 				Resource:        &resourceGCPComputeCPUType,
-				Power:           decimal.NewFromFloat(6880.7275733647).RoundFloor(10),
-				CarbonEmissions: decimal.NewFromFloat(292.2933073165).RoundFloor(10),
+				Power:           decimal.NewFromFloat(229043.9275733647).RoundFloor(10),
+				CarbonEmissions: decimal.NewFromFloat(9729.7860433165).RoundFloor(10),
 				AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
 			},
 		},
@@ -209,14 +213,14 @@ func TestEstimateResources(t *testing.T) {
 					},
 					{
 						Resource:        &resourceGCPComputeCPUType,
-						Power:           decimal.NewFromFloat(9.5565660741),
-						CarbonEmissions: decimal.NewFromFloat(0.5638373983),
+						Power:           decimal.NewFromFloat(318.1165660741),
+						CarbonEmissions: decimal.NewFromFloat(18.7688773983),
 						AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
 					},
 				},
 				Total: EstimationTotal{
-					Power:           decimal.NewFromFloat(17.1573500741),
-					CarbonEmissions: decimal.NewFromFloat(1.0122836543),
+					Power:           decimal.NewFromFloat(325.7173500741),
+					CarbonEmissions: decimal.NewFromFloat(19.2173236543),
 					ResourcesCount:  2,
 				},
 			},
