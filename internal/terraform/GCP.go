@@ -98,7 +98,7 @@ func getComputeResourceSpecs(
 		}
 	}
 	return &resources.ComputeResourceSpecs{
-		Gpu:        machineType.Gpus,
+		GpuTypes:   machineType.GPUTypes,
 		VCPUs:      machineType.Vcpus,
 		MemoryMb:   machineType.MemoryMb,
 		CPUType:    CPUType,

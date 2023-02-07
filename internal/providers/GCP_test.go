@@ -25,7 +25,7 @@ func TestGetGCPMachineType(t *testing.T) {
 			want: MachineType{
 				Name:     "e2-standard-2",
 				Vcpus:    2,
-				Gpus:     0,
+				GPUTypes: nil,
 				MemoryMb: 8192,
 				CpuTypes: []string{
 					"Skylake", "Broadwell", "Haswell", "AMD EPYC Rome", "AMD EPYC Milan",
@@ -38,7 +38,7 @@ func TestGetGCPMachineType(t *testing.T) {
 			want: MachineType{
 				Name:     "custom-2-2048",
 				Vcpus:    2,
-				Gpus:     0,
+				GPUTypes: nil,
 				MemoryMb: 2048,
 			},
 		},

@@ -96,18 +96,18 @@ func getMachineTypesForZone(client *compute.Service, project string, zone string
 			Vcpus:    int32(machineType.GuestCpus),
 			MemoryMb: int32(machineType.MemoryMb),
 			CpuTypes: getCPUTypes(machineType.Name),
-			Gpus:     getGPUs(machineType),
+			GPUTypes: getGPUs(machineType),
 		}
 	}
 	return machineTypes
 }
 
-func getGPUs(machineType *compute.MachineType) int32 {
-	var count int32 = 0
+func getGPUs(machineType *compute.MachineType) []string {
+	var gpuTypes []string
 	for _, accelerator := range machineType.Accelerators {
-		count += int32(accelerator.GuestAcceleratorCount)
+		gpuTypes = append(gpuTypes, accelerator.GuestAcceleratorType)
 	}
-	return count
+	return gpuTypes
 }
 
 func main() {

@@ -68,7 +68,7 @@ Unless set by the user in terraform file, the default size can be hard to find:
 
 ### GPU
 
-_To be implemented_
+As 
 
 ## Carbon Intensity
 

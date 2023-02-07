@@ -114,7 +114,7 @@ func TestGetResources(t *testing.T) {
 				Region:       "europe-west9",
 			},
 			Specs: &resources.ComputeResourceSpecs{
-				Gpu:               0,
+				GpuTypes:          nil,
 				HddStorage:        decimal.NewFromInt(1024),
 				SsdStorage:        decimal.Zero,
 				MemoryMb:          0,
@@ -131,7 +131,7 @@ func TestGetResources(t *testing.T) {
 				Region:       "europe-west9",
 			},
 			Specs: &resources.ComputeResourceSpecs{
-				Gpu:        0,
+				GpuTypes:   nil,
 				HddStorage: decimal.Zero,
 				SsdStorage: decimal.NewFromFloat(567).Add(decimal.NewFromFloat(375).Add(decimal.NewFromFloat(375))),
 				MemoryMb:   2480,
@@ -147,7 +147,7 @@ func TestGetResources(t *testing.T) {
 				Region:       "europe-west9",
 			},
 			Specs: &resources.ComputeResourceSpecs{
-				Gpu:        0,
+				GpuTypes:   nil,
 				HddStorage: decimal.NewFromFloat(10),
 				SsdStorage: decimal.Zero,
 				MemoryMb:   4098,
@@ -171,7 +171,7 @@ func TestGetResources(t *testing.T) {
 				Region:       "europe-west9",
 			},
 			Specs: &resources.ComputeResourceSpecs{
-				Gpu:               0,
+				GpuTypes:          nil,
 				HddStorage:        decimal.NewFromInt(1024),
 				SsdStorage:        decimal.Zero,
 				MemoryMb:          0,
@@ -228,7 +228,7 @@ func TestGetResources_DiskImage(t *testing.T) {
 				Region:       "europe-west9",
 			},
 			Specs: &resources.ComputeResourceSpecs{
-				Gpu:               0,
+				GpuTypes:          nil,
 				HddStorage:        decimal.NewFromFloat(10),
 				SsdStorage:        decimal.Zero,
 				MemoryMb:          0,

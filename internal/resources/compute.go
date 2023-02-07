@@ -8,7 +8,7 @@ import (
 )
 
 type ComputeResourceSpecs struct {
-	Gpu               int32
+	GpuTypes          []string
 	HddStorage        decimal.Decimal
 	SsdStorage        decimal.Decimal
 	MemoryMb          int32
