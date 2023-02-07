@@ -31,6 +31,17 @@
       "cpuTypes": [
         "Cascade Lake"
       ]
+    },
+    "a2-highgpu-1g": {
+      "name": "a2-highgpu-1g",
+      "vcpus": 12,
+      "gpus": [
+        "nvidia-tesla-a100"
+      ],
+      "memoryMb": 87040,
+      "cpuTypes": [
+        "Cascade Lake"
+      ]
     }
   }
 }

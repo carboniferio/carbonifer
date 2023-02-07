@@ -45,6 +45,34 @@ var regionDisk tfjson.StateResource = tfjson.StateResource{
 	},
 }
 
+var gpuAttachedMachine tfjson.StateResource = tfjson.StateResource{
+	Address: "google_compute_instance.attachedgpu",
+	Type:    "google_compute_instance",
+	Name:    "attachedgpu",
+	AttributeValues: map[string]interface{}{
+		"name":         "attachedgpu",
+		"machine_type": "n2-standard-2",
+		"zone":         "europe-west9-a",
+		"boot_disk":    []interface{}{},
+		"guest_accelerator": map[string]interface{}{
+			"type":  "nvidia-tesla-k80",
+			"count": 2,
+		},
+	},
+}
+
+var gpuDefaultMachine tfjson.StateResource = tfjson.StateResource{
+	Address: "google_compute_instance.defaultgpu",
+	Type:    "google_compute_instance",
+	Name:    "defaultgpu",
+	AttributeValues: map[string]interface{}{
+		"name":         "defaultgpu",
+		"machine_type": "a2-highgpu-1g",
+		"zone":         "europe-west9-a",
+		"boot_disk":    []interface{}{},
+	},
+}
+
 func TestGetResource(t *testing.T) {
 	type args struct {
 		tfResource tfjson.StateResource
@@ -108,6 +136,51 @@ func TestGetResource(t *testing.T) {
 					HddStorage:        decimal.Zero,
 					SsdStorage:        decimal.NewFromInt(1024),
 					ReplicationFactor: 2,
+				},
+			},
+		},
+		{
+			name: "gpu attached",
+			args: args{
+				tfResource: gpuAttachedMachine,
+			},
+			want: resources.ComputeResource{
+				Identification: &resources.ResourceIdentification{
+					Name:         "attachedgpu",
+					ResourceType: "google_compute_instance",
+					Provider:     providers.GCP,
+					Region:       "europe-west9",
+				},
+				Specs: &resources.ComputeResourceSpecs{
+					GpuTypes: []string{
+						"nvidia-tesla-k80",
+						"nvidia-tesla-k80",
+					},
+					HddStorage: decimal.Zero,
+					SsdStorage: decimal.Zero,
+				},
+			},
+		},
+		{
+			name: "gpu default",
+			args: args{
+				tfResource: gpuDefaultMachine,
+			},
+			want: resources.ComputeResource{
+				Identification: &resources.ResourceIdentification{
+					Name:         "defaultgpu",
+					ResourceType: "google_compute_instance",
+					Provider:     providers.GCP,
+					Region:       "europe-west9",
+				},
+				Specs: &resources.ComputeResourceSpecs{
+					GpuTypes: []string{
+						"nvidia-tesla-a100",
+					},
+					VCPUs:      int32(12),
+					MemoryMb:   int32(87040),
+					HddStorage: decimal.Zero,
+					SsdStorage: decimal.Zero,
 				},
 			},
 		},
