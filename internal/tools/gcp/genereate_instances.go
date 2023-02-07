@@ -53,7 +53,7 @@ type MachineFamily struct {
 func getCPUTypes(machineType string) []string {
 	if cpuTypes == nil {
 		// cpu_types.json manually generated from: https://cloud.google.com/compute/docs/machine-resource
-		jsonFile, err := os.Open("cpu_types.json")
+		jsonFile, err := os.Open("internal/tools/gcp/cpu_types.json")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -105,7 +105,9 @@ func getMachineTypesForZone(client *compute.Service, project string, zone string
 func getGPUs(machineType *compute.MachineType) []string {
 	var gpuTypes []string
 	for _, accelerator := range machineType.Accelerators {
-		gpuTypes = append(gpuTypes, accelerator.GuestAcceleratorType)
+		for i := 0; i < int(accelerator.GuestAcceleratorCount); i++ {
+			gpuTypes = append(gpuTypes, accelerator.GuestAcceleratorType)
+		}
 	}
 	return gpuTypes
 }

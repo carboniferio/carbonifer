@@ -7668,6 +7668,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -7679,6 +7680,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -7690,6 +7694,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -10353,6 +10364,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -10364,6 +10376,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -10375,6 +10390,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -15349,6 +15371,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -15360,6 +15383,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -15371,6 +15397,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -16616,6 +16649,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -16627,6 +16661,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -16638,6 +16675,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -28182,6 +28226,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -28193,6 +28238,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -28204,6 +28252,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -29810,6 +29865,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -29821,6 +29877,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -29832,6 +29891,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -29843,6 +29909,21 @@
       "name": "a2-megagpu-16g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 1392640,
@@ -62989,6 +63070,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -63000,6 +63082,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -63011,6 +63096,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -63022,6 +63114,21 @@
       "name": "a2-megagpu-16g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 1392640,
@@ -64728,6 +64835,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -64739,6 +64847,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -64750,6 +64861,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -64761,6 +64879,21 @@
       "name": "a2-megagpu-16g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 1392640,
@@ -90794,6 +90927,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -90805,6 +90939,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -90816,6 +90953,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -90827,6 +90971,21 @@
       "name": "a2-megagpu-16g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 1392640,
@@ -92556,6 +92715,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -92567,6 +92727,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -92578,6 +92741,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -92589,6 +92759,21 @@
       "name": "a2-megagpu-16g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 1392640,
@@ -94318,6 +94503,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -94329,6 +94515,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -94340,6 +94529,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -94351,6 +94547,21 @@
       "name": "a2-megagpu-16g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 1392640,
@@ -94373,6 +94584,7 @@
       "name": "a2-ultragpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-a100-80gb",
         "nvidia-a100-80gb"
       ],
       "memoryMb": 348160,
@@ -94384,6 +94596,9 @@
       "name": "a2-ultragpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
         "nvidia-a100-80gb"
       ],
       "memoryMb": 696320,
@@ -94395,6 +94610,13 @@
       "name": "a2-ultragpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
         "nvidia-a100-80gb"
       ],
       "memoryMb": 1392640,
@@ -96016,6 +96238,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -96027,6 +96250,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -96038,6 +96264,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -96049,6 +96282,21 @@
       "name": "a2-megagpu-16g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 1392640,
@@ -97581,6 +97829,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -97592,6 +97841,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -97603,6 +97855,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -105304,6 +105563,7 @@
       "name": "a2-ultragpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-a100-80gb",
         "nvidia-a100-80gb"
       ],
       "memoryMb": 348160,
@@ -105315,6 +105575,9 @@
       "name": "a2-ultragpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
         "nvidia-a100-80gb"
       ],
       "memoryMb": 696320,
@@ -105326,6 +105589,13 @@
       "name": "a2-ultragpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
+        "nvidia-a100-80gb",
         "nvidia-a100-80gb"
       ],
       "memoryMb": 1392640,
@@ -112325,6 +112595,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -112336,6 +112607,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -112347,6 +112621,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -119782,6 +120063,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -119793,6 +120075,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -119804,6 +120089,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
@@ -123562,6 +123854,7 @@
       "name": "a2-highgpu-2g",
       "vcpus": 24,
       "gpus": [
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 174080,
@@ -123573,6 +123866,9 @@
       "name": "a2-highgpu-4g",
       "vcpus": 48,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 348160,
@@ -123584,6 +123880,13 @@
       "name": "a2-highgpu-8g",
       "vcpus": 96,
       "gpus": [
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
+        "nvidia-tesla-a100",
         "nvidia-tesla-a100"
       ],
       "memoryMb": 696320,
