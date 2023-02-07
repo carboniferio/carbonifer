@@ -1,0 +1,13 @@
+name,min watts,max watts
+nvidia-tesla-m60,35,306
+nvidia-t4-8,71
+nvidia-tesla-k80,35,306
+nvidia-tesla-v100,35,306
+nvidia-tesla-a100,46,407
+nvidia-k520,26,229
+nvidia-a10g,18,153
+nvidia-tesla-p4,9,76.5
+nvidia-tesla-p100,36,306
+nvidia-tesla-p40,30,255
+amd-radeon-pro-v520,26,229
+xilinx-alveo-u250,27,229.5

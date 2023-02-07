@@ -68,7 +68,13 @@ Unless set by the user in terraform file, the default size can be hard to find:
 
 ### GPU
 
-As 
+Similarily to [CPU](#cpu), GPU energy consumption is calculated from the GPU type from min/max Watt described in [Carbon Footprint Calculator](https://www.cloudcarbonfootprint.org/docs/methodology/#graphic-processing-units-gpus), we use min/max watt from constant file [GPU Watt per GPU Type](../data/gpu_watt.csv) and apply same formula as [CPU](#cpu).
+
+Average GPU Utilization is also read from:
+
+- user's config file in `$HOME/.carbonifer/config.yml`), variable `avg_gpu_use`
+- targeted folder config file in `$TERRAFORM_PROJECT/.carbonifer/config.yml`), variable `avg_gpu_use`
+- The default is `0.5` (50%)
 
 ## Carbon Intensity
 
