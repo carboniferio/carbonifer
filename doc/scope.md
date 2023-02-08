@@ -21,7 +21,7 @@ Not all resource types need to be supported if their energy use is negligible or
 
 | Resource | Limitations  | Comment |
 |---|---|---|
-| `google_compute_instance`  | GCP not supported yet | Custom machine and nested boot disk type supported |
+| `google_compute_instance`  | | Custom machine, nested boot disk type and GPU supported |
 | `google_compute_disk`| `size` needs to be set, otherwise get it from image| |
 | `google_compute_region_disk` | `size` needs to be set, otherwise get it from image| |
 
