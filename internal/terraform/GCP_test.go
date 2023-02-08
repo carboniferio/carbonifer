@@ -54,9 +54,11 @@ var gpuAttachedMachine tfjson.StateResource = tfjson.StateResource{
 		"machine_type": "n2-standard-2",
 		"zone":         "europe-west9-a",
 		"boot_disk":    []interface{}{},
-		"guest_accelerator": map[string]interface{}{
-			"type":  "nvidia-tesla-k80",
-			"count": 2,
+		"guest_accelerator": []interface{}{
+			map[string]interface{}{
+				"type":  "nvidia-tesla-k80",
+				"count": float64(2),
+			},
 		},
 	},
 }

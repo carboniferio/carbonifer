@@ -105,13 +105,16 @@ func getComputeResourceSpecs(
 	}
 
 	gpus := machineType.GPUTypes
-	gaI, ok := resource.AttributeValues["guest_accelerator"]
+	gasI, ok := resource.AttributeValues["guest_accelerator"]
 	if ok {
-		ga := gaI.(map[string]interface{})
-		gpuCount := ga["count"].(int)
-		gpuType := ga["type"].(string)
-		for i := 0; i < gpuCount; i++ {
-			gpus = append(gpus, gpuType)
+		guestAccelerators := gasI.([]interface{})
+		for _, gaI := range guestAccelerators {
+			ga := gaI.(map[string]interface{})
+			gpuCount := ga["count"].(float64)
+			gpuType := ga["type"].(string)
+			for i := float64(0); i < gpuCount; i++ {
+				gpus = append(gpus, gpuType)
+			}
 		}
 	}
 

@@ -131,12 +131,15 @@ func TestGetResources(t *testing.T) {
 				Region:       "europe-west9",
 			},
 			Specs: &resources.ComputeResourceSpecs{
-				GpuTypes:   nil,
 				HddStorage: decimal.Zero,
 				SsdStorage: decimal.NewFromFloat(567).Add(decimal.NewFromFloat(375).Add(decimal.NewFromFloat(375))),
-				MemoryMb:   2480,
-				VCPUs:      1,
-				CPUType:    "",
+				MemoryMb:   87040,
+				VCPUs:      12,
+				GpuTypes: []string{
+					"nvidia-tesla-a100", // Default of a2-highgpu-1g"
+					"nvidia-tesla-k80",  // Added by user in main.tf
+					"nvidia-tesla-k80",  // Added by user in main.tf
+				},
 			},
 		},
 		resources.ComputeResource{
