@@ -19,7 +19,7 @@ import (
 type MachineType struct {
 	Name     string   `json:"name"`
 	Vcpus    int32    `json:"vcpus"`
-	Gpus     int32    `json:"gpus"`
+	GPUTypes []string `json:"gpus"`
 	MemoryMb int32    `json:"memoryMb"`
 	CpuTypes []string `json:"cpuTypes"`
 }

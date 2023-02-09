@@ -3,7 +3,7 @@
     "e2-standard-2": {
       "name": "e2-standard-2",
       "vcpus": 2,
-      "gpus": 0,
+      "gpus": null,
       "memoryMb": 8192,
       "cpuTypes": [
         "Skylake",
@@ -16,7 +16,7 @@
     "n2d-highcpu-2": {
       "name": "n2d-highcpu-2",
       "vcpus": 2,
-      "gpus": 0,
+      "gpus": null,
       "memoryMb": 2048,
       "cpuTypes": [
         "AMD EPYC Rome",
@@ -26,8 +26,19 @@
     "c2-standard-4": {
       "name": "c2-standard-4",
       "vcpus": 4,
-      "gpus": 0,
+      "gpus": null,
       "memoryMb": 16384,
+      "cpuTypes": [
+        "Cascade Lake"
+      ]
+    },
+    "a2-highgpu-1g": {
+      "name": "a2-highgpu-1g",
+      "vcpus": 12,
+      "gpus": [
+        "nvidia-tesla-a100"
+      ],
+      "memoryMb": 87040,
       "cpuTypes": [
         "Cascade Lake"
       ]

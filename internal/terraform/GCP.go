@@ -75,17 +75,23 @@ func getComputeResourceSpecs(
 	}
 
 	var disks []disk
-	bootDisks := resource.AttributeValues["boot_disk"].([]interface{})
-	for _, bootDiskBlock := range bootDisks {
-		bootDisk := getBootDisk(resource.Address, bootDiskBlock.(map[string]interface{}), dataResources)
-		disks = append(disks, bootDisk)
+	bd, ok_bd := resource.AttributeValues["boot_disk"]
+	if ok_bd {
+		bootDisks := bd.([]interface{})
+		for _, bootDiskBlock := range bootDisks {
+			bootDisk := getBootDisk(resource.Address, bootDiskBlock.(map[string]interface{}), dataResources)
+			disks = append(disks, bootDisk)
+		}
 	}
 
-	scratchDisks := resource.AttributeValues["scratch_disk"].([]interface{})
-	for range scratchDisks {
-		// Each scratch disk is 375GB
-		//  source: https://cloud.google.com/compute/docs/disks#localssds
-		disks = append(disks, disk{isSSD: true, sizeGb: 375})
+	sd, ok_sd := resource.AttributeValues["scratch_disk"]
+	if ok_sd {
+		scratchDisks := sd.([]interface{})
+		for range scratchDisks {
+			// Each scratch disk is 375GB
+			//  source: https://cloud.google.com/compute/docs/disks#localssds
+			disks = append(disks, disk{isSSD: true, sizeGb: 375})
+		}
 	}
 
 	hddSize := decimal.Zero
@@ -97,8 +103,23 @@ func getComputeResourceSpecs(
 			hddSize = hddSize.Add(decimal.NewFromFloat(disk.sizeGb))
 		}
 	}
+
+	gpus := machineType.GPUTypes
+	gasI, ok := resource.AttributeValues["guest_accelerator"]
+	if ok {
+		guestAccelerators := gasI.([]interface{})
+		for _, gaI := range guestAccelerators {
+			ga := gaI.(map[string]interface{})
+			gpuCount := ga["count"].(float64)
+			gpuType := ga["type"].(string)
+			for i := float64(0); i < gpuCount; i++ {
+				gpus = append(gpus, gpuType)
+			}
+		}
+	}
+
 	return &resources.ComputeResourceSpecs{
-		Gpu:        machineType.Gpus,
+		GpuTypes:   gpus,
 		VCPUs:      machineType.Vcpus,
 		MemoryMb:   machineType.MemoryMb,
 		CPUType:    CPUType,

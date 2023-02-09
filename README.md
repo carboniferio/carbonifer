@@ -21,7 +21,7 @@ It can estimate Carbon Emissions of:
   - [x] **Compute Engine**
     - [x] Compute Instances (generic and custom machine types)
     - [x] Disks (boot, persistent and region-persistent, hdd or ssd)
-    - [ ] Machines with GPUs
+    - [X] Machines with GPUs
 
 The following will also be supported soon:
 

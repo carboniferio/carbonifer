@@ -13,7 +13,7 @@ resource "google_compute_subnetwork" "first" {
 
 resource "google_compute_instance" "first" {
   name         = "cbf-test-vm"
-  machine_type = "custom-1-2480"
+  machine_type = "a2-highgpu-1g"
   zone         = "europe-west9-a"
   tags         = ["ssh"]
 
@@ -41,6 +41,11 @@ resource "google_compute_instance" "first" {
     access_config {
       # Include this section to give the VM an external IP address
     }
+  }
+
+  guest_accelerator {
+    type = "nvidia-tesla-k80"
+    count = 2
   }
 }
 
