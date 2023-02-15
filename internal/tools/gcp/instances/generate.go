@@ -10,39 +10,15 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"golang.org/x/oauth2/google"
-	"google.golang.org/api/cloudresourcemanager/v1"
 	"google.golang.org/api/compute/v1"
-	"google.golang.org/api/option"
 
 	"github.com/carboniferio/carbonifer/internal/providers"
+	tools_gcp "github.com/carboniferio/carbonifer/internal/tools/gcp"
 )
 
 const DEFAULT_ZONE = "us-central1-a"
 
 var cpuTypes map[string]MachineFamily
-
-func getProjectId() string {
-	ctx := context.Background()
-
-	// Get the default client using the default credentials
-	client, err := google.DefaultClient(ctx)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	crmService, err := cloudresourcemanager.NewService(ctx, option.WithHTTPClient(client))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// Set the project ID
-	projects, err := crmService.Projects.List().Do()
-	if err != nil {
-		log.Fatal(err)
-	}
-	return projects.Projects[0].Name
-}
 
 type MachineFamily struct {
 	Name         string   `json:"Name"`
@@ -53,7 +29,7 @@ type MachineFamily struct {
 func getCPUTypes(machineType string) []string {
 	if cpuTypes == nil {
 		// cpu_types.json manually generated from: https://cloud.google.com/compute/docs/machine-resource
-		jsonFile, err := os.Open("internal/tools/gcp/cpu_types.json")
+		jsonFile, err := os.Open("internal/tools/gcp/instances/cpu_types.json")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -122,7 +98,7 @@ func main() {
 		log.Fatalf("Error creating Compute Engine client: %v", err)
 	}
 
-	project := getProjectId()
+	project := tools_gcp.GetProjectId()
 
 	machineTypesByZone := make(map[string]map[string]providers.MachineType)
 	zones, err := client.Zones.List(project).Do()

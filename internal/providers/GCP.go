@@ -24,6 +24,13 @@ type MachineType struct {
 	CpuTypes []string `json:"cpuTypes"`
 }
 
+type SqlTier struct {
+	Name        string `json:"name"`
+	Vcpus       int64  `json:"vcpus"`
+	MemoryMb    int64  `json:"memoryMb"`
+	DiskQuotaGB int64  `json:"DiskQuotaGB"`
+}
+
 type CPUWatt struct {
 	Architecture        string
 	MinWatts            decimal.Decimal

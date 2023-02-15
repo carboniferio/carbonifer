@@ -7,5 +7,5 @@ Requirement:
 - go installed (1.17)
 
 ```bash
-go run internal/tools/gcp/genereate_instances.go > data/gcp_instances.json
+go run internal/tools/gcp/instances/generate.go > data/gcp_instances.json
 ```
