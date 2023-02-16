@@ -191,6 +191,23 @@ func TestGetResources(t *testing.T) {
 				Region:       "europe-west9",
 			},
 		},
+		resources.ComputeResource{
+			Identification: &resources.ResourceIdentification{
+				Name:         "instance",
+				ResourceType: "google_sql_database_instance",
+				Provider:     providers.GCP,
+				Region:       "europe-west9",
+			},
+			Specs: &resources.ComputeResourceSpecs{
+				GpuTypes:          nil,
+				HddStorage:        decimal.Zero,
+				SsdStorage:        decimal.NewFromFloat(10),
+				MemoryMb:          15360,
+				VCPUs:             4,
+				CPUType:           "",
+				ReplicationFactor: 2,
+			},
+		},
 	}
 
 	resources, _ := GetResources()

@@ -93,3 +93,14 @@ resource "google_compute_instance" "second" {
     }
   }
 }
+
+resource "google_sql_database_instance" "instance" {
+  name             = "my-database-instance"
+  region           = "europe-west9"
+  database_version = "POSTGRES_14"
+  settings {
+    tier = "db-n1-standard-4"
+    availability_type = "REGIONAL"
+  }
+}
+
