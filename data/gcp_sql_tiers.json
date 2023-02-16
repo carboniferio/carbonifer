@@ -1,0 +1,104 @@
+{
+  "db-f1-micro": {
+    "name": "db-f1-micro",
+    "vcpus": 1,
+    "memoryMb": 614,
+    "DiskQuotaGB": 3054
+  },
+  "db-g1-small": {
+    "name": "db-g1-small",
+    "vcpus": 1,
+    "memoryMb": 1740,
+    "DiskQuotaGB": 3054
+  },
+  "db-n1-highmem-16": {
+    "name": "db-n1-highmem-16",
+    "vcpus": 16,
+    "memoryMb": 106496,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-highmem-2": {
+    "name": "db-n1-highmem-2",
+    "vcpus": 2,
+    "memoryMb": 13312,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-highmem-32": {
+    "name": "db-n1-highmem-32",
+    "vcpus": 32,
+    "memoryMb": 212992,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-highmem-4": {
+    "name": "db-n1-highmem-4",
+    "vcpus": 4,
+    "memoryMb": 26624,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-highmem-64": {
+    "name": "db-n1-highmem-64",
+    "vcpus": 64,
+    "memoryMb": 425984,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-highmem-8": {
+    "name": "db-n1-highmem-8",
+    "vcpus": 8,
+    "memoryMb": 53248,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-highmem-96": {
+    "name": "db-n1-highmem-96",
+    "vcpus": 96,
+    "memoryMb": 638976,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-standard-1": {
+    "name": "db-n1-standard-1",
+    "vcpus": 1,
+    "memoryMb": 3840,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-standard-16": {
+    "name": "db-n1-standard-16",
+    "vcpus": 16,
+    "memoryMb": 61440,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-standard-2": {
+    "name": "db-n1-standard-2",
+    "vcpus": 2,
+    "memoryMb": 7680,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-standard-32": {
+    "name": "db-n1-standard-32",
+    "vcpus": 32,
+    "memoryMb": 122880,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-standard-4": {
+    "name": "db-n1-standard-4",
+    "vcpus": 4,
+    "memoryMb": 15360,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-standard-64": {
+    "name": "db-n1-standard-64",
+    "vcpus": 64,
+    "memoryMb": 245760,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-standard-8": {
+    "name": "db-n1-standard-8",
+    "vcpus": 8,
+    "memoryMb": 30720,
+    "DiskQuotaGB": 65536
+  },
+  "db-n1-standard-96": {
+    "name": "db-n1-standard-96",
+    "vcpus": 96,
+    "memoryMb": 368640,
+    "DiskQuotaGB": 65536
+  }
+}

@@ -32,4 +32,6 @@ type EstimationInfo struct {
 	UnitWattTime            string
 	UnitCarbonEmissionsTime string
 	DateTime                time.Time
+	AverageCPUUsage         float64
+	AverageGPUUsage         float64
 }

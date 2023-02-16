@@ -44,6 +44,8 @@ func EstimateResources(resourceList []resources.Resource) EstimationReport {
 			UnitWattTime:            fmt.Sprintf("%s%s", viper.Get("unit.power"), viper.Get("unit.time")),
 			UnitCarbonEmissionsTime: fmt.Sprintf("%sCO2eq/%s", viper.Get("unit.carbon"), viper.Get("unit.time")),
 			DateTime:                time.Now(),
+			AverageCPUUsage:         viper.GetFloat64("provider.gcp.avg_cpu_use"),
+			AverageGPUUsage:         viper.GetFloat64("provider.gcp.avg_gpu_use"),
 		},
 		Resources:            estimationResources,
 		UnsupportedResources: unsupportedResources,

@@ -24,6 +24,13 @@ type MachineType struct {
 	CpuTypes []string `json:"cpuTypes"`
 }
 
+type SqlTier struct {
+	Name        string `json:"name"`
+	Vcpus       int64  `json:"vcpus"`
+	MemoryMb    int64  `json:"memoryMb"`
+	DiskQuotaGB int64  `json:"DiskQuotaGB"`
+}
+
 type CPUWatt struct {
 	Architecture        string
 	MinWatts            decimal.Decimal
@@ -33,6 +40,7 @@ type CPUWatt struct {
 
 var gcpInstanceTypes map[string]map[string]MachineType
 var gcpWattPerCPU map[string]CPUWatt
+var gcpSQLTiers map[string]SqlTier
 
 func GetGCPMachineType(machineTypeStr string, zone string) MachineType {
 	log.Debugf("  Getting info for GCP machine type: %v", machineTypeStr)
@@ -111,4 +119,48 @@ func GetCPUWatt(cpu string) CPUWatt {
 		}
 	}
 	return gcpWattPerCPU[strings.ToLower(cpu)]
+}
+
+func GetGCPSQLTier(tierName string) SqlTier {
+	log.Debugf("  Getting info for GCP SQL tier: %v", tierName)
+	// Custom format db-custom-<number_cpus>-<ram_mb>
+	customTierRegex := regexp.MustCompile(`db-custom-(?P<vcpus>\d+)-(?P<mem>\d+)`)
+	if customTierRegex.MatchString(tierName) {
+		log.Debugf("  custom SQL Tier: %v", tierName)
+		customValues := customTierRegex.FindAllStringSubmatch(tierName, -1)[0]
+		if len(customValues) < 3 {
+			log.Fatalf("GCP Custom tier name malformed : %v", tierName)
+		}
+		vCPUs, err := strconv.Atoi(customValues[1])
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
+		ram, err := strconv.Atoi(customValues[2])
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
+		return SqlTier{
+			Name:     tierName,
+			Vcpus:    int64(vCPUs),
+			MemoryMb: int64(ram),
+		}
+	}
+	if gcpSQLTiers == nil {
+		gcpSQLTierDataFile := filepath.Join(viper.GetString("data.path"), "gcp_sql_tiers.json")
+		log.Debugf("  reading gcp sql tier data from: %v", gcpSQLTierDataFile)
+		jsonFile, err := os.Open(gcpSQLTierDataFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer jsonFile.Close()
+
+		byteValue, _ := io.ReadAll(jsonFile)
+		err = json.Unmarshal([]byte(byteValue), &gcpSQLTiers)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	return gcpSQLTiers[tierName]
+
 }

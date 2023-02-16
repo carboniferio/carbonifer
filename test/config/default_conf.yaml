@@ -7,6 +7,9 @@ out:
   format: "text"
 data:
   path: "test/data"
-avg_cpu_use: 0.5
+provider:
+  gcp:
+    avg_cpu_use: 0.5
+    avg_gpu_use: 0.5
 log:
   level : "warn"
