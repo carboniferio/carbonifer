@@ -20,7 +20,7 @@ func (r DataImageResource) GetAddress() string {
 }
 
 func (r DataImageResource) GetKey() string {
-	return r.GetIdentification().SelfLink
+	return r.GetAddress()
 }
 
 type DataResource interface {

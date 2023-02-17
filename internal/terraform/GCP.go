@@ -201,14 +201,15 @@ func getDisk(resourceAddress string, diskBlock map[string]*tfjson.Expression, is
 		} else {
 			disk.sizeGb = viper.GetFloat64("provider.gcp.disk.size")
 		}
-		diskImageLinkExpr, ok := diskBlock["image"]
-		if ok {
-			diskImageLink := diskImageLinkExpr.ConstantValue
-			image, ok := (*dataResources)[diskImageLink.(string)]
-			if ok {
-				disk.sizeGb = (image.(resources.DataImageResource)).DataImageSpecs.DiskSizeGb
-			} else {
-				log.Warningf("%v : Disk image does not have a size declared, considering it default to be 10Gb ", resourceAddress)
+		diskImageLinkExpr, okImage := diskBlock["image"]
+		if okImage {
+			for _, ref := range diskImageLinkExpr.References {
+				image, ok := (*dataResources)[ref]
+				if ok {
+					disk.sizeGb = (image.(resources.DataImageResource)).DataImageSpecs.DiskSizeGb
+				} else {
+					log.Warningf("%v : Disk image does not have a size declared, considering it default to be 10Gb ", resourceAddress)
+				}
 			}
 		} else {
 			log.Warningf("%v : Boot disk size not declared. Please set it! (otherwise we assume 10gb) ", resourceAddress)
