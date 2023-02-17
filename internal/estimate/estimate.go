@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func EstimateResources(resourceList []resources.Resource) EstimationReport {
+func EstimateResources(resourceList map[string]resources.Resource) EstimationReport {
 
 	var estimationResources []EstimationResource
 	var unsupportedResources []resources.Resource

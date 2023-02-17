@@ -105,8 +105,8 @@ func TestGetResources(t *testing.T) {
 	wd := path.Join(testutils.RootDir, "test/terraform/gcp_1")
 	viper.Set("workdir", wd)
 
-	wantResources := []resources.Resource{
-		resources.ComputeResource{
+	wantResources := map[string]resources.Resource{
+		"google_compute_disk.first": resources.ComputeResource{
 			Identification: &resources.ResourceIdentification{
 				Name:         "first",
 				ResourceType: "google_compute_disk",
@@ -123,7 +123,7 @@ func TestGetResources(t *testing.T) {
 				ReplicationFactor: 1,
 			},
 		},
-		resources.ComputeResource{
+		"google_compute_instance.first": resources.ComputeResource{
 			Identification: &resources.ResourceIdentification{
 				Name:         "first",
 				ResourceType: "google_compute_instance",
@@ -142,7 +142,7 @@ func TestGetResources(t *testing.T) {
 				},
 			},
 		},
-		resources.ComputeResource{
+		"google_compute_instance.second": resources.ComputeResource{
 			Identification: &resources.ResourceIdentification{
 				Name:         "second",
 				ResourceType: "google_compute_instance",
@@ -158,7 +158,7 @@ func TestGetResources(t *testing.T) {
 				CPUType:    "",
 			},
 		},
-		resources.UnsupportedResource{
+		"google_compute_network.vpc_network": resources.UnsupportedResource{
 			Identification: &resources.ResourceIdentification{
 				Name:         "vpc_network",
 				ResourceType: "google_compute_network",
@@ -166,7 +166,7 @@ func TestGetResources(t *testing.T) {
 				Region:       "",
 			},
 		},
-		resources.ComputeResource{
+		"google_compute_region_disk.regional-first": resources.ComputeResource{
 			Identification: &resources.ResourceIdentification{
 				Name:         "regional-first",
 				ResourceType: "google_compute_region_disk",
@@ -183,7 +183,7 @@ func TestGetResources(t *testing.T) {
 				ReplicationFactor: 2,
 			},
 		},
-		resources.UnsupportedResource{
+		"google_compute_subnetwork.first": resources.UnsupportedResource{
 			Identification: &resources.ResourceIdentification{
 				Name:         "first",
 				ResourceType: "google_compute_subnetwork",
@@ -191,7 +191,7 @@ func TestGetResources(t *testing.T) {
 				Region:       "europe-west9",
 			},
 		},
-		resources.ComputeResource{
+		"google_sql_database_instance.instance": resources.ComputeResource{
 			Identification: &resources.ResourceIdentification{
 				Name:         "instance",
 				ResourceType: "google_sql_database_instance",
@@ -239,8 +239,8 @@ func TestGetResources_DiskImage(t *testing.T) {
 	wd := path.Join(testutils.RootDir, "test/terraform/gcp_images")
 	viper.Set("workdir", wd)
 
-	wantResources := []resources.Resource{
-		resources.ComputeResource{
+	wantResources := map[string]resources.Resource{
+		"google_compute_disk.diskImage": resources.ComputeResource{
 			Identification: &resources.ResourceIdentification{
 				Name:         "diskImage",
 				ResourceType: "google_compute_disk",

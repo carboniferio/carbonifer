@@ -151,7 +151,7 @@ func TerraformPlan() (*tfjson.Plan, error) {
 	return tfplan, nil
 }
 
-func GetResources() ([]resources.Resource, error) {
+func GetResources() (map[string]resources.Resource, error) {
 	log.Debug("Reading planned resources from Terraform plan")
 	tfPlan, err := TerraformPlan()
 	if err != nil {
@@ -162,7 +162,7 @@ func GetResources() ([]resources.Resource, error) {
 		}
 	}
 	log.Debugf("Reading resources from Terraform plan: %d resources", len(tfPlan.PlannedValues.RootModule.Resources))
-	var resourcesList []resources.Resource
+	resourcesMap := make(map[string]resources.Resource)
 	dataResources := make(map[string]resources.DataResource)
 	if tfPlan.PriorState != nil {
 		for _, priorRes := range tfPlan.PriorState.Values.RootModule.Resources {
@@ -182,7 +182,7 @@ func GetResources() ([]resources.Resource, error) {
 			var resource resources.Resource
 			if res.Mode == "managed" {
 				resource := GetResource(*res, &dataResources)
-				resourcesList = append(resourcesList, resource)
+				resourcesMap[resource.GetAddress()] = resource
 			}
 
 			if log.IsLevelEnabled(log.DebugLevel) {
@@ -196,5 +196,5 @@ func GetResources() ([]resources.Resource, error) {
 
 		}
 	}
-	return resourcesList, nil
+	return resourcesMap, nil
 }

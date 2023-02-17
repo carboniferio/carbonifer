@@ -179,7 +179,7 @@ func TestEstimateResources(t *testing.T) {
 	viper.Set("unit.carbon", "g")
 	viper.Set("unit.time", "h")
 	type args struct {
-		resources []resources.Resource
+		resources map[string]resources.Resource
 	}
 	tests := []struct {
 		name string
@@ -189,9 +189,9 @@ func TestEstimateResources(t *testing.T) {
 		{
 			name: "gcp_array",
 			args: args{
-				[]resources.Resource{
-					resourceGCPComputeBasic,
-					resourceGCPComputeCPUType,
+				map[string]resources.Resource{
+					"type-1.machine-name-1": resourceGCPComputeBasic,
+					"type-1.machine-name-2": resourceGCPComputeCPUType,
 				},
 			},
 			want: EstimationReport{
