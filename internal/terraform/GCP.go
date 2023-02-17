@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func GetResource(tfResource tfjson.StateResource, dataResources *map[string]resources.DataResource) resources.Resource {
+func GetResource(tfResource tfjson.ConfigResource, dataResources *map[string]resources.DataResource) resources.Resource {
 	resourceId := getResourceIdentification(tfResource)
 	if resourceId.ResourceType == "google_compute_instance" {
 		specs := getComputeResourceSpecs(tfResource, dataResources)
@@ -41,23 +41,23 @@ func GetResource(tfResource tfjson.StateResource, dataResources *map[string]reso
 	}
 }
 
-func getResourceIdentification(resource tfjson.StateResource) *resources.ResourceIdentification {
-	region := resource.AttributeValues["region"]
+func getResourceIdentification(resource tfjson.ConfigResource) *resources.ResourceIdentification {
+	region := GetValueExpression(&resource, "region")
 	if region == nil {
-		if resource.AttributeValues["zone"] != nil {
-			zone := resource.AttributeValues["zone"].(string)
-			region = strings.Join(strings.Split(zone, "-")[:2], "-")
-		} else if resource.AttributeValues["replica_zones"] != nil {
-			replica_zones := resource.AttributeValues["replica_zones"].([]interface{})
-			// should be all in the same region
-			region = strings.Join(strings.Split(replica_zones[0].(string), "-")[:2], "-")
+		zone := GetValueExpression(&resource, "zone")
+		replica_zones := GetValueExpression(&resource, "replica_zones")
+		if zone != nil {
+			region = strings.Join(strings.Split(zone.(string), "-")[:2], "-")
+		} else if replica_zones != nil {
+			region = strings.Join(strings.Split(replica_zones.([]interface{})[0].(string), "-")[:2], "-")
 		} else {
 			region = ""
 		}
 	}
-	selfLink := ""
-	if resource.AttributeValues["self_link"] != nil {
-		selfLink = resource.AttributeValues["self_link"].(string)
+	selfLinkExpr := GetValueExpression(&resource, "self_link")
+	var selfLink string
+	if selfLinkExpr != nil {
+		selfLink = GetValueExpression(&resource, "self_link").(string)
 	}
 
 	return &resources.ResourceIdentification{
@@ -70,30 +70,30 @@ func getResourceIdentification(resource tfjson.StateResource) *resources.Resourc
 }
 
 func getComputeResourceSpecs(
-	resource tfjson.StateResource,
+	resource tfjson.ConfigResource,
 	dataResources *map[string]resources.DataResource) *resources.ComputeResourceSpecs {
 
-	machine_type := resource.AttributeValues["machine_type"].(string)
-	zone := resource.AttributeValues["zone"].(string)
+	machine_type := GetValueExpression(&resource, "machine_type").(string)
+	zone := GetValueExpression(&resource, "zone").(string)
 	machineType := providers.GetGCPMachineType(machine_type, zone)
-	CPUType, ok := resource.AttributeValues["cpu_platform"].(string)
+	CPUType, ok := GetValueExpression(&resource, "cpu_platform").(string)
 	if !ok {
 		CPUType = ""
 	}
 
 	var disks []disk
-	bd, ok_bd := resource.AttributeValues["boot_disk"]
+	bdExpr, ok_bd := resource.Expressions["boot_disk"]
 	if ok_bd {
-		bootDisks := bd.([]interface{})
+		bootDisks := bdExpr.NestedBlocks
 		for _, bootDiskBlock := range bootDisks {
-			bootDisk := getBootDisk(resource.Address, bootDiskBlock.(map[string]interface{}), dataResources)
+			bootDisk := getBootDisk(resource.Address, bootDiskBlock, dataResources)
 			disks = append(disks, bootDisk)
 		}
 	}
 
-	sd, ok_sd := resource.AttributeValues["scratch_disk"]
+	sdExpr, ok_sd := resource.Expressions["scratch_disk"]
 	if ok_sd {
-		scratchDisks := sd.([]interface{})
+		scratchDisks := sdExpr.NestedBlocks
 		for range scratchDisks {
 			// Each scratch disk is 375GB
 			//  source: https://cloud.google.com/compute/docs/disks#localssds
@@ -112,8 +112,8 @@ func getComputeResourceSpecs(
 	}
 
 	gpus := machineType.GPUTypes
-	gasI, ok := resource.AttributeValues["guest_accelerator"]
-	if ok {
+	gasI := GetValueExpression(&resource, "guest_accelerator")
+	if gasI != nil {
 		guestAccelerators := gasI.([]interface{})
 		for _, gaI := range guestAccelerators {
 			ga := gaI.(map[string]interface{})
@@ -136,10 +136,10 @@ func getComputeResourceSpecs(
 }
 
 func getComputeDiskResourceSpecs(
-	resource tfjson.StateResource,
+	resource tfjson.ConfigResource,
 	dataResources *map[string]resources.DataResource) *resources.ComputeResourceSpecs {
 
-	disk := getDisk(resource.Address, resource.AttributeValues, false, dataResources)
+	disk := getDisk(resource.Address, resource.Expressions, false, dataResources)
 	hddSize := decimal.Zero
 	ssdSize := decimal.Zero
 	if disk.isSSD {
@@ -160,46 +160,50 @@ type disk struct {
 	replicationFactor int32
 }
 
-func getBootDisk(resourceAddress string, bootDiskBlock map[string]interface{}, dataResources *map[string]resources.DataResource) disk {
+func getBootDisk(resourceAddress string, bootDiskBlock map[string]*tfjson.Expression, dataResources *map[string]resources.DataResource) disk {
 	var disk disk
-	initParams := bootDiskBlock["initialize_params"]
-	for _, iP := range initParams.([]interface{}) {
-		initParam := iP.(map[string]interface{})
+	initParams := bootDiskBlock["initialize_params"].NestedBlocks
+	for _, initParam := range initParams {
 		disk = getDisk(resourceAddress, initParam, true, dataResources)
 
 	}
 	return disk
 }
 
-func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDisk bool, dataResources *map[string]resources.DataResource) disk {
+func getDisk(resourceAddress string, diskBlock map[string]*tfjson.Expression, isBootDisk bool, dataResources *map[string]resources.DataResource) disk {
 	disk := disk{
 		sizeGb:            viper.GetFloat64("provider.gcp.boot_disk.size"),
 		isSSD:             true,
 		replicationFactor: 1,
 	}
-	diskType := diskBlock["type"]
-	if diskType == nil {
+	var diskType string
+	diskTypeExpr := diskBlock["type"]
+	if diskTypeExpr == nil {
 		if isBootDisk {
 			diskType = viper.GetString("provider.gcp.boot_disk.type")
 		} else {
 			diskType = viper.GetString("provider.gcp.disk.type")
 		}
+	} else {
+		diskType = diskTypeExpr.ConstantValue.(string)
 	}
+
 	if diskType == "pd-standard" {
 		disk.isSSD = false
 	}
 
-	sizeParam := diskBlock["size"]
-	if sizeParam != nil {
-		disk.sizeGb = sizeParam.(float64)
+	sizeParamExpr := diskBlock["size"]
+	if sizeParamExpr != nil {
+		disk.sizeGb = sizeParamExpr.ConstantValue.(float64)
 	} else {
 		if isBootDisk {
 			disk.sizeGb = viper.GetFloat64("provider.gcp.boot_disk.size")
 		} else {
 			disk.sizeGb = viper.GetFloat64("provider.gcp.disk.size")
 		}
-		diskImageLink, ok := diskBlock["image"]
+		diskImageLinkExpr, ok := diskBlock["image"]
 		if ok {
+			diskImageLink := diskImageLinkExpr.ConstantValue
 			image, ok := (*dataResources)[diskImageLink.(string)]
 			if ok {
 				disk.sizeGb = (image.(resources.DataImageResource)).DataImageSpecs.DiskSizeGb
@@ -213,9 +217,9 @@ func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDis
 
 	}
 
-	replicaZones := diskBlock["replica_zones"]
-	if replicaZones != nil {
-		rz := replicaZones.([]interface{})
+	replicaZonesExpr := diskBlock["replica_zones"]
+	if replicaZonesExpr != nil {
+		rz := replicaZonesExpr.ConstantValue.([]interface{})
 		disk.replicationFactor = int32(len(rz))
 	}
 
@@ -223,35 +227,38 @@ func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDis
 }
 
 func getSQLResourceSpecs(
-	resource tfjson.StateResource) *resources.ComputeResourceSpecs {
+	resource tfjson.ConfigResource) *resources.ComputeResourceSpecs {
 
 	replicationFactor := int32(1)
 	ssdSize := decimal.Zero
 	hddSize := decimal.Zero
 	var tier providers.SqlTier
 
-	settingsI, ok := resource.AttributeValues["settings"]
+	settingsExpr, ok := resource.Expressions["settings"]
 	if ok {
-		settings := settingsI.([]interface{})[0].(map[string]interface{})
+		settings := settingsExpr.NestedBlocks[0]
 
 		availabilityType := settings["availability_type"]
-		if availabilityType == "REGIONAL" {
+		if availabilityType.ConstantValue != nil && availabilityType.ConstantValue == "REGIONAL" {
 			replicationFactor = int32(2)
 		}
 
-		tierName := settings["tier"].(string)
+		tierName := ""
+		if settings["tier"] != nil {
+			tierName = settings["tier"].ConstantValue.(string)
+		}
 		tier = providers.GetGCPSQLTier(tierName)
 
 		diskTypeI, ok_dt := settings["disk_type"]
 		diskType := "PD_SSD"
 		if ok_dt {
-			diskType = diskTypeI.(string)
+			diskType = diskTypeI.ConstantValue.(string)
 		}
 
 		diskSizeI, ok_ds := settings["disk_size"]
 		diskSize := decimal.NewFromFloat(10)
 		if ok_ds {
-			diskSize = decimal.NewFromFloat(diskSizeI.(float64))
+			diskSize = decimal.NewFromFloat(diskSizeI.ConstantValue.(float64))
 		}
 
 		if diskType == "PD_SSD" {
@@ -271,4 +278,14 @@ func getSQLResourceSpecs(
 		HddStorage:        hddSize,
 		ReplicationFactor: replicationFactor,
 	}
+}
+
+func GetValueExpression(resource *tfjson.ConfigResource, key string) interface{} {
+	expr := resource.Expressions[key]
+	if expr != nil {
+		if expr.ConstantValue != nil {
+			return expr.ConstantValue
+		}
+	}
+	return nil
 }

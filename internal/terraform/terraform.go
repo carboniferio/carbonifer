@@ -176,10 +176,15 @@ func GetResources() ([]resources.Resource, error) {
 		}
 	}
 
-	for _, res := range tfPlan.PlannedValues.RootModule.Resources {
+	for _, res := range tfPlan.Config.RootModule.Resources {
 		log.Debugf("Reading resource %v", res.Address)
 		if strings.HasPrefix(res.Type, "google") {
-			resource := GetResource(*res, &dataResources)
+			var resource resources.Resource
+			if res.Mode == "managed" {
+				resource := GetResource(*res, &dataResources)
+				resourcesList = append(resourcesList, resource)
+			}
+
 			if log.IsLevelEnabled(log.DebugLevel) {
 				computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"
 				if resource.IsSupported() {
@@ -188,8 +193,6 @@ func GetResources() ([]resources.Resource, error) {
 				}
 				log.Debugf("  Compute resource : %v", string(computeJsonStr))
 			}
-
-			resourcesList = append(resourcesList, resource)
 
 		}
 	}
