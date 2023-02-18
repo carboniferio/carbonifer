@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/carboniferio/carbonifer/internal/terraform/gcp"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hc-install/product"
 	"github.com/hashicorp/hc-install/releases"
@@ -170,7 +171,7 @@ func GetResources() (map[string]resources.Resource, error) {
 			log.Debugf("Reading prior state resources %v", priorRes.Address)
 			if priorRes.Mode == "data" {
 				if strings.HasPrefix(priorRes.Type, "google") {
-					dataResource := GetDataResource(*priorRes)
+					dataResource := gcp.GetDataResource(*priorRes)
 					dataResources[dataResource.GetKey()] = dataResource
 				}
 			}
@@ -191,7 +192,7 @@ func GetResources() (map[string]resources.Resource, error) {
 		log.Debugf("Reading resource %v", res.Address)
 		if strings.HasPrefix(res.Type, "google") && !strings.HasSuffix(res.Type, "_template") {
 			if res.Mode == "managed" {
-				resource := GetResource(*res, &dataResources, &resourceTemplates)
+				resource := gcp.GetResource(*res, &dataResources, &resourceTemplates)
 				resourcesMap[resource.GetAddress()] = resource
 				if log.IsLevelEnabled(log.DebugLevel) {
 					computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"

@@ -1,9 +1,10 @@
-package estimate
+package allprovider
 
 import (
 	"testing"
 
 	"github.com/carboniferio/carbonifer/internal/resources"
+	_ "github.com/carboniferio/carbonifer/internal/testutils"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 )
@@ -53,7 +54,7 @@ func Test_estimateWattGPU(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := estimateWattGPU(tt.args.resource)
+			got := EstimateWattGPU(tt.args.resource)
 			assert.Equal(t, tt.want, got)
 
 		})

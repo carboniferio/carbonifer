@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/carboniferio/carbonifer/internal/estimate"
+	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
 	"github.com/carboniferio/carbonifer/internal/testutils"
 	_ "github.com/carboniferio/carbonifer/internal/testutils"
 )
@@ -23,15 +23,15 @@ func TestGenerateReportJson_Empty(t *testing.T) {
 	viper.Set("workdir", wd)
 	now := time.Now()
 
-	estimations := estimate.EstimationReport{
-		Info: estimate.EstimationInfo{
+	estimations := estimation.EstimationReport{
+		Info: estimation.EstimationInfo{
 			UnitTime:                "h",
 			UnitWattTime:            "w",
 			UnitCarbonEmissionsTime: "gCO2eq/h",
 			DateTime:                now,
 		},
-		Resources: []estimate.EstimationResource{},
-		Total: estimate.EstimationTotal{
+		Resources: []estimation.EstimationResource{},
+		Total: estimation.EstimationTotal{
 			Power:           decimal.Decimal{},
 			CarbonEmissions: decimal.Decimal{},
 			ResourcesCount:  decimal.Zero,

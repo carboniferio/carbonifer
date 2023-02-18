@@ -1,4 +1,4 @@
-package estimate
+package allprovider
 
 import (
 	"github.com/carboniferio/carbonifer/internal/providers"
@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func estimateWattGPU(resource *resources.ComputeResource) decimal.Decimal {
+func EstimateWattGPU(resource *resources.ComputeResource) decimal.Decimal {
 	// Get average GPU usage
 	averageCPUUse := decimal.NewFromFloat(viper.GetFloat64("provider.gcp.avg_gpu_use"))
 

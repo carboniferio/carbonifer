@@ -1,4 +1,4 @@
-package estimate
+package coefficients
 
 import (
 	"encoding/json"

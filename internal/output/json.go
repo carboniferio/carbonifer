@@ -3,11 +3,11 @@ package output
 import (
 	"encoding/json"
 
-	"github.com/carboniferio/carbonifer/internal/estimate"
+	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
 	log "github.com/sirupsen/logrus"
 )
 
-func GenerateReportJson(estimations estimate.EstimationReport) string {
+func GenerateReportJson(estimations estimation.EstimationReport) string {
 	log.Debug("Generating JSON report")
 
 	reportTextBytes, err := json.MarshalIndent(estimations, "", "  ")

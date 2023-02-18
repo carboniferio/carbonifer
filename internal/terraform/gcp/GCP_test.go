@@ -1,4 +1,4 @@
-package terraform
+package gcp
 
 import (
 	"reflect"
@@ -7,6 +7,7 @@ import (
 
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
+	_ "github.com/carboniferio/carbonifer/internal/testutils"
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
