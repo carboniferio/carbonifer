@@ -2,10 +2,10 @@ package output
 
 import (
 	"fmt"
-	"sort"
 	"strings"
 
 	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
+	"github.com/carboniferio/carbonifer/internal/utils"
 	"github.com/olekukonko/tablewriter"
 	log "github.com/sirupsen/logrus"
 )
@@ -20,9 +20,7 @@ func GenerateReportText(report estimation.EstimationReport) string {
 
 	// Default sort
 	estimations := report.Resources
-	sort.Slice(estimations, func(i, j int) bool {
-		return estimations[i].Resource.GetIdentification().Name < estimations[j].Resource.GetIdentification().Name
-	})
+	utils.SortEstimations(&estimations)
 
 	for _, resource := range report.Resources {
 		table.Append([]string{
