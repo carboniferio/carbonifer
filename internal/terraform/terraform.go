@@ -164,7 +164,8 @@ func GetResources() (map[string]resources.Resource, error) {
 	}
 	log.Debugf("Reading resources from Terraform plan: %d resources", len(tfPlan.PlannedValues.RootModule.Resources))
 	resourcesMap := make(map[string]resources.Resource)
-	resourceTemplates := make(map[string]*tfjson.ConfigResource)
+	resourceConfigs := make(map[string]*tfjson.ConfigResource)
+	resourceTemplates := make(map[string]*tfjson.StateResource)
 	dataResources := make(map[string]resources.DataResource)
 	if tfPlan.PriorState != nil {
 		for _, priorRes := range tfPlan.PriorState.Values.RootModule.Resources {
@@ -179,7 +180,7 @@ func GetResources() (map[string]resources.Resource, error) {
 	}
 
 	// Find template first
-	for _, res := range tfPlan.Config.RootModule.Resources {
+	for _, res := range tfPlan.PlannedValues.RootModule.Resources {
 		log.Debugf("Reading resource %v", res.Address)
 		if strings.HasPrefix(res.Type, "google") && strings.HasSuffix(res.Type, "_template") {
 			if res.Mode == "managed" {
@@ -188,11 +189,22 @@ func GetResources() (map[string]resources.Resource, error) {
 		}
 	}
 
-	for _, res := range tfPlan.Config.RootModule.Resources {
+	// Index configurations in order to find relationships
+	for _, resConfig := range tfPlan.Config.RootModule.Resources {
+		log.Debugf("Reading resource config %v", resConfig.Address)
+		if strings.HasPrefix(resConfig.Type, "google") {
+			if resConfig.Mode == "managed" {
+				resourceConfigs[resConfig.Address] = resConfig
+			}
+		}
+	}
+
+	// Get All resources
+	for _, res := range tfPlan.PlannedValues.RootModule.Resources {
 		log.Debugf("Reading resource %v", res.Address)
 		if strings.HasPrefix(res.Type, "google") && !strings.HasSuffix(res.Type, "_template") {
 			if res.Mode == "managed" {
-				resource := gcp.GetResource(*res, &dataResources, &resourceTemplates)
+				resource := gcp.GetResource(*res, &dataResources, &resourceTemplates, &resourceConfigs)
 				resourcesMap[resource.GetAddress()] = resource
 				if log.IsLevelEnabled(log.DebugLevel) {
 					computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"

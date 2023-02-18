@@ -8,46 +8,46 @@ import (
 )
 
 func getComputeResourceSpecs(
-	resource tfjson.ConfigResource,
+	resource tfjson.StateResource,
 	dataResources *map[string]resources.DataResource, groupZone interface{}) *resources.ComputeResourceSpecs {
 
-	machine_type := GetConstFromConfig(&resource, "machine_type").(string)
+	machine_type := resource.AttributeValues["machine_type"].(string)
 	var zone string
 	if groupZone != nil {
 		zone = groupZone.(string)
 	} else {
-		zone = GetConstFromConfig(&resource, "zone").(string)
+		zone = resource.AttributeValues["zone"].(string)
 	}
 
 	machineType := gcp.GetGCPMachineType(machine_type, zone)
-	CPUType, ok := GetConstFromConfig(&resource, "cpu_platform").(string)
+	CPUType, ok := resource.AttributeValues["cpu_platform"].(string)
 	if !ok {
 		CPUType = ""
 	}
 
 	var disks []disk
-	bdExpr, ok_bd := resource.Expressions["boot_disk"]
+	bd, ok_bd := resource.AttributeValues["boot_disk"]
 	if ok_bd {
-		bootDisks := bdExpr.NestedBlocks
+		bootDisks := bd.([]interface{})
 		for _, bootDiskBlock := range bootDisks {
-			bootDisk := getBootDisk(resource.Address, bootDiskBlock, dataResources)
+			bootDisk := getBootDisk(resource.Address, bootDiskBlock.(map[string]interface{}), dataResources)
 			disks = append(disks, bootDisk)
 		}
 	}
 
-	diskExpr, ok_bd := resource.Expressions["disk"]
-	if ok_bd {
-		disksBlocks := diskExpr.NestedBlocks
-		for _, diskBlock := range disksBlocks {
-
-			bootDisk := getDisk(resource.Address, diskBlock, false, dataResources)
-			disks = append(disks, bootDisk)
+	// TODO Disks
+	diskListI, ok_disks := resource.AttributeValues["disk"]
+	if ok_disks {
+		diskList := diskListI.([]interface{})
+		for _, diskBlock := range diskList {
+			disk := getDisk(resource.Address, diskBlock.(map[string]interface{}), false, dataResources)
+			disks = append(disks, disk)
 		}
 	}
 
-	sdExpr, ok_sd := resource.Expressions["scratch_disk"]
+	sd, ok_sd := resource.AttributeValues["scratch_disk"]
 	if ok_sd {
-		scratchDisks := sdExpr.NestedBlocks
+		scratchDisks := sd.([]interface{})
 		for range scratchDisks {
 			// Each scratch disk is 375GB
 			//  source: https://cloud.google.com/compute/docs/disks#localssds
@@ -66,8 +66,8 @@ func getComputeResourceSpecs(
 	}
 
 	gpus := machineType.GPUTypes
-	gasI := GetConstFromConfig(&resource, "guest_accelerator")
-	if gasI != nil {
+	gasI, ok := resource.AttributeValues["guest_accelerator"]
+	if ok {
 		guestAccelerators := gasI.([]interface{})
 		for _, gaI := range guestAccelerators {
 			ga := gaI.(map[string]interface{})

@@ -9,38 +9,38 @@ import (
 )
 
 func getSQLResourceSpecs(
-	resource tfjson.ConfigResource) *resources.ComputeResourceSpecs {
+	resource tfjson.StateResource) *resources.ComputeResourceSpecs {
 
 	replicationFactor := int32(1)
 	ssdSize := decimal.Zero
 	hddSize := decimal.Zero
 	var tier gcp.SqlTier
 
-	settingsExpr, ok := resource.Expressions["settings"]
+	settingsI, ok := resource.AttributeValues["settings"]
 	if ok {
-		settings := settingsExpr.NestedBlocks[0]
+		settings := settingsI.([]interface{})[0].(map[string]interface{})
 
 		availabilityType := settings["availability_type"]
-		if availabilityType.ConstantValue != nil && availabilityType.ConstantValue == "REGIONAL" {
+		if availabilityType != nil && availabilityType == "REGIONAL" {
 			replicationFactor = int32(2)
 		}
 
 		tierName := ""
 		if settings["tier"] != nil {
-			tierName = settings["tier"].ConstantValue.(string)
+			tierName = settings["tier"].(string)
 		}
 		tier = gcp.GetGCPSQLTier(tierName)
 
 		diskTypeI, ok_dt := settings["disk_type"]
 		diskType := "PD_SSD"
 		if ok_dt {
-			diskType = diskTypeI.ConstantValue.(string)
+			diskType = diskTypeI.(string)
 		}
 
 		diskSizeI, ok_ds := settings["disk_size"]
 		diskSize := decimal.NewFromFloat(10)
 		if ok_ds {
-			diskSize = decimal.NewFromFloat(diskSizeI.ConstantValue.(float64))
+			diskSize = decimal.NewFromFloat(diskSizeI.(float64))
 		}
 
 		if diskType == "PD_SSD" {

@@ -260,7 +260,7 @@ func TestGetResources_DiskImage(t *testing.T) {
 			},
 			Specs: &resources.ComputeResourceSpecs{
 				GpuTypes:          nil,
-				HddStorage:        decimal.NewFromFloat(10),
+				HddStorage:        decimal.New(int64(50), 1),
 				SsdStorage:        decimal.Zero,
 				MemoryMb:          0,
 				VCPUs:             0,
@@ -270,12 +270,13 @@ func TestGetResources_DiskImage(t *testing.T) {
 		},
 	}
 
-	resources, err := GetResources()
+	resourceList, err := GetResources()
 	if assert.NoError(t, err) {
-		assert.Equal(t, len(wantResources), len(resources))
-		for i, resource := range resources {
+		assert.Equal(t, len(wantResources), len(resourceList))
+		for i, resource := range resourceList {
 			wantResource := wantResources[i]
-			assert.Equal(t, wantResource, resource)
+			log.Println(resource.(resources.ComputeResource).Specs.HddStorage)
+			assert.EqualValues(t, wantResource, resource)
 		}
 	}
 
