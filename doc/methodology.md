@@ -76,7 +76,7 @@ Average GPU Utilization is also read from:
 - targeted folder config file in `$TERRAFORM_PROJECT/.carbonifer/config.yml`), variable `avg_gpu_use`
 - The default is `0.5` (50%)
 
-### Instance Group size and count
+### Instance Group size and autoscaler
 
 For group of instances, like GCP managed instance group or AWS autoscaling group, estimations will be displayed by instance and a count value will appear:
 
@@ -112,6 +112,16 @@ will produce :
  --------------------------------------- ------------------ ------- ------------------------ 
                                           Total              3        1.6704 gCO2eq/h        
 ```
+
+Autoscaling groups have a min and max size, and we cannot know in advance what the average size! User can define an average percentage in global config:
+
+```yaml
+provider:
+  gcp:
+    avg_autoscaler_size_percent: 0.5
+```
+
+For example if min size is 1 and max size is 5, average will be `0.5 * (5-1) = 2` 
 
 ## Carbon Intensity
 
