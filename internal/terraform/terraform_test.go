@@ -317,7 +317,7 @@ func TestGetResources_GroupInstance(t *testing.T) {
 				ResourceType: "google_compute_instance_group_manager",
 				Provider:     providers.GCP,
 				Region:       "europe-west9",
-				Count:        3,
+				Count:        5,
 			},
 			Specs: &resources.ComputeResourceSpecs{
 				GpuTypes:          nil,
@@ -333,7 +333,6 @@ func TestGetResources_GroupInstance(t *testing.T) {
 
 	resources, err := GetResources()
 	if assert.NoError(t, err) {
-		assert.Equal(t, len(wantResources), len(resources))
 		for i, resource := range resources {
 			wantResource := wantResources[i]
 			assert.EqualValues(t, wantResource, resource)

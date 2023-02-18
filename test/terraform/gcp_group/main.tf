@@ -34,3 +34,18 @@ resource "google_compute_instance_group_manager" "my-group-manager" {
 
   target_size  = 3
 }
+
+resource "google_compute_autoscaler" "autoscaler" {
+  name   = "my-autoscaler"
+  target = google_compute_instance_group_manager.my-group-manager.id
+
+  autoscaling_policy {
+    max_replicas    = 10
+    min_replicas    = 1
+    cooldown_period = 60
+
+    cpu_utilization {
+      target = 0.5
+    }
+  }
+}

@@ -165,7 +165,7 @@ func GetResources() (map[string]resources.Resource, error) {
 	log.Debugf("Reading resources from Terraform plan: %d resources", len(tfPlan.PlannedValues.RootModule.Resources))
 	resourcesMap := make(map[string]resources.Resource)
 	resourceConfigs := make(map[string]*tfjson.ConfigResource)
-	resourceTemplates := make(map[string]*tfjson.StateResource)
+	resourceReferences := make(map[string]*tfjson.StateResource)
 	dataResources := make(map[string]resources.DataResource)
 	if tfPlan.PriorState != nil {
 		for _, priorRes := range tfPlan.PriorState.Values.RootModule.Resources {
@@ -182,9 +182,10 @@ func GetResources() (map[string]resources.Resource, error) {
 	// Find template first
 	for _, res := range tfPlan.PlannedValues.RootModule.Resources {
 		log.Debugf("Reading resource %v", res.Address)
-		if strings.HasPrefix(res.Type, "google") && strings.HasSuffix(res.Type, "_template") {
+		if strings.HasPrefix(res.Type, "google") && (strings.HasSuffix(res.Type, "_template") ||
+			strings.HasSuffix(res.Type, "_autoscaler")) {
 			if res.Mode == "managed" {
-				resourceTemplates[res.Address] = res
+				resourceReferences[res.Address] = res
 			}
 		}
 	}
@@ -204,8 +205,10 @@ func GetResources() (map[string]resources.Resource, error) {
 		log.Debugf("Reading resource %v", res.Address)
 		if strings.HasPrefix(res.Type, "google") && !strings.HasSuffix(res.Type, "_template") {
 			if res.Mode == "managed" {
-				resource := gcp.GetResource(*res, &dataResources, &resourceTemplates, &resourceConfigs)
-				resourcesMap[resource.GetAddress()] = resource
+				resource := gcp.GetResource(*res, &dataResources, &resourceReferences, &resourceConfigs)
+				if resource != nil {
+					resourcesMap[resource.GetAddress()] = resource
+				}
 				if log.IsLevelEnabled(log.DebugLevel) {
 					computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"
 					if resource.IsSupported() {

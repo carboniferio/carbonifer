@@ -7,12 +7,77 @@ import (
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 func getComputeInstanceGroupManagerSpecs(
 	tfResource tfjson.StateResource,
 	dataResources *map[string]resources.DataResource,
-	resourceTemplates *map[string]*tfjson.StateResource,
+	resourceReferences *map[string]*tfjson.StateResource,
+	resourceConfigs *map[string]*tfjson.ConfigResource) (*resources.ComputeResourceSpecs, int64) {
+
+	// Get template of instance
+	specs, targetSize := getTemplateSpecs(tfResource, dataResources, resourceReferences, resourceConfigs)
+	if specs == nil {
+		return specs, targetSize
+	}
+
+	// Get targetSize from autoscaler if exists
+	var autoscaler *tfjson.StateResource
+	for _, resourceConfig := range *resourceConfigs {
+		if resourceConfig.Type == "google_compute_autoscaler" {
+			targetExpr := (*resourceConfig).Expressions["target"]
+			if targetExpr != nil {
+				for _, target := range (*targetExpr).References {
+					if target == tfResource.Address {
+						autoscaler = (*resourceReferences)[resourceConfig.Address]
+						break
+					}
+				}
+				if autoscaler != nil {
+					break
+				}
+			}
+		}
+	}
+	if autoscaler != nil {
+		targetSize = getTargetSizeFromAutoscaler(autoscaler, resourceConfigs, tfResource, resourceReferences, targetSize)
+	}
+
+	return specs, targetSize
+}
+
+func getTargetSizeFromAutoscaler(autoscaler *tfjson.StateResource, resourceConfigs *map[string]*tfjson.ConfigResource, tfResource tfjson.StateResource, resourceReferences *map[string]*tfjson.StateResource, targetSizeOfTemplate int64) int64 {
+
+	targetSize := targetSizeOfTemplate
+	autoscalingPoliciesI := autoscaler.AttributeValues["autoscaling_policy"]
+	if autoscalingPoliciesI != nil {
+		for _, autoscalingPolicyI := range autoscalingPoliciesI.([]interface{}) {
+			autoscalingPolicy := autoscalingPolicyI.(map[string]interface{})
+			minSize := autoscalingPolicy["min_replicas"]
+			if minSize == nil {
+				minSize = 0
+			}
+			maxSize := autoscalingPolicy["max_replicas"]
+			if maxSize == nil {
+				maxSize = 0
+			}
+			targetSize = computeTargetSize(decimal.NewFromFloat(minSize.(float64)), decimal.NewFromFloat(maxSize.(float64)))
+		}
+	}
+
+	return targetSize
+}
+
+func computeTargetSize(minSize decimal.Decimal, maxSize decimal.Decimal) int64 {
+	avgAutoscalerSizePercent := decimal.NewFromFloat(viper.GetFloat64("provider.gcp.avg_autoscaler_size_percent"))
+	return avgAutoscalerSizePercent.Mul(maxSize.Sub(minSize)).Ceil().IntPart()
+}
+
+func getTemplateSpecs(
+	tfResource tfjson.StateResource,
+	dataResources *map[string]resources.DataResource,
+	resourceReferences *map[string]*tfjson.StateResource,
 	resourceConfigs *map[string]*tfjson.ConfigResource) (*resources.ComputeResourceSpecs, int64) {
 
 	targetSize := int64(0)
@@ -31,7 +96,7 @@ func getComputeInstanceGroupManagerSpecs(
 				references := instanceTemplate.References
 				for _, reference := range references {
 					if !strings.HasSuffix(reference, ".id") {
-						template = (*resourceTemplates)[reference]
+						template = (*resourceReferences)[reference]
 					}
 				}
 			}

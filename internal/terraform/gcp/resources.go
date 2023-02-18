@@ -44,6 +44,9 @@ func GetResource(
 			}
 		}
 	}
+	if resourceId.ResourceType == "google_compute_autoscaler" {
+		return nil
+	}
 	return resources.UnsupportedResource{
 		Identification: resourceId,
 	}
