@@ -12,7 +12,7 @@ import (
 
 	"google.golang.org/api/compute/v1"
 
-	"github.com/carboniferio/carbonifer/internal/providers"
+	"github.com/carboniferio/carbonifer/internal/providers/gcp"
 	tools_gcp "github.com/carboniferio/carbonifer/internal/tools/gcp"
 )
 
@@ -54,8 +54,8 @@ func getCPUTypes(machineType string) []string {
 	return familyTypes.CPUTypes
 }
 
-func getMachineTypesForZone(client *compute.Service, project string, zone string) map[string]providers.MachineType {
-	machineTypes := make(map[string]providers.MachineType)
+func getMachineTypesForZone(client *compute.Service, project string, zone string) map[string]gcp.MachineType {
+	machineTypes := make(map[string]gcp.MachineType)
 	// Get the list of available machine types
 	machineTypesArray, err := client.MachineTypes.List(project, zone).Do()
 	if err != nil {
@@ -67,7 +67,7 @@ func getMachineTypesForZone(client *compute.Service, project string, zone string
 		if ok {
 			log.Fatalf("There is already a machine type %v", machineType.Name)
 		}
-		machineTypes[machineType.Name] = providers.MachineType{
+		machineTypes[machineType.Name] = gcp.MachineType{
 			Name:     machineType.Name,
 			Vcpus:    int32(machineType.GuestCpus),
 			MemoryMb: int32(machineType.MemoryMb),
@@ -100,7 +100,7 @@ func main() {
 
 	project := tools_gcp.GetProjectId()
 
-	machineTypesByZone := make(map[string]map[string]providers.MachineType)
+	machineTypesByZone := make(map[string]map[string]gcp.MachineType)
 	zones, err := client.Zones.List(project).Do()
 	if err != nil {
 		log.Fatal(err)

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/carboniferio/carbonifer/internal/estimate"
+	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
 	"github.com/olekukonko/tablewriter"
 	log "github.com/sirupsen/logrus"
 )
 
-func GenerateReportText(report estimate.EstimationReport) string {
+func GenerateReportText(report estimation.EstimationReport) string {
 	log.Debug("Generating text report")
 	tableString := &strings.Builder{}
 	tableString.WriteString("\n  Average estimation of CO2 emissions per instance: \n\n")

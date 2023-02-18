@@ -4,6 +4,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	_ "github.com/carboniferio/carbonifer/internal/testutils"
@@ -79,12 +80,12 @@ func TestEstimateResource(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *EstimationResource
+		want *estimation.EstimationResource
 	}{
 		{
 			name: "gcp_basic",
 			args: args{resourceGCPComputeBasic},
-			want: &EstimationResource{
+			want: &estimation.EstimationResource{
 				Resource:        &resourceGCPComputeBasic,
 				Power:           decimal.NewFromFloat(7.600784000).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(0.448446256).RoundFloor(10),
@@ -95,7 +96,7 @@ func TestEstimateResource(t *testing.T) {
 		{
 			name: "gcp_specific_cpu_type",
 			args: args{resourceGCPComputeCPUType},
-			want: &EstimationResource{
+			want: &estimation.EstimationResource{
 				Resource:        &resourceGCPComputeCPUType,
 				Power:           decimal.NewFromFloat(9.5565660741),
 				CarbonEmissions: decimal.NewFromFloat(0.5638373983),
@@ -106,7 +107,7 @@ func TestEstimateResource(t *testing.T) {
 		{
 			name: "gcp_group",
 			args: args{resourceGCPInstanceGroup},
-			want: &EstimationResource{
+			want: &estimation.EstimationResource{
 				Resource:        &resourceGCPInstanceGroup,
 				Power:           decimal.NewFromFloat(7.600784000).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(0.448446256).RoundFloor(10),
@@ -133,12 +134,12 @@ func TestEstimateResourceKilo(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *EstimationResource
+		want *estimation.EstimationResource
 	}{
 		{
 			name: "gcp_basic",
 			args: args{resourceGCPComputeBasic},
-			want: &EstimationResource{
+			want: &estimation.EstimationResource{
 				Resource:        &resourceGCPComputeBasic,
 				Power:           decimal.NewFromFloat(5472.56448).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(232.4745391104).RoundFloor(10),
@@ -149,7 +150,7 @@ func TestEstimateResourceKilo(t *testing.T) {
 		{
 			name: "gcp_specific_cpu_type",
 			args: args{resourceGCPComputeCPUType},
-			want: &EstimationResource{
+			want: &estimation.EstimationResource{
 				Resource:        &resourceGCPComputeCPUType,
 				Power:           decimal.NewFromFloat(6880.7275733647).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(292.2933073165).RoundFloor(10),
@@ -192,7 +193,7 @@ func TestEstimateResourceUnsupported(t *testing.T) {
 	}
 }
 
-func EqualsEstimationResource(t *testing.T, expected *EstimationResource, actual *EstimationResource) {
+func EqualsEstimationResource(t *testing.T, expected *estimation.EstimationResource, actual *estimation.EstimationResource) {
 	assert.Equal(t, expected.Resource, actual.Resource)
 	assert.Equal(t, expected.Power.String(), actual.Power.String())
 	assert.Equal(t, expected.CarbonEmissions.String(), actual.CarbonEmissions.String())
@@ -201,7 +202,7 @@ func EqualsEstimationResource(t *testing.T, expected *EstimationResource, actual
 
 }
 
-func EqualsTotal(t *testing.T, expected *EstimationTotal, actual *EstimationTotal) {
+func EqualsTotal(t *testing.T, expected *estimation.EstimationTotal, actual *estimation.EstimationTotal) {
 	assert.Equal(t, expected.ResourcesCount, actual.ResourcesCount)
 	assert.Equal(t, expected.Power.String(), actual.Power.String())
 	assert.Equal(t, expected.CarbonEmissions.String(), actual.CarbonEmissions.String())
@@ -218,7 +219,7 @@ func TestEstimateResources(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want EstimationReport
+		want estimation.EstimationReport
 	}{
 		{
 			name: "gcp_array",
@@ -229,13 +230,13 @@ func TestEstimateResources(t *testing.T) {
 					"type-group.machine-group-1": resourceGCPInstanceGroup,
 				},
 			},
-			want: EstimationReport{
-				Info: EstimationInfo{
+			want: estimation.EstimationReport{
+				Info: estimation.EstimationInfo{
 					UnitTime:                "h",
 					UnitWattTime:            "Wh",
 					UnitCarbonEmissionsTime: "gCO2eq/h",
 				},
-				Resources: []EstimationResource{
+				Resources: []estimation.EstimationResource{
 					{
 						Resource:        &resourceGCPComputeBasic,
 						Power:           decimal.NewFromFloat(7.600784).Round(10),
@@ -258,7 +259,7 @@ func TestEstimateResources(t *testing.T) {
 						Count:           decimal.NewFromInt(3),
 					},
 				},
-				Total: EstimationTotal{
+				Total: estimation.EstimationTotal{
 					Power:           decimal.NewFromFloat(39.9597020741),
 					CarbonEmissions: decimal.NewFromFloat(2.3576224223),
 					ResourcesCount:  decimal.NewFromInt(5),

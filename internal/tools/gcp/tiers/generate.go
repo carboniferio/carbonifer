@@ -12,7 +12,7 @@ import (
 
 	"google.golang.org/api/sqladmin/v1"
 
-	"github.com/carboniferio/carbonifer/internal/providers"
+	"github.com/carboniferio/carbonifer/internal/providers/gcp"
 	tools_gcp "github.com/carboniferio/carbonifer/internal/tools/gcp"
 )
 
@@ -47,7 +47,7 @@ func main() {
 
 	project := tools_gcp.GetProjectId()
 
-	tiersList := make(map[string]providers.SqlTier)
+	tiersList := make(map[string]gcp.SqlTier)
 	tiers, err := client.Tiers.List(project).Do()
 	if err != nil {
 		log.Fatal(err)
@@ -57,7 +57,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		tiersList[tier.Tier] = providers.SqlTier{
+		tiersList[tier.Tier] = gcp.SqlTier{
 			Name:        tier.Tier,
 			Vcpus:       vCpus,
 			MemoryMb:    tier.RAM / 1024 / 1024,

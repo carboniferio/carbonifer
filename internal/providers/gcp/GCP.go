@@ -1,4 +1,4 @@
-package providers
+package gcp
 
 import (
 	"encoding/json"

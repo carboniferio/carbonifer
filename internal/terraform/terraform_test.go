@@ -8,6 +8,7 @@ import (
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/carboniferio/carbonifer/internal/testutils"
+	_ "github.com/carboniferio/carbonifer/internal/testutils"
 	"github.com/shopspring/decimal"
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
