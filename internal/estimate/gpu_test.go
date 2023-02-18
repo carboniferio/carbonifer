@@ -10,7 +10,8 @@ import (
 
 var noGPUResource = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
-		Name: "no-gpu",
+		Name:  "no-gpu",
+		Count: 1,
 	},
 	Specs: &resources.ComputeResourceSpecs{
 		GpuTypes: nil,
@@ -19,7 +20,8 @@ var noGPUResource = resources.ComputeResource{
 
 var twoGPUResources = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
-		Name: "two-gpu",
+		Name:  "two-gpu",
+		Count: 1,
 	},
 	Specs: &resources.ComputeResourceSpecs{
 		GpuTypes: []string{

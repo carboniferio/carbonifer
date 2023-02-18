@@ -151,7 +151,7 @@ func TerraformPlan() (*tfjson.Plan, error) {
 	return tfplan, nil
 }
 
-func GetResources() ([]resources.Resource, error) {
+func GetResources() (map[string]resources.Resource, error) {
 	log.Debug("Reading planned resources from Terraform plan")
 	tfPlan, err := TerraformPlan()
 	if err != nil {
@@ -162,7 +162,8 @@ func GetResources() ([]resources.Resource, error) {
 		}
 	}
 	log.Debugf("Reading resources from Terraform plan: %d resources", len(tfPlan.PlannedValues.RootModule.Resources))
-	var resourcesList []resources.Resource
+	resourcesMap := make(map[string]resources.Resource)
+	resourceTemplates := make(map[string]*tfjson.ConfigResource)
 	dataResources := make(map[string]resources.DataResource)
 	if tfPlan.PriorState != nil {
 		for _, priorRes := range tfPlan.PriorState.Values.RootModule.Resources {
@@ -176,25 +177,32 @@ func GetResources() ([]resources.Resource, error) {
 		}
 	}
 
+	// Find template first
 	for _, res := range tfPlan.Config.RootModule.Resources {
 		log.Debugf("Reading resource %v", res.Address)
-		if strings.HasPrefix(res.Type, "google") {
-			var resource resources.Resource
+		if strings.HasPrefix(res.Type, "google") && strings.HasSuffix(res.Type, "_template") {
 			if res.Mode == "managed" {
-				resource := GetResource(*res, &dataResources)
-				resourcesList = append(resourcesList, resource)
+				resourceTemplates[res.Address] = res
 			}
-
-			if log.IsLevelEnabled(log.DebugLevel) {
-				computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"
-				if resource.IsSupported() {
-					computeJson, _ := json.Marshal(resource)
-					computeJsonStr = string(computeJson)
-				}
-				log.Debugf("  Compute resource : %v", string(computeJsonStr))
-			}
-
 		}
 	}
-	return resourcesList, nil
+
+	for _, res := range tfPlan.Config.RootModule.Resources {
+		log.Debugf("Reading resource %v", res.Address)
+		if strings.HasPrefix(res.Type, "google") && !strings.HasSuffix(res.Type, "_template") {
+			if res.Mode == "managed" {
+				resource := GetResource(*res, &dataResources, &resourceTemplates)
+				resourcesMap[resource.GetAddress()] = resource
+				if log.IsLevelEnabled(log.DebugLevel) {
+					computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"
+					if resource.IsSupported() {
+						computeJson, _ := json.Marshal(resource)
+						computeJsonStr = string(computeJson)
+					}
+					log.Debugf("  Compute resource : %v", string(computeJsonStr))
+				}
+			}
+		}
+	}
+	return resourcesMap, nil
 }

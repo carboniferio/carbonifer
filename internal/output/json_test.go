@@ -34,7 +34,7 @@ func TestGenerateReportJson_Empty(t *testing.T) {
 		Total: estimate.EstimationTotal{
 			Power:           decimal.Decimal{},
 			CarbonEmissions: decimal.Decimal{},
-			ResourcesCount:  0,
+			ResourcesCount:  decimal.Zero,
 		},
 	}
 
