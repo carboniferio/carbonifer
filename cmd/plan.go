@@ -36,7 +36,7 @@ var planCmd = &cobra.Command{
 		if len(args) != 0 {
 			terraformProject := args[0]
 			if strings.HasPrefix(terraformProject, "/") {
-				workdir = path.Dir(terraformProject)
+				workdir = terraformProject
 			} else {
 				workdir = path.Join(workdir, terraformProject)
 			}

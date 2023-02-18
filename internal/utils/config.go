@@ -2,7 +2,9 @@ package utils
 
 import (
 	"os"
+	"sort"
 
+	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
@@ -32,4 +34,10 @@ func LoadViperDefaults() {
 	settings := viper.AllSettings()
 
 	log.Debug(settings)
+}
+
+func SortEstimations(resources *[]estimation.EstimationResource) {
+	sort.Slice(*resources, func(i, j int) bool {
+		return (*resources)[i].Resource.GetAddress() < (*resources)[j].Resource.GetAddress()
+	})
 }

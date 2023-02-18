@@ -23,6 +23,7 @@ Not all resource types need to be supported if their energy use is negligible or
 |---|---|---|
 | `google_compute_instance`  | | Custom machine, nested boot disk type and GPU supported |
 | `google_compute_instance_group_manager`  | | Count will be the target size. Uses machine specifications from `google_compute_instance_template` |
+| `google_compute_autoscaler`  | Takes an average size  | Will set target size of `google_compute_instance_group_manager` |
 | `google_compute_disk`| `size` needs to be set, otherwise get it from image| |
 | `google_compute_region_disk` | `size` needs to be set, otherwise get it from image| |
 | `google_sql_database_instance`  | | Custom machine also supported |

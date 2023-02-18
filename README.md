@@ -20,14 +20,13 @@ It can estimate Carbon Emissions of:
 - **Google Cloud Platform**
   - [x] **Compute Engine**
     - [x] Compute Instances (generic and custom machine types)
-    - [x] Disks (boot, persistent and region-persistent, hdd or ssd)
+    - [x] Disks (boot, persistent and region-persistent, HDD or SSD)
     - [X] Machines with GPUs
     - [x] Cloud SQL
+    - [x] Instance Group (including with Autoscaler)
 
 The following will also be supported soon:
 
-- Google Cloud Platform
-  - [ ] Instance Group
 - Amazon Web Services
   - [ ] EC2
   - [ ] RDS

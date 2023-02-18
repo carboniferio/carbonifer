@@ -13,6 +13,7 @@ provider:
   gcp:
     avg_cpu_use: 0.5
     avg_gpu_use: 0.5
+    avg_autoscaler_size_percent: 0.5
     boot_disk:
       size: 10
       type: pd-standard
