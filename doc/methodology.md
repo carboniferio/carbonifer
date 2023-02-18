@@ -76,6 +76,39 @@ Average GPU Utilization is also read from:
 - targeted folder config file in `$TERRAFORM_PROJECT/.carbonifer/config.yml`), variable `avg_gpu_use`
 - The default is `0.5` (50%)
 
+### Instance Group size and count
+
+For group of instances, like GCP managed instance group or AWS autoscaling group, estimations will be displayed by instance and a count value will appear:
+
+```bash
+ --------------------------------------- ------------------ ------- ------------------------ 
+  resource type                           name               count   emissions per instance  
+ --------------------------------------- ------------------ ------- ------------------------ 
+  google_compute_instance_group_manager   my-group-manager   3        0.5568 gCO2eq/h        
+ --------------------------------------- ------------------ ------- ------------------------ 
+                                          Total              3        1.6704 gCO2eq/h        
+```
+
+So that, we can have a sense of what the footprint of each instance and infer easily what would be the estimation if we change the size of the group.
+
+On the same note, if a resource have a terraform `count` attribute, they will appear the same way:
+
+```terraform
+resource "google_compute_instance" "foo" {
+  count = 2
+```
+
+will produce :
+
+```bash
+ --------------------------------------- ------------------ ------- ------------------------ 
+  resource type                           name               count   emissions per instance  
+ --------------------------------------- ------------------ ------- ------------------------ 
+  google_compute_instance                 fo                 3        0.5568 gCO2eq/h        
+ --------------------------------------- ------------------ ------- ------------------------ 
+                                          Total              3        1.6704 gCO2eq/h        
+```
+
 ## Carbon Intensity
 
 This is the Carbon Emissions per Power per Time, in gCO2eq/Wh.
