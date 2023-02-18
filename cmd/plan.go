@@ -34,12 +34,12 @@ var planCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 		if len(args) != 0 {
-			if strings.HasPrefix("/", args[0]) {
-				workdir = args[0]
+			terraformProject := args[0]
+			if strings.HasPrefix(terraformProject, "/") {
+				workdir = path.Dir(terraformProject)
 			} else {
-				workdir = path.Join(workdir, args[0])
+				workdir = path.Join(workdir, terraformProject)
 			}
-
 		}
 
 		viper.Set("workdir", workdir)
