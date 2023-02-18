@@ -104,11 +104,23 @@ func getTemplateSpecs(
 	}
 
 	if template != nil {
-		zone := tfResource.AttributeValues["zone"]
-		if zone == nil {
-			log.Fatalf("No zone declared for %v", tfResource.Address)
+		var zones []string
+		zoneAttr := tfResource.AttributeValues["zone"]
+		if zoneAttr != nil {
+			zones = append(zones, zoneAttr.(string))
 		}
-		templateResource := GetResourceTemplate(*template, dataResources, zone.(string))
+		distributionPolicyZonesI := tfResource.AttributeValues["distribution_policy_zones"]
+		if distributionPolicyZonesI != nil {
+			distributionPolicyZones := distributionPolicyZonesI.([]interface{})
+			for _, z := range distributionPolicyZones {
+				zones = append(zones, z.(string))
+			}
+		}
+
+		if len(zones) == 0 {
+			log.Fatalf("No zone or distribution policy declared for %v", tfResource.Address)
+		}
+		templateResource := GetResourceTemplate(*template, dataResources, zones[0])
 		computeTemplate, ok := templateResource.(resources.ComputeResource)
 		if ok {
 			return computeTemplate.Specs, targetSize
