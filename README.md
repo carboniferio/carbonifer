@@ -42,9 +42,10 @@ A list of supported resource types is available in the [Scope](doc/scope.md) doc
 
 ## Install Carbonifer CLI
 
-```
+```bash
 go install github.com/carboniferio/carbonifer@latest
 ```
+
 Go will automatically install it in your $GOPATH/bin directory which should be in your $PATH.
 
 ## Plan
@@ -54,22 +55,36 @@ Go will automatically install it in your $GOPATH/bin directory which should be i
 ```bash
 $ carbonifer plan
 
- ---------------------------- ---------------- ------------------ 
-  resource type                name             emissions         
- ---------------------------- ---------------- ------------------ 
-  google_compute_disk          first             0.0422 gCO2eq/h  
-  google_compute_instance      first             0.3231 gCO2eq/h  
-  google_compute_instance      second            0.4248 gCO2eq/h  
-  google_compute_region_disk   regional-first    0.0844 gCO2eq/h  
-  google_compute_network       vpc_network      unsupported       
-  google_compute_subnetwork    first            unsupported       
- ---------------------------- ---------------- ------------------ 
-                               Total             0.8744 gCO2eq/h  
- ---------------------------- ---------------- ------------------ 
+ ------------------------------ ---------------- ------- ------------------------ 
+  resource type                  name             count   emissions per instance  
+ ------------------------------ ---------------- ------- ------------------------ 
+  google_sql_database_instance   instance         1        2.1716 gCO2eq/h        
+  google_compute_disk            first            1        0.0449 gCO2eq/h        
+  google_compute_instance        first            1        43.2803 gCO2eq/h       
+  google_compute_instance        second           1        0.4489 gCO2eq/h        
+  google_compute_region_disk     regional-first   1        0.0898 gCO2eq/h        
+  google_compute_subnetwork      first                    unsupported             
+  google_compute_network         vpc_network              unsupported             
+ ------------------------------ ---------------- ------- ------------------------ 
+                                 Total            5        46.0356 gCO2eq/h       
 
 ```
 
-The report is customizable (text or json, per hour, month...), cf [Configuration](#configuration)
+In case instances are in a managed group (GCP managed instance group, AWS autoscaling group...), the instances appear in the group name, with a count > 1 and emissions are shown for 1 instance. Of course, `Total` will sum all instances of the group:
+
+```bash
+ --------------------------------------- ------------------ ------- ------------------------ 
+  resource type                           name               count   emissions per instance  
+ --------------------------------------- ------------------ ------- ------------------------ 
+  google_compute_instance_group_manager   my-group-manager   3        0.5568 gCO2eq/h        
+  google_compute_network                  vpc_network                unsupported             
+  google_compute_subnetwork               first                      unsupported             
+ --------------------------------------- ------------------ ------- ------------------------ 
+                                          Total              3        1.6704 gCO2eq/h        
+ --------------------------------------- ------------------ ------- ------------------------ 
+ ```
+
+The report is customizable (text or JSON, per hour, month...), cf [Configuration](#configuration)
 
 <details><summary>Example of a JSON report</summary>
 <p>
@@ -80,7 +95,9 @@ The report is customizable (text or json, per hour, month...), cf [Configuration
     "UnitTime": "h",
     "UnitWattTime": "Wh",
     "UnitCarbonEmissionsTime": "gCO2eq/h",
-    "DateTime": "2023-01-24T15:58:25.720493+01:00"
+    "DateTime": "2023-02-18T14:52:08.757999+01:00",
+    "AverageCPUUsage": 0.5,
+    "AverageGPUUsage": 0.5
   },
   "Resources": [
     {
@@ -90,10 +107,11 @@ The report is customizable (text or json, per hour, month...), cf [Configuration
           "ResourceType": "google_compute_disk",
           "Provider": 2,
           "Region": "europe-west9",
-          "SelfLink": ""
+          "SelfLink": "",
+          "Count": 1
         },
         "Specs": {
-          "Gpu": 0,
+          "GpuTypes": null,
           "HddStorage": "1024",
           "SsdStorage": "0",
           "MemoryMb": 0,
@@ -102,9 +120,10 @@ The report is customizable (text or json, per hour, month...), cf [Configuration
           "ReplicationFactor": 1
         }
       },
-      "Power": "0.715",
-      "CarbonEmissions": "0.042185",
-      "AverageCPUUsage": "0.5"
+      "PowerPerInstance": "0.76096",
+      "CarbonEmissionsPerInstance": "0.04489664",
+      "AverageCPUUsage": "0.5",
+      "Count": "1"
     },
     {
       "Resource": {
@@ -113,21 +132,27 @@ The report is customizable (text or json, per hour, month...), cf [Configuration
           "ResourceType": "google_compute_instance",
           "Provider": 2,
           "Region": "europe-west9",
-          "SelfLink": ""
+          "SelfLink": "",
+          "Count": 1
         },
         "Specs": {
-          "Gpu": 0,
+          "GpuTypes": [
+            "nvidia-tesla-a100",
+            "nvidia-tesla-k80",
+            "nvidia-tesla-k80"
+          ],
           "HddStorage": "0",
           "SsdStorage": "1317",
-          "MemoryMb": 2480,
-          "VCPUs": 1,
+          "MemoryMb": 87040,
+          "VCPUs": 12,
           "CPUType": "",
-          "ReplicationFactor": 0
+          "ReplicationFactor": 1
         }
       },
-      "Power": "5.4755078125",
-      "CarbonEmissions": "0.3230549609",
-      "AverageCPUUsage": "0.5"
+      "PowerPerInstance": "733.5648917187",
+      "CarbonEmissionsPerInstance": "43.2803286114",
+      "AverageCPUUsage": "0.5",
+      "Count": "1"
     },
     {
       "Resource": {
@@ -136,21 +161,23 @@ The report is customizable (text or json, per hour, month...), cf [Configuration
           "ResourceType": "google_compute_instance",
           "Provider": 2,
           "Region": "europe-west9",
-          "SelfLink": ""
+          "SelfLink": "",
+          "Count": 1
         },
         "Specs": {
-          "Gpu": 0,
+          "GpuTypes": null,
           "HddStorage": "10",
           "SsdStorage": "0",
           "MemoryMb": 4098,
           "VCPUs": 2,
           "CPUType": "",
-          "ReplicationFactor": 0
+          "ReplicationFactor": 1
         }
       },
-      "Power": "7.1996246093",
-      "CarbonEmissions": "0.4247778519",
-      "AverageCPUUsage": "0.5"
+      "PowerPerInstance": "7.6091047343",
+      "CarbonEmissionsPerInstance": "0.4489371793",
+      "AverageCPUUsage": "0.5",
+      "Count": "1"
     },
     {
       "Resource": {
@@ -159,10 +186,11 @@ The report is customizable (text or json, per hour, month...), cf [Configuration
           "ResourceType": "google_compute_region_disk",
           "Provider": 2,
           "Region": "europe-west9",
-          "SelfLink": ""
+          "SelfLink": "",
+          "Count": 1
         },
         "Specs": {
-          "Gpu": 0,
+          "GpuTypes": null,
           "HddStorage": "1024",
           "SsdStorage": "0",
           "MemoryMb": 0,
@@ -171,9 +199,35 @@ The report is customizable (text or json, per hour, month...), cf [Configuration
           "ReplicationFactor": 2
         }
       },
-      "Power": "1.43",
-      "CarbonEmissions": "0.08437",
-      "AverageCPUUsage": "0.5"
+      "PowerPerInstance": "1.52192",
+      "CarbonEmissionsPerInstance": "0.08979328",
+      "AverageCPUUsage": "0.5",
+      "Count": "1"
+    },
+    {
+      "Resource": {
+        "Identification": {
+          "Name": "instance",
+          "ResourceType": "google_sql_database_instance",
+          "Provider": 2,
+          "Region": "europe-west9",
+          "SelfLink": "",
+          "Count": 1
+        },
+        "Specs": {
+          "GpuTypes": null,
+          "HddStorage": "0",
+          "SsdStorage": "10",
+          "MemoryMb": 15360,
+          "VCPUs": 4,
+          "CPUType": "",
+          "ReplicationFactor": 2
+        }
+      },
+      "PowerPerInstance": "36.807506875",
+      "CarbonEmissionsPerInstance": "2.1716429056",
+      "AverageCPUUsage": "0.5",
+      "Count": "1"
     }
   ],
   "UnsupportedResources": [
@@ -183,7 +237,8 @@ The report is customizable (text or json, per hour, month...), cf [Configuration
         "ResourceType": "google_compute_network",
         "Provider": 2,
         "Region": "",
-        "SelfLink": ""
+        "SelfLink": "",
+        "Count": 1
       }
     },
     {
@@ -192,14 +247,15 @@ The report is customizable (text or json, per hour, month...), cf [Configuration
         "ResourceType": "google_compute_subnetwork",
         "Provider": 2,
         "Region": "europe-west9",
-        "SelfLink": ""
+        "SelfLink": "",
+        "Count": 1
       }
     }
   ],
   "Total": {
-    "Power": "14.8201324218",
-    "CarbonEmissions": "0.8743878128",
-    "ResourcesCount": 6
+    "Power": "780.264383328",
+    "CarbonEmissions": "46.0355986163",
+    "ResourcesCount": "5"
   }
 }
 ```
