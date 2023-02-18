@@ -23,7 +23,7 @@ It can estimate Carbon Emissions of:
     - [x] Disks (boot, persistent and region-persistent, HDD or SSD)
     - [X] Machines with GPUs
     - [x] Cloud SQL
-    - [x] Instance Group (including with Autoscaler)
+    - [x] Instance Group (including regional and with Autoscaler)
 
 The following will also be supported soon:
 

@@ -13,11 +13,14 @@ func getResourceIdentification(resource tfjson.StateResource) *resources.Resourc
 	region := resource.AttributeValues["region"]
 	if region == nil {
 		zone := resource.AttributeValues["zone"]
-		replica_zones := resource.AttributeValues["replica_zones"]
+		zones := resource.AttributeValues["replica_zones"]
+		if zones == nil {
+			zones = resource.AttributeValues["distribution_policy_zones"]
+		}
 		if zone != nil {
 			region = strings.Join(strings.Split(zone.(string), "-")[:2], "-")
-		} else if replica_zones != nil {
-			region = strings.Join(strings.Split(replica_zones.([]interface{})[0].(string), "-")[:2], "-")
+		} else if zones != nil {
+			region = strings.Join(strings.Split(zones.([]interface{})[0].(string), "-")[:2], "-")
 		} else {
 			region = ""
 		}

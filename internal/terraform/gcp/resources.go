@@ -34,7 +34,8 @@ func GetResource(
 			Specs:          specs,
 		}
 	}
-	if resourceId.ResourceType == "google_compute_instance_group_manager" {
+	if resourceId.ResourceType == "google_compute_instance_group_manager" ||
+		resourceId.ResourceType == "google_compute_region_instance_group_manager" {
 		specs, count := getComputeInstanceGroupManagerSpecs(tfResource, dataResources, resourceTemplates, resourceConfigs)
 		if specs != nil {
 			resourceId.Count = count
