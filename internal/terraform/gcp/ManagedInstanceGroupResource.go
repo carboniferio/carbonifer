@@ -9,14 +9,21 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func getComputeInstanceGroupManagerSpecs(tfResource tfjson.ConfigResource, dataResources *map[string]resources.DataResource, resourceTemplates *map[string]*tfjson.ConfigResource) (*resources.ComputeResourceSpecs, int64) {
+func getComputeInstanceGroupManagerSpecs(
+	tfResource tfjson.StateResource,
+	dataResources *map[string]resources.DataResource,
+	resourceTemplates *map[string]*tfjson.StateResource,
+	resourceConfigs *map[string]*tfjson.ConfigResource) (*resources.ComputeResourceSpecs, int64) {
+
 	targetSize := int64(0)
-	targetSizeExpr := GetConstFromConfig(&tfResource, "target_size")
+	targetSizeExpr := tfResource.AttributeValues["target_size"]
 	if targetSizeExpr != nil {
 		targetSize = decimal.NewFromFloat(targetSizeExpr.(float64)).BigInt().Int64()
 	}
-	versionExpr := tfResource.Expressions["version"]
-	var template *tfjson.ConfigResource
+
+	var template *tfjson.StateResource
+	templateConfig := (*resourceConfigs)[tfResource.Address]
+	versionExpr := templateConfig.Expressions["version"]
 	if versionExpr != nil {
 		for _, version := range versionExpr.NestedBlocks {
 			instanceTemplate := version["instance_template"]
@@ -30,9 +37,13 @@ func getComputeInstanceGroupManagerSpecs(tfResource tfjson.ConfigResource, dataR
 			}
 		}
 	}
+
 	if template != nil {
-		zone := GetConstFromConfig(&tfResource, "zone").(string)
-		templateResource := GetResourceTemplate(*template, dataResources, zone)
+		zone := tfResource.AttributeValues["zone"]
+		if zone == nil {
+			log.Fatalf("No zone declared for %v", tfResource.Address)
+		}
+		templateResource := GetResourceTemplate(*template, dataResources, zone.(string))
 		computeTemplate, ok := templateResource.(resources.ComputeResource)
 		if ok {
 			return computeTemplate.Specs, targetSize

@@ -9,11 +9,11 @@ import (
 	tfjson "github.com/hashicorp/terraform-json"
 )
 
-func getResourceIdentification(resource tfjson.ConfigResource) *resources.ResourceIdentification {
-	region := GetConstFromConfig(&resource, "region")
+func getResourceIdentification(resource tfjson.StateResource) *resources.ResourceIdentification {
+	region := resource.AttributeValues["region"]
 	if region == nil {
-		zone := GetConstFromConfig(&resource, "zone")
-		replica_zones := GetConstFromConfig(&resource, "replica_zones")
+		zone := resource.AttributeValues["zone"]
+		replica_zones := resource.AttributeValues["replica_zones"]
 		if zone != nil {
 			region = strings.Join(strings.Split(zone.(string), "-")[:2], "-")
 		} else if replica_zones != nil {
@@ -22,14 +22,19 @@ func getResourceIdentification(resource tfjson.ConfigResource) *resources.Resour
 			region = ""
 		}
 	}
-	selfLinkExpr := GetConstFromConfig(&resource, "self_link")
-	var selfLink string
-	if selfLinkExpr != nil {
-		selfLink = GetConstFromConfig(&resource, "self_link").(string)
+
+	selfLink := ""
+	if resource.AttributeValues["self_link"] != nil {
+		selfLink = resource.AttributeValues["self_link"].(string)
+	}
+
+	name := resource.Name
+	if resource.Index != nil {
+		name = fmt.Sprintf("%v[%v]", resource.Name, resource.Index)
 	}
 
 	return &resources.ResourceIdentification{
-		Name:         resource.Name,
+		Name:         name,
 		ResourceType: resource.Type,
 		Provider:     providers.GCP,
 		Region:       fmt.Sprint(region),

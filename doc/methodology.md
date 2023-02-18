@@ -91,11 +91,13 @@ For group of instances, like GCP managed instance group or AWS autoscaling group
 
 So that, we can have a sense of what the footprint of each instance and infer easily what would be the estimation if we change the size of the group.
 
-On the same note, if a resource have a terraform `count` attribute, they will appear the same way:
+However, if a resource have a terraform `count` attribute, they will appear individually:
 
 ```terraform
 resource "google_compute_instance" "foo" {
   count = 2
+  ...
+}
 ```
 
 will produce :
@@ -104,7 +106,9 @@ will produce :
  --------------------------------------- ------------------ ------- ------------------------ 
   resource type                           name               count   emissions per instance  
  --------------------------------------- ------------------ ------- ------------------------ 
-  google_compute_instance                 fo                 3        0.5568 gCO2eq/h        
+  google_compute_instance                 foo[0]             1        0.5568 gCO2eq/h        
+  google_compute_instance                 foo[1]             1        0.5568 gCO2eq/h        
+  google_compute_instance                 foo[2]             1        0.5568 gCO2eq/h        
  --------------------------------------- ------------------ ------- ------------------------ 
                                           Total              3        1.6704 gCO2eq/h        
 ```

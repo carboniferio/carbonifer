@@ -9,10 +9,10 @@ import (
 )
 
 func getComputeDiskResourceSpecs(
-	resource tfjson.ConfigResource,
+	resource tfjson.StateResource,
 	dataResources *map[string]resources.DataResource) *resources.ComputeResourceSpecs {
 
-	disk := getDisk(resource.Address, resource.Expressions, false, dataResources)
+	disk := getDisk(resource.Address, resource.AttributeValues, false, dataResources)
 	hddSize := decimal.Zero
 	ssdSize := decimal.Zero
 	if disk.isSSD {
@@ -33,17 +33,18 @@ type disk struct {
 	replicationFactor int32
 }
 
-func getBootDisk(resourceAddress string, bootDiskBlock map[string]*tfjson.Expression, dataResources *map[string]resources.DataResource) disk {
+func getBootDisk(resourceAddress string, bootDiskBlock map[string]interface{}, dataResources *map[string]resources.DataResource) disk {
 	var disk disk
-	initParams := bootDiskBlock["initialize_params"].NestedBlocks
-	for _, initParam := range initParams {
+	initParams := bootDiskBlock["initialize_params"]
+	for _, iP := range initParams.([]interface{}) {
+		initParam := iP.(map[string]interface{})
 		disk = getDisk(resourceAddress, initParam, true, dataResources)
 
 	}
 	return disk
 }
 
-func getDisk(resourceAddress string, diskBlock map[string]*tfjson.Expression, isBootDiskParam bool, dataResources *map[string]resources.DataResource) disk {
+func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDiskParam bool, dataResources *map[string]resources.DataResource) disk {
 	disk := disk{
 		sizeGb:            viper.GetFloat64("provider.gcp.boot_disk.size"),
 		isSSD:             true,
@@ -52,7 +53,7 @@ func getDisk(resourceAddress string, diskBlock map[string]*tfjson.Expression, is
 
 	// Is Boot disk
 	isBootDisk := isBootDiskParam
-	isBootDiskI := GetConstFromExpression(diskBlock["boot"])
+	isBootDiskI := diskBlock["boot"]
 	if isBootDiskI != nil {
 		isBootDisk = isBootDiskI.(bool)
 	}
@@ -61,13 +62,16 @@ func getDisk(resourceAddress string, diskBlock map[string]*tfjson.Expression, is
 	var diskType string
 	diskTypeExpr := diskBlock["type"]
 	if diskTypeExpr == nil {
+		diskTypeExpr = diskBlock["disk_type"]
+	}
+	if diskTypeExpr == nil {
 		if isBootDisk {
 			diskType = viper.GetString("provider.gcp.boot_disk.type")
 		} else {
 			diskType = viper.GetString("provider.gcp.disk.type")
 		}
 	} else {
-		diskType = diskTypeExpr.ConstantValue.(string)
+		diskType = diskTypeExpr.(string)
 	}
 
 	if diskType == "pd-standard" {
@@ -75,9 +79,9 @@ func getDisk(resourceAddress string, diskBlock map[string]*tfjson.Expression, is
 	}
 
 	// Get Disk size
-	declaredSize := GetConstFromExpression(diskBlock["size"])
+	declaredSize := diskBlock["size"]
 	if declaredSize == nil {
-		declaredSize = GetConstFromExpression(diskBlock["disk_size_gb"])
+		declaredSize = diskBlock["disk_size_gb"]
 	}
 	if declaredSize == nil {
 		if isBootDisk {
@@ -85,15 +89,13 @@ func getDisk(resourceAddress string, diskBlock map[string]*tfjson.Expression, is
 		} else {
 			disk.sizeGb = viper.GetFloat64("provider.gcp.disk.size")
 		}
-		diskImageLinkExpr, okImage := diskBlock["image"]
-		if okImage {
-			for _, ref := range diskImageLinkExpr.References {
-				image, ok := (*dataResources)[ref]
-				if ok {
-					disk.sizeGb = (image.(resources.DataImageResource)).DataImageSpecs.DiskSizeGb
-				} else {
-					log.Warningf("%v : Disk image does not have a size declared, considering it default to be 10Gb ", resourceAddress)
-				}
+		diskImageLink := diskBlock["image"]
+		if diskImageLink != nil {
+			image, ok := (*dataResources)[diskImageLink.(string)]
+			if ok {
+				disk.sizeGb = (image.(resources.DataImageResource)).DataImageSpecs.DiskSizeGb
+			} else {
+				log.Warningf("%v : Disk image does not have a size declared, considering it default to be 10Gb ", resourceAddress)
 			}
 		} else {
 			log.Warningf("%v : Boot disk size not declared. Please set it! (otherwise we assume 10gb) ", resourceAddress)
@@ -103,12 +105,10 @@ func getDisk(resourceAddress string, diskBlock map[string]*tfjson.Expression, is
 		disk.sizeGb = declaredSize.(float64)
 	}
 
-	replicaZonesExpr := diskBlock["replica_zones"]
-	if replicaZonesExpr != nil {
-		rz := replicaZonesExpr.ConstantValue.([]interface{})
+	replicaZones := diskBlock["replica_zones"]
+	if replicaZones != nil {
+		rz := replicaZones.([]interface{})
 		disk.replicationFactor = int32(len(rz))
-	} else {
-		disk.replicationFactor = 1
 	}
 
 	return disk

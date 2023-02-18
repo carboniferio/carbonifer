@@ -2,6 +2,7 @@ package output
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
@@ -16,6 +17,12 @@ func GenerateReportText(report estimation.EstimationReport) string {
 
 	table := tablewriter.NewWriter(tableString)
 	table.SetHeader([]string{"resource type", "name", "count", "emissions per instance"})
+
+	// Default sort
+	estimations := report.Resources
+	sort.Slice(estimations, func(i, j int) bool {
+		return estimations[i].Resource.GetIdentification().Name < estimations[j].Resource.GetIdentification().Name
+	})
 
 	for _, resource := range report.Resources {
 		table.Append([]string{

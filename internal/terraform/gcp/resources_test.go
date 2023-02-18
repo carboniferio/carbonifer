@@ -1,8 +1,6 @@
 package gcp
 
 import (
-	"reflect"
-	"strings"
 	"testing"
 
 	"github.com/carboniferio/carbonifer/internal/providers"
@@ -80,7 +78,7 @@ var gpuDefaultMachine tfjson.StateResource = tfjson.StateResource{
 
 func TestGetResource(t *testing.T) {
 	type args struct {
-		tfResource tfjson.ConfigResource
+		tfResource tfjson.StateResource
 	}
 	tests := []struct {
 		name string
@@ -90,7 +88,7 @@ func TestGetResource(t *testing.T) {
 		{
 			name: "diskWithSize",
 			args: args{
-				tfResource: StateResourceToConfigResource(persistenDisk),
+				tfResource: persistenDisk,
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
@@ -110,7 +108,7 @@ func TestGetResource(t *testing.T) {
 		{
 			name: "diskWithNoSize",
 			args: args{
-				tfResource: StateResourceToConfigResource(persistenDiskNoSize),
+				tfResource: persistenDiskNoSize,
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
@@ -130,7 +128,7 @@ func TestGetResource(t *testing.T) {
 		{
 			name: "regionDisk",
 			args: args{
-				tfResource: StateResourceToConfigResource(regionDisk),
+				tfResource: regionDisk,
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
@@ -150,7 +148,7 @@ func TestGetResource(t *testing.T) {
 		{
 			name: "gpu attached",
 			args: args{
-				tfResource: StateResourceToConfigResource(gpuAttachedMachine),
+				tfResource: gpuAttachedMachine,
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
@@ -174,7 +172,7 @@ func TestGetResource(t *testing.T) {
 		{
 			name: "gpu default",
 			args: args{
-				tfResource: StateResourceToConfigResource(gpuDefaultMachine),
+				tfResource: gpuDefaultMachine,
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
@@ -199,46 +197,8 @@ func TestGetResource(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := GetResource(tt.args.tfResource, nil, nil)
+			got := GetResource(tt.args.tfResource, nil, nil, nil)
 			assert.Equal(t, tt.want, got)
 		})
-	}
-}
-
-func StateResourceToConfigResource(stateResource tfjson.StateResource) tfjson.ConfigResource {
-	mode := tfjson.ManagedResourceMode
-	if strings.HasPrefix(stateResource.Address, "data.") {
-		mode = tfjson.DataResourceMode
-	}
-	expressions := make(map[string]*tfjson.Expression)
-	for key, value := range stateResource.AttributeValues {
-		expressionData := tfjson.ExpressionData{
-			ConstantValue: nil,
-			References:    nil,
-			NestedBlocks:  nil,
-		}
-
-		rt := reflect.TypeOf(value)
-		if rt.Kind() == reflect.Slice || rt.Kind() == reflect.Array {
-			len := len(value.([]interface{}))
-			if len > 0 {
-				expressionData.ConstantValue = value
-			}
-		} else {
-			expressionData.ConstantValue = value
-		}
-		expr := tfjson.Expression{
-			ExpressionData: &expressionData,
-		}
-		expressions[key] = &expr
-	}
-	return tfjson.ConfigResource{
-		Address:           stateResource.Address,
-		Mode:              mode,
-		Type:              stateResource.Type,
-		Name:              stateResource.Name,
-		ProviderConfigKey: strings.Split(stateResource.Address, "_")[0],
-		Expressions:       expressions,
-		SchemaVersion:     stateResource.SchemaVersion,
 	}
 }

@@ -5,7 +5,12 @@ import (
 	tfjson "github.com/hashicorp/terraform-json"
 )
 
-func GetResource(tfResource tfjson.ConfigResource, dataResources *map[string]resources.DataResource, resourceTemplates *map[string]*tfjson.ConfigResource) resources.Resource {
+func GetResource(
+	tfResource tfjson.StateResource,
+	dataResources *map[string]resources.DataResource,
+	resourceTemplates *map[string]*tfjson.StateResource,
+	resourceConfigs *map[string]*tfjson.ConfigResource) resources.Resource {
+
 	resourceId := getResourceIdentification(tfResource)
 	if resourceId.ResourceType == "google_compute_instance" {
 		specs := getComputeResourceSpecs(tfResource, dataResources, nil)
@@ -30,7 +35,7 @@ func GetResource(tfResource tfjson.ConfigResource, dataResources *map[string]res
 		}
 	}
 	if resourceId.ResourceType == "google_compute_instance_group_manager" {
-		specs, count := getComputeInstanceGroupManagerSpecs(tfResource, dataResources, resourceTemplates)
+		specs, count := getComputeInstanceGroupManagerSpecs(tfResource, dataResources, resourceTemplates, resourceConfigs)
 		if specs != nil {
 			resourceId.Count = count
 			return resources.ComputeResource{
@@ -44,7 +49,7 @@ func GetResource(tfResource tfjson.ConfigResource, dataResources *map[string]res
 	}
 }
 
-func GetResourceTemplate(tfResource tfjson.ConfigResource, dataResources *map[string]resources.DataResource, zone string) resources.Resource {
+func GetResourceTemplate(tfResource tfjson.StateResource, dataResources *map[string]resources.DataResource, zone string) resources.Resource {
 	resourceId := getResourceIdentification(tfResource)
 	if resourceId.ResourceType == "google_compute_instance_template" {
 		specs := getComputeResourceSpecs(tfResource, dataResources, zone)
