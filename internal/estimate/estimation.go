@@ -16,15 +16,16 @@ type EstimationReport struct {
 
 type EstimationResource struct {
 	Resource        resources.Resource
-	Power           decimal.Decimal
-	CarbonEmissions decimal.Decimal
+	Power           decimal.Decimal `json:"PowerPerInstance"`
+	CarbonEmissions decimal.Decimal `json:"CarbonEmissionsPerInstance"`
 	AverageCPUUsage decimal.Decimal
+	Count           decimal.Decimal
 }
 
 type EstimationTotal struct {
 	Power           decimal.Decimal
 	CarbonEmissions decimal.Decimal
-	ResourcesCount  int
+	ResourcesCount  decimal.Decimal
 }
 
 type EstimationInfo struct {

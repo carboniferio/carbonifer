@@ -19,7 +19,7 @@ func EstimateResources(resourceList map[string]resources.Resource) EstimationRep
 	estimationTotal := EstimationTotal{
 		Power:           decimal.Zero,
 		CarbonEmissions: decimal.Zero,
-		ResourcesCount:  0,
+		ResourcesCount:  decimal.Zero,
 	}
 	for _, resource := range resourceList {
 		estimationResource, uerr := EstimateResource(resource)
@@ -33,9 +33,9 @@ func EstimateResources(resourceList map[string]resources.Resource) EstimationRep
 			unsupportedResources = append(unsupportedResources, resource)
 		}
 
-		estimationTotal.Power = estimationTotal.Power.Add(estimationResource.Power)
-		estimationTotal.CarbonEmissions = estimationTotal.CarbonEmissions.Add(estimationResource.CarbonEmissions)
-		estimationTotal.ResourcesCount += 1
+		estimationTotal.Power = estimationTotal.Power.Add(estimationResource.Power.Mul(estimationResource.Count))
+		estimationTotal.CarbonEmissions = estimationTotal.CarbonEmissions.Add(estimationResource.CarbonEmissions.Mul(estimationResource.Count))
+		estimationTotal.ResourcesCount = estimationTotal.ResourcesCount.Add(estimationResource.Count)
 	}
 
 	return EstimationReport{
@@ -103,7 +103,7 @@ func estimateGCP(resource resources.Resource) *EstimationResource {
 	carbonEmissionPerTime := avgWatt.Mul(regionEmissions.GridCarbonIntensity)
 
 	log.Debugf(
-		"estimating resource %v.%v (%v): %v %v%v * %v %vCO2/%v%v = %v %vCO2/%v%v",
+		"estimating resource %v.%v (%v): %v %v%v * %v %vCO2/%v%v = %v %vCO2/%v%v * %v",
 		computeResource.Identification.ResourceType,
 		computeResource.Identification.Name,
 		regionEmissions.Region,
@@ -118,6 +118,7 @@ func estimateGCP(resource resources.Resource) *EstimationResource {
 		viper.Get("unit.carbon").(string),
 		viper.Get("unit.power").(string),
 		viper.Get("unit.time").(string),
+		resource.GetIdentification().Count,
 	)
 
 	return &EstimationResource{
@@ -125,6 +126,7 @@ func estimateGCP(resource resources.Resource) *EstimationResource {
 		Power:           avgWatt.RoundFloor(10),
 		CarbonEmissions: carbonEmissionPerTime.RoundFloor(10),
 		AverageCPUUsage: decimal.NewFromFloat(viper.GetFloat64("provider.gcp.avg_cpu_use")).RoundFloor(10),
+		Count:           decimal.NewFromInt(int64(computeResource.Identification.Count)),
 	}
 }
 

@@ -97,6 +97,7 @@ func TestGetResource(t *testing.T) {
 					ResourceType: "google_compute_disk",
 					Provider:     providers.GCP,
 					Region:       "europe-west9",
+					Count:        1,
 				},
 				Specs: &resources.ComputeResourceSpecs{
 					HddStorage:        decimal.NewFromInt(1024),
@@ -116,6 +117,7 @@ func TestGetResource(t *testing.T) {
 					ResourceType: "google_compute_disk",
 					Provider:     providers.GCP,
 					Region:       "europe-west9",
+					Count:        1,
 				},
 				Specs: &resources.ComputeResourceSpecs{
 					HddStorage:        decimal.New(50, 1),
@@ -135,6 +137,7 @@ func TestGetResource(t *testing.T) {
 					ResourceType: "google_compute_region_disk",
 					Provider:     providers.GCP,
 					Region:       "europe-west9",
+					Count:        1,
 				},
 				Specs: &resources.ComputeResourceSpecs{
 					HddStorage:        decimal.Zero,
@@ -154,14 +157,16 @@ func TestGetResource(t *testing.T) {
 					ResourceType: "google_compute_instance",
 					Provider:     providers.GCP,
 					Region:       "europe-west9",
+					Count:        1,
 				},
 				Specs: &resources.ComputeResourceSpecs{
 					GpuTypes: []string{
 						"nvidia-tesla-k80",
 						"nvidia-tesla-k80",
 					},
-					HddStorage: decimal.Zero,
-					SsdStorage: decimal.Zero,
+					HddStorage:        decimal.Zero,
+					SsdStorage:        decimal.Zero,
+					ReplicationFactor: 1,
 				},
 			},
 		},
@@ -176,22 +181,24 @@ func TestGetResource(t *testing.T) {
 					ResourceType: "google_compute_instance",
 					Provider:     providers.GCP,
 					Region:       "europe-west9",
+					Count:        1,
 				},
 				Specs: &resources.ComputeResourceSpecs{
 					GpuTypes: []string{
 						"nvidia-tesla-a100",
 					},
-					VCPUs:      int32(12),
-					MemoryMb:   int32(87040),
-					HddStorage: decimal.Zero,
-					SsdStorage: decimal.Zero,
+					VCPUs:             int32(12),
+					MemoryMb:          int32(87040),
+					HddStorage:        decimal.Zero,
+					SsdStorage:        decimal.Zero,
+					ReplicationFactor: 1,
 				},
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := GetResource(tt.args.tfResource, nil)
+			got := GetResource(tt.args.tfResource, nil, nil)
 			assert.Equal(t, tt.want, got)
 		})
 	}

@@ -112,6 +112,7 @@ func TestGetResources(t *testing.T) {
 				ResourceType: "google_compute_disk",
 				Provider:     providers.GCP,
 				Region:       "europe-west9",
+				Count:        1,
 			},
 			Specs: &resources.ComputeResourceSpecs{
 				GpuTypes:          nil,
@@ -129,6 +130,7 @@ func TestGetResources(t *testing.T) {
 				ResourceType: "google_compute_instance",
 				Provider:     providers.GCP,
 				Region:       "europe-west9",
+				Count:        1,
 			},
 			Specs: &resources.ComputeResourceSpecs{
 				HddStorage: decimal.Zero,
@@ -140,6 +142,7 @@ func TestGetResources(t *testing.T) {
 					"nvidia-tesla-k80",  // Added by user in main.tf
 					"nvidia-tesla-k80",  // Added by user in main.tf
 				},
+				ReplicationFactor: 1,
 			},
 		},
 		"google_compute_instance.second": resources.ComputeResource{
@@ -148,14 +151,16 @@ func TestGetResources(t *testing.T) {
 				ResourceType: "google_compute_instance",
 				Provider:     providers.GCP,
 				Region:       "europe-west9",
+				Count:        1,
 			},
 			Specs: &resources.ComputeResourceSpecs{
-				GpuTypes:   nil,
-				HddStorage: decimal.NewFromFloat(10),
-				SsdStorage: decimal.Zero,
-				MemoryMb:   4098,
-				VCPUs:      2,
-				CPUType:    "",
+				GpuTypes:          nil,
+				HddStorage:        decimal.NewFromFloat(10),
+				SsdStorage:        decimal.Zero,
+				MemoryMb:          4098,
+				VCPUs:             2,
+				CPUType:           "",
+				ReplicationFactor: 1,
 			},
 		},
 		"google_compute_network.vpc_network": resources.UnsupportedResource{
@@ -164,6 +169,7 @@ func TestGetResources(t *testing.T) {
 				ResourceType: "google_compute_network",
 				Provider:     providers.GCP,
 				Region:       "",
+				Count:        1,
 			},
 		},
 		"google_compute_region_disk.regional-first": resources.ComputeResource{
@@ -172,6 +178,7 @@ func TestGetResources(t *testing.T) {
 				ResourceType: "google_compute_region_disk",
 				Provider:     providers.GCP,
 				Region:       "europe-west9",
+				Count:        1,
 			},
 			Specs: &resources.ComputeResourceSpecs{
 				GpuTypes:          nil,
@@ -189,6 +196,7 @@ func TestGetResources(t *testing.T) {
 				ResourceType: "google_compute_subnetwork",
 				Provider:     providers.GCP,
 				Region:       "europe-west9",
+				Count:        1,
 			},
 		},
 		"google_sql_database_instance.instance": resources.ComputeResource{
@@ -197,6 +205,7 @@ func TestGetResources(t *testing.T) {
 				ResourceType: "google_sql_database_instance",
 				Provider:     providers.GCP,
 				Region:       "europe-west9",
+				Count:        1,
 			},
 			Specs: &resources.ComputeResourceSpecs{
 				GpuTypes:          nil,
@@ -246,6 +255,7 @@ func TestGetResources_DiskImage(t *testing.T) {
 				ResourceType: "google_compute_disk",
 				Provider:     providers.GCP,
 				Region:       "europe-west9",
+				Count:        1,
 			},
 			Specs: &resources.ComputeResourceSpecs{
 				GpuTypes:          nil,
@@ -265,6 +275,66 @@ func TestGetResources_DiskImage(t *testing.T) {
 		for i, resource := range resources {
 			wantResource := wantResources[i]
 			assert.Equal(t, wantResource, resource)
+		}
+	}
+
+}
+
+func TestGetResources_GroupInstance(t *testing.T) {
+	testutils.SkipWithCreds(t)
+	// reset
+	terraformExec = nil
+
+	t.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "")
+
+	wd := path.Join(testutils.RootDir, "test/terraform/gcp_group")
+	viper.Set("workdir", wd)
+
+	wantResources := map[string]resources.Resource{
+		"google_compute_network.vpc_network": resources.UnsupportedResource{
+			Identification: &resources.ResourceIdentification{
+				Name:         "vpc_network",
+				ResourceType: "google_compute_network",
+				Provider:     providers.GCP,
+				Region:       "",
+				Count:        1,
+			},
+		},
+		"google_compute_subnetwork.first": resources.UnsupportedResource{
+			Identification: &resources.ResourceIdentification{
+				Name:         "first",
+				ResourceType: "google_compute_subnetwork",
+				Provider:     providers.GCP,
+				Region:       "europe-west9",
+				Count:        1,
+			},
+		},
+		"google_compute_instance_group_manager.my-group-manager": resources.ComputeResource{
+			Identification: &resources.ResourceIdentification{
+				Name:         "my-group-manager",
+				ResourceType: "google_compute_instance_group_manager",
+				Provider:     providers.GCP,
+				Region:       "europe-west9",
+				Count:        3,
+			},
+			Specs: &resources.ComputeResourceSpecs{
+				GpuTypes:          nil,
+				HddStorage:        decimal.NewFromFloat(20),
+				SsdStorage:        decimal.Zero,
+				MemoryMb:          8192,
+				VCPUs:             2,
+				CPUType:           "",
+				ReplicationFactor: 1,
+			},
+		},
+	}
+
+	resources, err := GetResources()
+	if assert.NoError(t, err) {
+		assert.Equal(t, len(wantResources), len(resources))
+		for i, resource := range resources {
+			wantResource := wantResources[i]
+			assert.EqualValues(t, wantResource, resource)
 		}
 	}
 

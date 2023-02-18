@@ -12,10 +12,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-func GetResource(tfResource tfjson.ConfigResource, dataResources *map[string]resources.DataResource) resources.Resource {
+func GetResource(tfResource tfjson.ConfigResource, dataResources *map[string]resources.DataResource, resourceTemplates *map[string]*tfjson.ConfigResource) resources.Resource {
 	resourceId := getResourceIdentification(tfResource)
 	if resourceId.ResourceType == "google_compute_instance" {
-		specs := getComputeResourceSpecs(tfResource, dataResources)
+		specs := getComputeResourceSpecs(tfResource, dataResources, nil)
 		return resources.ComputeResource{
 			Identification: resourceId,
 			Specs:          specs,
@@ -36,16 +36,38 @@ func GetResource(tfResource tfjson.ConfigResource, dataResources *map[string]res
 			Specs:          specs,
 		}
 	}
+	if resourceId.ResourceType == "google_compute_instance_group_manager" {
+		specs, count := getComputeInstanceGroupManagerSpecs(tfResource, dataResources, resourceTemplates)
+		if specs != nil {
+			resourceId.Count = count
+			return resources.ComputeResource{
+				Identification: resourceId,
+				Specs:          specs,
+			}
+		}
+	}
 	return resources.UnsupportedResource{
 		Identification: resourceId,
 	}
 }
 
+func GetResourceTemplate(tfResource tfjson.ConfigResource, dataResources *map[string]resources.DataResource, zone string) resources.Resource {
+	resourceId := getResourceIdentification(tfResource)
+	if resourceId.ResourceType == "google_compute_instance_template" {
+		specs := getComputeResourceSpecs(tfResource, dataResources, zone)
+		return resources.ComputeResource{
+			Identification: resourceId,
+			Specs:          specs,
+		}
+	}
+	return nil
+}
+
 func getResourceIdentification(resource tfjson.ConfigResource) *resources.ResourceIdentification {
-	region := GetValueExpression(&resource, "region")
+	region := GetConstFromConfig(&resource, "region")
 	if region == nil {
-		zone := GetValueExpression(&resource, "zone")
-		replica_zones := GetValueExpression(&resource, "replica_zones")
+		zone := GetConstFromConfig(&resource, "zone")
+		replica_zones := GetConstFromConfig(&resource, "replica_zones")
 		if zone != nil {
 			region = strings.Join(strings.Split(zone.(string), "-")[:2], "-")
 		} else if replica_zones != nil {
@@ -54,10 +76,10 @@ func getResourceIdentification(resource tfjson.ConfigResource) *resources.Resour
 			region = ""
 		}
 	}
-	selfLinkExpr := GetValueExpression(&resource, "self_link")
+	selfLinkExpr := GetConstFromConfig(&resource, "self_link")
 	var selfLink string
 	if selfLinkExpr != nil {
-		selfLink = GetValueExpression(&resource, "self_link").(string)
+		selfLink = GetConstFromConfig(&resource, "self_link").(string)
 	}
 
 	return &resources.ResourceIdentification{
@@ -66,17 +88,24 @@ func getResourceIdentification(resource tfjson.ConfigResource) *resources.Resour
 		Provider:     providers.GCP,
 		Region:       fmt.Sprint(region),
 		SelfLink:     selfLink,
+		Count:        1,
 	}
 }
 
 func getComputeResourceSpecs(
 	resource tfjson.ConfigResource,
-	dataResources *map[string]resources.DataResource) *resources.ComputeResourceSpecs {
+	dataResources *map[string]resources.DataResource, groupZone interface{}) *resources.ComputeResourceSpecs {
 
-	machine_type := GetValueExpression(&resource, "machine_type").(string)
-	zone := GetValueExpression(&resource, "zone").(string)
+	machine_type := GetConstFromConfig(&resource, "machine_type").(string)
+	var zone string
+	if groupZone != nil {
+		zone = groupZone.(string)
+	} else {
+		zone = GetConstFromConfig(&resource, "zone").(string)
+	}
+
 	machineType := providers.GetGCPMachineType(machine_type, zone)
-	CPUType, ok := GetValueExpression(&resource, "cpu_platform").(string)
+	CPUType, ok := GetConstFromConfig(&resource, "cpu_platform").(string)
 	if !ok {
 		CPUType = ""
 	}
@@ -87,6 +116,16 @@ func getComputeResourceSpecs(
 		bootDisks := bdExpr.NestedBlocks
 		for _, bootDiskBlock := range bootDisks {
 			bootDisk := getBootDisk(resource.Address, bootDiskBlock, dataResources)
+			disks = append(disks, bootDisk)
+		}
+	}
+
+	diskExpr, ok_bd := resource.Expressions["disk"]
+	if ok_bd {
+		disksBlocks := diskExpr.NestedBlocks
+		for _, diskBlock := range disksBlocks {
+
+			bootDisk := getDisk(resource.Address, diskBlock, false, dataResources)
 			disks = append(disks, bootDisk)
 		}
 	}
@@ -112,7 +151,7 @@ func getComputeResourceSpecs(
 	}
 
 	gpus := machineType.GPUTypes
-	gasI := GetValueExpression(&resource, "guest_accelerator")
+	gasI := GetConstFromConfig(&resource, "guest_accelerator")
 	if gasI != nil {
 		guestAccelerators := gasI.([]interface{})
 		for _, gaI := range guestAccelerators {
@@ -126,12 +165,13 @@ func getComputeResourceSpecs(
 	}
 
 	return &resources.ComputeResourceSpecs{
-		GpuTypes:   gpus,
-		VCPUs:      machineType.Vcpus,
-		MemoryMb:   machineType.MemoryMb,
-		CPUType:    CPUType,
-		SsdStorage: ssdSize,
-		HddStorage: hddSize,
+		GpuTypes:          gpus,
+		VCPUs:             machineType.Vcpus,
+		MemoryMb:          machineType.MemoryMb,
+		CPUType:           CPUType,
+		SsdStorage:        ssdSize,
+		HddStorage:        hddSize,
+		ReplicationFactor: 1,
 	}
 }
 
@@ -170,12 +210,21 @@ func getBootDisk(resourceAddress string, bootDiskBlock map[string]*tfjson.Expres
 	return disk
 }
 
-func getDisk(resourceAddress string, diskBlock map[string]*tfjson.Expression, isBootDisk bool, dataResources *map[string]resources.DataResource) disk {
+func getDisk(resourceAddress string, diskBlock map[string]*tfjson.Expression, isBootDiskParam bool, dataResources *map[string]resources.DataResource) disk {
 	disk := disk{
 		sizeGb:            viper.GetFloat64("provider.gcp.boot_disk.size"),
 		isSSD:             true,
 		replicationFactor: 1,
 	}
+
+	// Is Boot disk
+	isBootDisk := isBootDiskParam
+	isBootDiskI := GetConstFromExpression(diskBlock["boot"])
+	if isBootDiskI != nil {
+		isBootDisk = isBootDiskI.(bool)
+	}
+
+	// Get disk type
 	var diskType string
 	diskTypeExpr := diskBlock["type"]
 	if diskTypeExpr == nil {
@@ -192,10 +241,12 @@ func getDisk(resourceAddress string, diskBlock map[string]*tfjson.Expression, is
 		disk.isSSD = false
 	}
 
-	sizeParamExpr := diskBlock["size"]
-	if sizeParamExpr != nil {
-		disk.sizeGb = sizeParamExpr.ConstantValue.(float64)
-	} else {
+	// Get Disk size
+	declaredSize := GetConstFromExpression(diskBlock["size"])
+	if declaredSize == nil {
+		declaredSize = GetConstFromExpression(diskBlock["disk_size_gb"])
+	}
+	if declaredSize == nil {
 		if isBootDisk {
 			disk.sizeGb = viper.GetFloat64("provider.gcp.boot_disk.size")
 		} else {
@@ -215,13 +266,16 @@ func getDisk(resourceAddress string, diskBlock map[string]*tfjson.Expression, is
 			log.Warningf("%v : Boot disk size not declared. Please set it! (otherwise we assume 10gb) ", resourceAddress)
 
 		}
-
+	} else {
+		disk.sizeGb = declaredSize.(float64)
 	}
 
 	replicaZonesExpr := diskBlock["replica_zones"]
 	if replicaZonesExpr != nil {
 		rz := replicaZonesExpr.ConstantValue.([]interface{})
 		disk.replicationFactor = int32(len(rz))
+	} else {
+		disk.replicationFactor = 1
 	}
 
 	return disk
@@ -281,8 +335,46 @@ func getSQLResourceSpecs(
 	}
 }
 
-func GetValueExpression(resource *tfjson.ConfigResource, key string) interface{} {
+func getComputeInstanceGroupManagerSpecs(tfResource tfjson.ConfigResource, dataResources *map[string]resources.DataResource, resourceTemplates *map[string]*tfjson.ConfigResource) (*resources.ComputeResourceSpecs, int64) {
+	targetSize := int64(0)
+	targetSizeExpr := GetConstFromConfig(&tfResource, "target_size")
+	if targetSizeExpr != nil {
+		targetSize = decimal.NewFromFloat(targetSizeExpr.(float64)).BigInt().Int64()
+	}
+	versionExpr := tfResource.Expressions["version"]
+	var template *tfjson.ConfigResource
+	if versionExpr != nil {
+		for _, version := range versionExpr.NestedBlocks {
+			instanceTemplate := version["instance_template"]
+			if instanceTemplate != nil {
+				references := instanceTemplate.References
+				for _, reference := range references {
+					if !strings.HasSuffix(reference, ".id") {
+						template = (*resourceTemplates)[reference]
+					}
+				}
+			}
+		}
+	}
+	if template != nil {
+		zone := GetConstFromConfig(&tfResource, "zone").(string)
+		templateResource := GetResourceTemplate(*template, dataResources, zone)
+		computeTemplate, ok := templateResource.(resources.ComputeResource)
+		if ok {
+			return computeTemplate.Specs, targetSize
+		} else {
+			log.Fatalf("Type mismatch, not a esources.ComputeResource template %v", computeTemplate.GetAddress())
+		}
+	}
+	return nil, 0
+}
+
+func GetConstFromConfig(resource *tfjson.ConfigResource, key string) interface{} {
 	expr := resource.Expressions[key]
+	return GetConstFromExpression(expr)
+}
+
+func GetConstFromExpression(expr *tfjson.Expression) interface{} {
 	if expr != nil {
 		if expr.ConstantValue != nil {
 			return expr.ConstantValue

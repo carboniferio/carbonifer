@@ -24,6 +24,7 @@ type ResourceIdentification struct {
 	Provider     providers.Provider
 	Region       string
 	SelfLink     string
+	Count        int64
 }
 
 type ComputeResource struct {
