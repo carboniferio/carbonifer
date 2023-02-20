@@ -106,7 +106,6 @@ The report is customizable (text or JSON, per hour, month...), cf [Configuration
           "ResourceType": "google_compute_disk",
           "Provider": 2,
           "Region": "europe-west9",
-          "SelfLink": "",
           "Count": 1
         },
         "Specs": {
@@ -115,7 +114,6 @@ The report is customizable (text or JSON, per hour, month...), cf [Configuration
           "SsdStorage": "0",
           "MemoryMb": 0,
           "VCPUs": 0,
-          "CPUType": "",
           "ReplicationFactor": 1
         }
       },
@@ -131,7 +129,6 @@ The report is customizable (text or JSON, per hour, month...), cf [Configuration
           "ResourceType": "google_compute_instance",
           "Provider": 2,
           "Region": "europe-west9",
-          "SelfLink": "",
           "Count": 1
         },
         "Specs": {
@@ -160,7 +157,6 @@ The report is customizable (text or JSON, per hour, month...), cf [Configuration
           "ResourceType": "google_compute_instance",
           "Provider": 2,
           "Region": "europe-west9",
-          "SelfLink": "",
           "Count": 1
         },
         "Specs": {
@@ -185,7 +181,6 @@ The report is customizable (text or JSON, per hour, month...), cf [Configuration
           "ResourceType": "google_compute_region_disk",
           "Provider": 2,
           "Region": "europe-west9",
-          "SelfLink": "",
           "Count": 1
         },
         "Specs": {
@@ -210,7 +205,6 @@ The report is customizable (text or JSON, per hour, month...), cf [Configuration
           "ResourceType": "google_sql_database_instance",
           "Provider": 2,
           "Region": "europe-west9",
-          "SelfLink": "",
           "Count": 1
         },
         "Specs": {
@@ -236,7 +230,6 @@ The report is customizable (text or JSON, per hour, month...), cf [Configuration
         "ResourceType": "google_compute_network",
         "Provider": 2,
         "Region": "",
-        "SelfLink": "",
         "Count": 1
       }
     },
@@ -246,7 +239,6 @@ The report is customizable (text or JSON, per hour, month...), cf [Configuration
         "ResourceType": "google_compute_subnetwork",
         "Provider": 2,
         "Region": "europe-west9",
-        "SelfLink": "",
         "Count": 1
       }
     }

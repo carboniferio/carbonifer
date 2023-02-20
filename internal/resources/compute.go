@@ -23,7 +23,6 @@ type ResourceIdentification struct {
 	ResourceType string
 	Provider     providers.Provider
 	Region       string
-	SelfLink     string
 	Count        int64
 }
 

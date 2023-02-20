@@ -40,16 +40,11 @@ func getDataResourceIdentification(resource tfjson.StateResource) *resources.Res
 			region = ""
 		}
 	}
-	selfLink := ""
-	if resource.AttributeValues["self_link"] != nil {
-		selfLink = resource.AttributeValues["self_link"].(string)
-	}
 
 	return &resources.ResourceIdentification{
 		Name:         resource.Name,
 		ResourceType: resource.Type,
 		Provider:     providers.GCP,
 		Region:       fmt.Sprint(region),
-		SelfLink:     selfLink,
 	}
 }
