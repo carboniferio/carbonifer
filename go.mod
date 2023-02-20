@@ -3,10 +3,11 @@ module github.com/carboniferio/carbonifer
 go 1.17
 
 require (
+	github.com/forestgiant/sliceutil v0.0.0-20160425183142-94783f95db6c
 	github.com/hashicorp/go-version v1.6.0
 	github.com/hashicorp/hc-install v0.4.0
 	github.com/hashicorp/terraform-exec v0.17.2
-	github.com/hashicorp/terraform-json v0.14.0
+	github.com/hashicorp/terraform-json v0.15.0
 	github.com/heirko/go-contrib v0.0.0-20200825160048-11fc5e2235fa
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/shopspring/decimal v1.3.1

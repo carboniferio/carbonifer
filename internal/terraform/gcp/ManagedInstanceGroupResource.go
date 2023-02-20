@@ -17,7 +17,7 @@ func getComputeInstanceGroupManagerSpecs(
 	resourceConfigs *map[string]*tfjson.ConfigResource) (*resources.ComputeResourceSpecs, int64) {
 
 	// Get template of instance
-	specs, targetSize := getTemplateSpecs(tfResource, dataResources, resourceReferences, resourceConfigs)
+	specs, targetSize := getGroupInstanceTemplateSpecs(tfResource, dataResources, resourceReferences, resourceConfigs)
 	if specs == nil {
 		return specs, targetSize
 	}
@@ -74,7 +74,7 @@ func computeTargetSize(minSize decimal.Decimal, maxSize decimal.Decimal) int64 {
 	return avgAutoscalerSizePercent.Mul(maxSize.Sub(minSize)).Ceil().IntPart()
 }
 
-func getTemplateSpecs(
+func getGroupInstanceTemplateSpecs(
 	tfResource tfjson.StateResource,
 	dataResources *map[string]resources.DataResource,
 	resourceReferences *map[string]*tfjson.StateResource,

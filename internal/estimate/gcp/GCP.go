@@ -23,6 +23,7 @@ func EstimateGCP(resource resources.Resource) *estimation.EstimationResource {
 	if viper.Get("unit.time").(string) == "y" {
 		avgWatt = avgWatt.Mul(decimal.NewFromInt(24 * 365))
 	}
+	avgWattStr := avgWatt.String()
 
 	// Regional grid emission per unit of time
 	regionEmissions, err := GCPRegionEmission(resource.GetIdentification().Region) // gCO2eq /kWh
@@ -44,20 +45,21 @@ func EstimateGCP(resource resources.Resource) *estimation.EstimationResource {
 
 	// Carbon Emissions
 	carbonEmissionPerTime := avgWatt.Mul(regionEmissions.GridCarbonIntensity)
+	carbonEmissionPerTimeStr := carbonEmissionPerTime.String()
 
 	log.Debugf(
 		"estimating resource %v.%v (%v): %v %v%v * %v %vCO2/%v%v = %v %vCO2/%v%v * %v",
 		computeResource.Identification.ResourceType,
 		computeResource.Identification.Name,
 		regionEmissions.Region,
-		avgWatt,
+		avgWattStr,
 		viper.Get("unit.power").(string),
 		viper.Get("unit.time").(string),
 		regionEmissions.GridCarbonIntensity,
 		viper.Get("unit.carbon").(string),
 		viper.Get("unit.power").(string),
 		viper.Get("unit.time").(string),
-		carbonEmissionPerTime,
+		carbonEmissionPerTimeStr,
 		viper.Get("unit.carbon").(string),
 		viper.Get("unit.power").(string),
 		viper.Get("unit.time").(string),

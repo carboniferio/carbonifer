@@ -340,3 +340,62 @@ func TestGetResources_GroupInstance(t *testing.T) {
 	}
 
 }
+
+func TestGetResources_InstanceFromTemplate(t *testing.T) {
+	testutils.SkipWithCreds(t)
+	// reset
+	terraformExec = nil
+
+	t.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "")
+
+	wd := path.Join(testutils.RootDir, "test/terraform/gcp_cit")
+	viper.Set("workdir", wd)
+
+	wantResources := map[string]resources.Resource{
+		"google_compute_network.vpc_network": resources.UnsupportedResource{
+			Identification: &resources.ResourceIdentification{
+				Name:         "vpc_network",
+				ResourceType: "google_compute_network",
+				Provider:     providers.GCP,
+				Region:       "",
+				Count:        1,
+			},
+		},
+		"google_compute_subnetwork.first": resources.UnsupportedResource{
+			Identification: &resources.ResourceIdentification{
+				Name:         "first",
+				ResourceType: "google_compute_subnetwork",
+				Provider:     providers.GCP,
+				Region:       "europe-west9",
+				Count:        1,
+			},
+		},
+		"google_compute_instance_from_template.ifromtpl": resources.ComputeResource{
+			Identification: &resources.ResourceIdentification{
+				Name:         "ifromtpl",
+				ResourceType: "google_compute_instance_from_template",
+				Provider:     providers.GCP,
+				Region:       "europe-west9",
+				Count:        1,
+			},
+			Specs: &resources.ComputeResourceSpecs{
+				GpuTypes:          nil,
+				HddStorage:        decimal.NewFromFloat(20),
+				SsdStorage:        decimal.Zero,
+				MemoryMb:          8192,
+				VCPUs:             2,
+				CPUType:           "",
+				ReplicationFactor: 1,
+			},
+		},
+	}
+
+	resources, err := GetResources()
+	if assert.NoError(t, err) {
+		for i, resource := range resources {
+			wantResource := wantResources[i]
+			assert.EqualValues(t, wantResource, resource)
+		}
+	}
+
+}
