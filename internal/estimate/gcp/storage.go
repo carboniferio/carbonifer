@@ -3,7 +3,6 @@ package gcp
 import (
 	"github.com/carboniferio/carbonifer/internal/estimate/coefficients"
 	"github.com/carboniferio/carbonifer/internal/resources"
-	_ "github.com/carboniferio/carbonifer/internal/testutils"
 	"github.com/shopspring/decimal"
 )
 

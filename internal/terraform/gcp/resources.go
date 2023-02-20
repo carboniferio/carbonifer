@@ -2,6 +2,7 @@ package gcp
 
 import (
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/forestgiant/sliceutil"
 	tfjson "github.com/hashicorp/terraform-json"
 )
 
@@ -17,6 +18,15 @@ func GetResource(
 		return resources.ComputeResource{
 			Identification: resourceId,
 			Specs:          specs,
+		}
+	}
+	if resourceId.ResourceType == "google_compute_instance_from_template" {
+		specs := getComputeResourceFromTemplateSpecs(tfResource, dataResources, resourceTemplates, resourceConfigs)
+		if specs != nil {
+			return resources.ComputeResource{
+				Identification: resourceId,
+				Specs:          specs,
+			}
 		}
 	}
 	if resourceId.ResourceType == "google_compute_disk" ||
@@ -45,9 +55,14 @@ func GetResource(
 			}
 		}
 	}
-	if resourceId.ResourceType == "google_compute_autoscaler" {
+	ignoredResourceType := []string{
+		"google_compute_autoscaler",
+		"google_compute_instance_template",
+	}
+	if sliceutil.Contains(ignoredResourceType, resourceId.ResourceType) {
 		return nil
 	}
+
 	return resources.UnsupportedResource{
 		Identification: resourceId,
 	}

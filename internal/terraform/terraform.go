@@ -203,19 +203,19 @@ func GetResources() (map[string]resources.Resource, error) {
 	// Get All resources
 	for _, res := range tfPlan.PlannedValues.RootModule.Resources {
 		log.Debugf("Reading resource %v", res.Address)
-		if strings.HasPrefix(res.Type, "google") && !strings.HasSuffix(res.Type, "_template") {
+		if strings.HasPrefix(res.Type, "google") {
 			if res.Mode == "managed" {
 				resource := gcp.GetResource(*res, &dataResources, &resourceReferences, &resourceConfigs)
 				if resource != nil {
 					resourcesMap[resource.GetAddress()] = resource
-				}
-				if log.IsLevelEnabled(log.DebugLevel) {
-					computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"
-					if resource.IsSupported() {
-						computeJson, _ := json.Marshal(resource)
-						computeJsonStr = string(computeJson)
+					if log.IsLevelEnabled(log.DebugLevel) {
+						computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"
+						if resource.IsSupported() {
+							computeJson, _ := json.Marshal(resource)
+							computeJsonStr = string(computeJson)
+						}
+						log.Debugf("  Compute resource : %v", string(computeJsonStr))
 					}
-					log.Debugf("  Compute resource : %v", string(computeJsonStr))
 				}
 			}
 		}

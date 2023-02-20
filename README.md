@@ -19,7 +19,7 @@ It can estimate Carbon Emissions of:
 
 - **Google Cloud Platform**
   - [x] **Compute Engine**
-    - [x] Compute Instances (generic and custom machine types)
+    - [x] Compute Instances (generic and custom machine types, and from template)
     - [x] Disks (boot, persistent and region-persistent, HDD or SSD)
     - [X] Machines with GPUs
     - [x] Cloud SQL

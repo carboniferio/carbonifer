@@ -35,7 +35,6 @@ func getComputeResourceSpecs(
 		}
 	}
 
-	// TODO Disks
 	diskListI, ok_disks := resource.AttributeValues["disk"]
 	if ok_disks {
 		diskList := diskListI.([]interface{})
