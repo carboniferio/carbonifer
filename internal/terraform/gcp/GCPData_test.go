@@ -40,9 +40,7 @@ func TestGetDataResource(t *testing.T) {
 				Identification: &resources.ResourceIdentification{
 					Name:         "debian",
 					ResourceType: "google_compute_image",
-					Provider:     providers.GCP,
-					SelfLink:     "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20221206",
-				},
+					Provider:     providers.GCP},
 				DataImageSpecs: &resources.DataImageSpecs{
 					DiskSizeGb: float64(10),
 				},

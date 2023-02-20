@@ -26,11 +26,6 @@ func getResourceIdentification(resource tfjson.StateResource) *resources.Resourc
 		}
 	}
 
-	selfLink := ""
-	if resource.AttributeValues["self_link"] != nil {
-		selfLink = resource.AttributeValues["self_link"].(string)
-	}
-
 	name := resource.Name
 	if resource.Index != nil {
 		name = fmt.Sprintf("%v[%v]", resource.Name, resource.Index)
@@ -41,7 +36,6 @@ func getResourceIdentification(resource tfjson.StateResource) *resources.Resourc
 		ResourceType: resource.Type,
 		Provider:     providers.GCP,
 		Region:       fmt.Sprint(region),
-		SelfLink:     selfLink,
 		Count:        1,
 	}
 }
