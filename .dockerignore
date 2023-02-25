@@ -1,0 +1,12 @@
+.vscode/
+.idea/
+bin/
+.git*
+doc/
+*.md
+.*ignore
+.goreleaser.yaml
+test/
+Makefile
+Dockerfile*
+**/*_test.go
