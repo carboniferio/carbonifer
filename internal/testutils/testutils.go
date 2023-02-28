@@ -1,14 +1,12 @@
 package testutils
 
 import (
-	"log"
 	"os"
 	"path"
 	"runtime"
 	"testing"
 
 	"github.com/carboniferio/carbonifer/internal/utils"
-	"github.com/spf13/viper"
 )
 
 var RootDir string
@@ -20,13 +18,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	utils.LoadViperDefaults()
-	viper.AddConfigPath(path.Join(RootDir, "test/config"))
-	viper.SetConfigName("default_conf")
-	viper.SetConfigType("yaml")
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatal(err)
-	}
+	utils.InitConfig(path.Join(RootDir, "test/config/default_conf.yaml"))
 
 	// Set fake GCP auth
 	os.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "foo")
