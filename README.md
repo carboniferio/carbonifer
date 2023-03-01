@@ -47,6 +47,17 @@ go install github.com/carboniferio/carbonifer@latest
 
 Go will automatically install it in your $GOPATH/bin directory which should be in your $PATH.
 
+### Docker alternative
+
+Alternatively, you can use the Docker image:
+
+```bash
+git clone https://github.com/carboniferio/carbonifer.git
+cd carbonifer
+docker build -t carbonifer .
+docker run -it --rm -v <your_tf_folder_with_config>:/tmp/ carbonifer ./carbonifer --config=/tmp/config.yaml plan /tmp/
+```
+
 ## Plan
 
 `carbonifer plan` will read your Terraform folder and estimates Carbon Emissions.
