@@ -17,10 +17,8 @@ package cmd
 
 import (
 	"os"
-	"path"
 
 	"github.com/carboniferio/carbonifer/internal/utils"
-	"github.com/heirko/go-contrib/logrusHelper"
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -64,42 +62,16 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
+	utils.InitConfig(cfgFile)
 
-		viper.AddConfigPath(path.Join(home, ".carbonifer"))
-		viper.AddConfigPath("/etc/carbonifer/")
-		viper.AddConfigPath("./.carbonifer")
-		if viper.ConfigFileUsed() == "" {
-			viper.SetConfigType("yaml")
-			viper.SetConfigName("config")
-		}
-	}
-
-	viper.AutomaticEnv() // read in environment variables that match
-
-	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err != nil {
-		log.Panic(err)
-	}
-
-	// Setup Logrus
-	var logrusConfig = logrusHelper.UnmarshalConfiguration(viper.GetViper().Sub("log")) // Unmarshal configuration from Viper
-	err := logrusHelper.SetConfig(log.StandardLogger(), logrusConfig)
+	// Set working directory
+	currentDir, err := os.Getwd()
 	if err != nil {
-		log.Panic(err)
+		log.Fatal(err)
 	}
+	viper.SetDefault("workdir", currentDir)
 
-	if viper.ConfigFileUsed() != "" {
-		log.Infof("Using config file: %v", viper.ConfigFileUsed())
-	}
-
-	// Set log level
+	// Set log level from command flags
 	info, _ := RootCmd.Flags().GetBool("info")
 	debug, _ := RootCmd.Flags().GetBool("debug")
 	if info {
@@ -109,14 +81,6 @@ func initConfig() {
 	} else {
 		viper.SetDefault("log.level", "warning")
 	}
-
-	// Viper default values
-	currentDir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-	viper.SetDefault("workdir", currentDir)
-	utils.LoadViperDefaults()
 
 	// Bind Viper and Cobra flags
 	if err := viper.BindPFlag("out.format", RootCmd.PersistentFlags().Lookup("format")); err != nil {
