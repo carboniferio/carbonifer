@@ -2,13 +2,13 @@ package resources
 
 import (
 	"fmt"
+
 	internalProvider "github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/providers/gcp"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/carboniferio/carbonifer/internal/utils"
 	"github.com/carboniferio/carbonifer/pkg/providers"
 	"github.com/shopspring/decimal"
-	"github.com/spf13/viper"
 )
 
 type GenericResource struct {
@@ -77,6 +77,5 @@ func fromGCPMachineTypeToResource(region string, machineType gcp.MachineType) Ge
 }
 
 func init() {
-	viper.Set("data.path", "../../data")
-	utils.InitConfig("../../internal/utils/defaults.yaml")
+	utils.InitWithDefaultConfig()
 }

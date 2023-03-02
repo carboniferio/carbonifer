@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"runtime"
 	"sort"
 
 	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
@@ -17,8 +18,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func InitConfig(configFilePath string) {
-	initViper(configFilePath)
+func InitWithDefaultConfig() {
+	initViper("")
+	initLogger()
+	checkDataConfig()
+}
+
+func InitWithConfig(customConfigFilePath string) {
+	initViper(customConfigFilePath)
 	initLogger()
 	checkDataConfig()
 }
@@ -42,8 +49,15 @@ func loadViperDefaults() {
 	log.Debug(settings)
 }
 
+func BasePath() string {
+	_, b, _, _ := runtime.Caller(0)
+	d := filepath.Dir(b)
+	return filepath.Join(d, "../..")
+}
+
 func initViper(configFilePath string) {
 	loadViperDefaults()
+
 	if configFilePath != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(configFilePath)
@@ -69,6 +83,14 @@ func initViper(configFilePath string) {
 			log.Panic(err)
 		}
 	}
+
+	// Set absolute data directory
+	dataPath := viper.GetString("data.path")
+	if dataPath != "" && !filepath.IsAbs(dataPath) {
+		basedir := BasePath()
+		dataPath = filepath.Join(basedir, dataPath)
+	}
+	viper.Set("data.path", dataPath)
 
 	if viper.ConfigFileUsed() != "" {
 		log.Infof("Using config file: %v", viper.ConfigFileUsed())

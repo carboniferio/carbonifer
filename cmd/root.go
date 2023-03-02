@@ -62,14 +62,7 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	utils.InitConfig(cfgFile)
-
-	// Set working directory
-	currentDir, err := os.Getwd()
-	if err != nil {
-		log.Fatal(err)
-	}
-	viper.SetDefault("workdir", currentDir)
+	utils.InitWithConfig(cfgFile)
 
 	// Set log level from command flags
 	info, _ := RootCmd.Flags().GetBool("info")

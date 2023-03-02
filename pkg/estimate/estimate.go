@@ -7,7 +7,6 @@ import (
 	"github.com/carboniferio/carbonifer/pkg/providers"
 	"github.com/carboniferio/carbonifer/pkg/resources"
 	"github.com/shopspring/decimal"
-	"github.com/spf13/viper"
 )
 
 type EstimationReport struct {
@@ -65,6 +64,5 @@ func toInternalComputeResource(resource resources.GenericResource) internalResou
 }
 
 func init() {
-	viper.Set("data.path", "../../data")
-	utils.InitConfig("../../internal/utils/defaults.yaml")
+	utils.InitWithDefaultConfig()
 }
