@@ -18,7 +18,8 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	utils.InitConfig(path.Join(RootDir, "test/config/default_conf.yaml"))
+	configFile := path.Join(RootDir, "test/config/default_conf.yaml")
+	utils.InitWithConfig(configFile)
 
 	// Set fake GCP auth
 	os.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "foo")
