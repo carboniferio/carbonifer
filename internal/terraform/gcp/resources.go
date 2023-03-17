@@ -2,26 +2,25 @@ package gcp
 
 import (
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
 	"github.com/forestgiant/sliceutil"
 	tfjson "github.com/hashicorp/terraform-json"
 )
 
 func GetResource(
 	tfResource tfjson.StateResource,
-	dataResources *map[string]resources.DataResource,
-	resourceTemplates *map[string]*tfjson.StateResource,
-	resourceConfigs *map[string]*tfjson.ConfigResource) resources.Resource {
+	tfRefs *tfrefs.References) resources.Resource {
 
 	resourceId := getResourceIdentification(tfResource)
 	if resourceId.ResourceType == "google_compute_instance" {
-		specs := getComputeResourceSpecs(tfResource, dataResources, nil)
+		specs := getComputeResourceSpecs(tfResource, tfRefs, nil)
 		return resources.ComputeResource{
 			Identification: resourceId,
 			Specs:          specs,
 		}
 	}
 	if resourceId.ResourceType == "google_compute_instance_from_template" {
-		specs := getComputeResourceFromTemplateSpecs(tfResource, dataResources, resourceTemplates, resourceConfigs)
+		specs := getComputeResourceFromTemplateSpecs(tfResource, tfRefs)
 		if specs != nil {
 			return resources.ComputeResource{
 				Identification: resourceId,
@@ -31,7 +30,7 @@ func GetResource(
 	}
 	if resourceId.ResourceType == "google_compute_disk" ||
 		resourceId.ResourceType == "google_compute_region_disk" {
-		specs := getComputeDiskResourceSpecs(tfResource, dataResources)
+		specs := getComputeDiskResourceSpecs(tfResource, tfRefs)
 		return resources.ComputeResource{
 			Identification: resourceId,
 			Specs:          specs,
@@ -46,7 +45,7 @@ func GetResource(
 	}
 	if resourceId.ResourceType == "google_compute_instance_group_manager" ||
 		resourceId.ResourceType == "google_compute_region_instance_group_manager" {
-		specs, count := getComputeInstanceGroupManagerSpecs(tfResource, dataResources, resourceTemplates, resourceConfigs)
+		specs, count := getComputeInstanceGroupManagerSpecs(tfResource, tfRefs)
 		if specs != nil {
 			resourceId.Count = count
 			return resources.ComputeResource{
@@ -68,10 +67,10 @@ func GetResource(
 	}
 }
 
-func GetResourceTemplate(tfResource tfjson.StateResource, dataResources *map[string]resources.DataResource, zone string) resources.Resource {
+func GetResourceTemplate(tfResource tfjson.StateResource, tfRefs *tfrefs.References, zone string) resources.Resource {
 	resourceId := getResourceIdentification(tfResource)
 	if resourceId.ResourceType == "google_compute_instance_template" {
-		specs := getComputeResourceSpecs(tfResource, dataResources, zone)
+		specs := getComputeResourceSpecs(tfResource, tfRefs, zone)
 		return resources.ComputeResource{
 			Identification: resourceId,
 			Specs:          specs,

@@ -3,13 +3,14 @@ package gcp
 import (
 	"github.com/carboniferio/carbonifer/internal/providers/gcp"
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/shopspring/decimal"
 )
 
 func getComputeResourceSpecs(
 	resource tfjson.StateResource,
-	dataResources *map[string]resources.DataResource, groupZone interface{}) *resources.ComputeResourceSpecs {
+	tfRefs *tfrefs.References, groupZone interface{}) *resources.ComputeResourceSpecs {
 
 	machine_type := resource.AttributeValues["machine_type"].(string)
 	var zone string
@@ -30,7 +31,7 @@ func getComputeResourceSpecs(
 	if ok_bd {
 		bootDisks := bd.([]interface{})
 		for _, bootDiskBlock := range bootDisks {
-			bootDisk := getBootDisk(resource.Address, bootDiskBlock.(map[string]interface{}), dataResources)
+			bootDisk := getBootDisk(resource.Address, bootDiskBlock.(map[string]interface{}), tfRefs)
 			disks = append(disks, bootDisk)
 		}
 	}
@@ -39,7 +40,7 @@ func getComputeResourceSpecs(
 	if ok_disks {
 		diskList := diskListI.([]interface{})
 		for _, diskBlock := range diskList {
-			disk := getDisk(resource.Address, diskBlock.(map[string]interface{}), false, dataResources)
+			disk := getDisk(resource.Address, diskBlock.(map[string]interface{}), false, tfRefs)
 			disks = append(disks, disk)
 		}
 	}

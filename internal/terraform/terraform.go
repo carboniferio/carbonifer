@@ -9,6 +9,7 @@ import (
 
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/carboniferio/carbonifer/internal/terraform/gcp"
+	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hc-install/product"
 	"github.com/hashicorp/hc-install/releases"
@@ -137,7 +138,8 @@ func TerraformPlan() (*tfjson.Plan, error) {
 	_, err = tf.Plan(ctx, out)
 	if err != nil {
 		if strings.Contains(err.Error(), "invalid authentication credentials") ||
-			strings.Contains(err.Error(), "No credentials loaded") {
+			strings.Contains(err.Error(), "No credentials loaded") ||
+			strings.Contains(err.Error(), "no valid credential") {
 			return nil, &ProviderAuthError{ParentError: err}
 		}
 		return nil, err
@@ -164,16 +166,19 @@ func GetResources() (map[string]resources.Resource, error) {
 	}
 	log.Debugf("Reading resources from Terraform plan: %d resources", len(tfPlan.PlannedValues.RootModule.Resources))
 	resourcesMap := make(map[string]resources.Resource)
-	resourceConfigs := make(map[string]*tfjson.ConfigResource)
-	resourceReferences := make(map[string]*tfjson.StateResource)
-	dataResources := make(map[string]resources.DataResource)
+	terraformRefs := tfrefs.References{
+		ResourceConfigs:    map[string]*tfjson.ConfigResource{},
+		ResourceReferences: map[string]*tfjson.StateResource{},
+		DataResources:      map[string]resources.DataResource{},
+		ProviderConfigs:    map[string]string{},
+	}
 	if tfPlan.PriorState != nil {
 		for _, priorRes := range tfPlan.PriorState.Values.RootModule.Resources {
 			log.Debugf("Reading prior state resources %v", priorRes.Address)
 			if priorRes.Mode == "data" {
 				if strings.HasPrefix(priorRes.Type, "google") {
 					dataResource := gcp.GetDataResource(*priorRes)
-					dataResources[dataResource.GetKey()] = dataResource
+					terraformRefs.DataResources[dataResource.GetKey()] = dataResource
 				}
 			}
 		}
@@ -185,7 +190,7 @@ func GetResources() (map[string]resources.Resource, error) {
 		if strings.HasPrefix(res.Type, "google") && (strings.HasSuffix(res.Type, "_template") ||
 			strings.HasSuffix(res.Type, "_autoscaler")) {
 			if res.Mode == "managed" {
-				resourceReferences[res.Address] = res
+				terraformRefs.ResourceReferences[res.Address] = res
 			}
 		}
 	}
@@ -195,7 +200,23 @@ func GetResources() (map[string]resources.Resource, error) {
 		log.Debugf("Reading resource config %v", resConfig.Address)
 		if strings.HasPrefix(resConfig.Type, "google") {
 			if resConfig.Mode == "managed" {
-				resourceConfigs[resConfig.Address] = resConfig
+				terraformRefs.ResourceConfigs[resConfig.Address] = resConfig
+			}
+		}
+	}
+
+	// Get default values
+
+	for provider, resConfig := range tfPlan.Config.ProviderConfigs {
+		if provider == "aws" {
+			log.Debugf("Reading provider config %v", resConfig.Name)
+			// TODO #58 Improve way we get default regions (env var, profile...)
+			regionExpr := resConfig.Expressions["region"]
+			if regionExpr != nil {
+				region := regionExpr.ConstantValue
+				if region != nil {
+					terraformRefs.ProviderConfigs["region"] = region.(string)
+				}
 			}
 		}
 	}
@@ -203,22 +224,30 @@ func GetResources() (map[string]resources.Resource, error) {
 	// Get All resources
 	for _, res := range tfPlan.PlannedValues.RootModule.Resources {
 		log.Debugf("Reading resource %v", res.Address)
-		if strings.HasPrefix(res.Type, "google") {
-			if res.Mode == "managed" {
-				resource := gcp.GetResource(*res, &dataResources, &resourceReferences, &resourceConfigs)
-				if resource != nil {
-					resourcesMap[resource.GetAddress()] = resource
-					if log.IsLevelEnabled(log.DebugLevel) {
-						computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"
-						if resource.IsSupported() {
-							computeJson, _ := json.Marshal(resource)
-							computeJsonStr = string(computeJson)
-						}
-						log.Debugf("  Compute resource : %v", string(computeJsonStr))
+
+		if res.Mode == "managed" {
+			var resource resources.Resource
+			prefix := strings.Split(res.Type, "_")[0]
+			if prefix == "google" {
+				resource = gcp.GetResource(*res, &terraformRefs)
+			} else if prefix == "aws" {
+				resource = gcp.GetResource(*res, &terraformRefs)
+			} else {
+				log.Warnf("Skipping resource %s. Provider not supported : %s", res.Type, prefix)
+			}
+			if resource != nil {
+				resourcesMap[resource.GetAddress()] = resource
+				if log.IsLevelEnabled(log.DebugLevel) {
+					computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"
+					if resource.IsSupported() {
+						computeJson, _ := json.Marshal(resource)
+						computeJsonStr = string(computeJson)
 					}
+					log.Debugf("  Compute resource : %v", string(computeJsonStr))
 				}
 			}
 		}
+
 	}
 	return resourcesMap, nil
 }
