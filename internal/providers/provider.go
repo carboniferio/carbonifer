@@ -2,25 +2,10 @@ package providers
 
 import "fmt"
 
+// ENUM(AWS, AZURE, GCP)
+//
+//go:generate go-enum --nocase --noprefix --marshal
 type Provider int
-
-const (
-	AWS = iota
-	AZURE
-	GCP
-)
-
-func (p Provider) String() string {
-	switch p {
-	case AWS:
-		return "AWS"
-	case AZURE:
-		return "Azure"
-	case GCP:
-		return "GCP"
-	}
-	return "unknown"
-}
 
 type UnsupportedProviderError struct {
 	Provider string

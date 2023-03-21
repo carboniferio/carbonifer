@@ -1,8 +1,9 @@
-package allprovider
+package estimate
 
 import (
 	"testing"
 
+	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	_ "github.com/carboniferio/carbonifer/internal/testutils"
 	"github.com/shopspring/decimal"
@@ -11,8 +12,9 @@ import (
 
 var noGPUResource = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
-		Name:  "no-gpu",
-		Count: 1,
+		Name:     "no-gpu",
+		Count:    1,
+		Provider: providers.GCP,
 	},
 	Specs: &resources.ComputeResourceSpecs{
 		GpuTypes: nil,
@@ -21,8 +23,9 @@ var noGPUResource = resources.ComputeResource{
 
 var twoGPUResources = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
-		Name:  "two-gpu",
-		Count: 1,
+		Name:     "two-gpu",
+		Count:    1,
+		Provider: providers.GCP,
 	},
 	Specs: &resources.ComputeResourceSpecs{
 		GpuTypes: []string{

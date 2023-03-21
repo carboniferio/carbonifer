@@ -1,7 +1,6 @@
-package gcp
+package estimate
 
 import (
-	"github.com/carboniferio/carbonifer/internal/estimate/allprovider"
 	"github.com/carboniferio/carbonifer/internal/estimate/coefficients"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/shopspring/decimal"
@@ -10,14 +9,14 @@ import (
 
 // Source: https://www.cloudcarbonfootprint.org/docs/methodology/#appendix-i-energy-coefficients
 // in Watt Hour
-func EstimateWattHourGCP(resource *resources.ComputeResource) decimal.Decimal {
-	cpuEstimationInWh := estimateWattGCPCPU(resource)
+func estimateWattHour(resource *resources.ComputeResource) decimal.Decimal {
+	cpuEstimationInWh := estimateWattCPU(resource)
 	log.Debugf("%v.%v CPU in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, cpuEstimationInWh)
 	memoryEstimationInWH := estimateWattMem(resource)
 	log.Debugf("%v.%v Memory in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, memoryEstimationInWH)
 	storageInWh := estimateWattStorage(resource)
 	log.Debugf("%v.%v Storage in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, storageInWh)
-	gpuEstimationInWh := allprovider.EstimateWattGPU(resource)
+	gpuEstimationInWh := EstimateWattGPU(resource)
 	log.Debugf("%v.%v GPUs in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, gpuEstimationInWh)
 	pue := coefficients.GetEnergyCoefficients().GCP.PueAverage
 	log.Debugf("%v.%v PUE %v", resource.Identification.ResourceType, resource.Identification.Name, pue)

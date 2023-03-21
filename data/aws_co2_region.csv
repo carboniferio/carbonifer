@@ -1,0 +1,26 @@
+Region,Location,Grid carbon intensity (gCO2eq / kWh),Source
+us-east-1,United States,415.755,https://www.cloudcarbonfootprint.org/
+us-east-2,United States,440.187,https://www.cloudcarbonfootprint.org/
+us-west-1,United States,350.861,https://www.cloudcarbonfootprint.org/
+us-west-2,United States,350.861,https://www.cloudcarbonfootprint.org/
+us-gov-east-1,United States,415.755,https://www.cloudcarbonfootprint.org/
+us-gov-west-1,United States,350.861,https://www.cloudcarbonfootprint.org/
+af-south-1,South Africa,928,https://www.cloudcarbonfootprint.org/
+ap-east-1,Hong Kong,810,https://www.cloudcarbonfootprint.org/
+ap-south-1,India,708,https://www.cloudcarbonfootprint.org/
+ap-northeast-3,Japan,506,https://www.cloudcarbonfootprint.org/
+ap-northeast-2,South Korea,500,https://www.cloudcarbonfootprint.org/
+ap-southeast-1,Singapore,408.5,https://www.cloudcarbonfootprint.org/
+ap-southeast-2,Australia,790,https://www.cloudcarbonfootprint.org/
+ap-northeast-1,Japan,506,https://www.cloudcarbonfootprint.org/
+ca-central-1,Canada,130,https://www.cloudcarbonfootprint.org/
+cn-north-1,China,555,https://www.cloudcarbonfootprint.org/
+cn-northwest-1,China,555,https://www.cloudcarbonfootprint.org/
+eu-central-1,Germany,338,https://www.cloudcarbonfootprint.org/
+eu-west-1,Ireland,316,https://www.cloudcarbonfootprint.org/
+eu-west-2,England,228,https://www.cloudcarbonfootprint.org/
+eu-south-1,Italy,233,https://www.cloudcarbonfootprint.org/
+eu-west-3,France,52,https://www.cloudcarbonfootprint.org/
+eu-north-1,Sweden,8,https://www.cloudcarbonfootprint.org/
+me-south-1,Bahrain,732,https://www.cloudcarbonfootprint.org/
+sa-east-1,Brazil,74,https://www.cloudcarbonfootprint.org/

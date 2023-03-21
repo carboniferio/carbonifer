@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"reflect"
 
+	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -49,7 +50,11 @@ func GetEnergyCoefficients() *CoefficientsProviders {
 	return coefficientsPerProviders
 }
 
-func (cps *CoefficientsProviders) GetByName(name string) Coefficients {
+func (cps *CoefficientsProviders) GetByProvider(provider providers.Provider) Coefficients {
+	return coefficientsPerProviders.GetByProviderName(provider.String())
+}
+
+func (cps *CoefficientsProviders) GetByProviderName(name string) Coefficients {
 	r := reflect.ValueOf(cps)
 	coefficients := reflect.Indirect(r).FieldByName(name)
 	return coefficients.Interface().(Coefficients)

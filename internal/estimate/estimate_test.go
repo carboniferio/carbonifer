@@ -49,7 +49,7 @@ var resourceAWSComputeBasic = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
 		Name:         "machine-name-3",
 		ResourceType: "type-1",
-		Provider:     providers.AWS,
+		Provider:     providers.AZURE,
 		Region:       "europe-west9",
 		Count:        1,
 	},
@@ -180,7 +180,7 @@ func TestEstimateResourceUnsupported(t *testing.T) {
 		{
 			name: "gcp_basic",
 			args: args{resourceAWSComputeBasic},
-			want: &providers.UnsupportedProviderError{Provider: "AWS"},
+			want: &providers.UnsupportedProviderError{Provider: "AZURE"},
 		},
 	}
 	for _, tt := range tests {

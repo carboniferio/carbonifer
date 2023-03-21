@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/carboniferio/carbonifer/internal/estimate/estimate"
 	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
-	"github.com/carboniferio/carbonifer/internal/estimate/gcp"
+
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/shopspring/decimal"
@@ -45,8 +46,16 @@ func EstimateResources(resourceList map[string]resources.Resource) estimation.Es
 			UnitWattTime:            fmt.Sprintf("%s%s", viper.Get("unit.power"), viper.Get("unit.time")),
 			UnitCarbonEmissionsTime: fmt.Sprintf("%sCO2eq/%s", viper.Get("unit.carbon"), viper.Get("unit.time")),
 			DateTime:                time.Now(),
-			AverageCPUUsage:         viper.GetFloat64("provider.gcp.avg_cpu_use"),
-			AverageGPUUsage:         viper.GetFloat64("provider.gcp.avg_gpu_use"),
+			InfoByProvider: map[providers.Provider]estimation.InfoByProvider{
+				providers.GCP: {
+					AverageCPUUsage: viper.GetFloat64("provider.gcp.avg_cpu_use"),
+					AverageGPUUsage: viper.GetFloat64("provider.gcp.avg_gpu_use"),
+				},
+				providers.AWS: {
+					AverageCPUUsage: viper.GetFloat64("provider.gcp.avg_cpu_use"),
+					AverageGPUUsage: viper.GetFloat64("provider.gcp.avg_gpu_use"),
+				},
+			},
 		},
 		Resources:            estimationResources,
 		UnsupportedResources: unsupportedResources,
@@ -60,8 +69,10 @@ func EstimateResource(resource resources.Resource) (*estimation.EstimationResour
 		return estimateNotSupported(resource.(resources.UnsupportedResource)), nil
 	}
 	switch resource.GetIdentification().Provider {
+	case providers.AWS:
+		return estimate.EstimateSupportedResource(resource), nil
 	case providers.GCP:
-		return gcp.EstimateGCP(resource), nil
+		return estimate.EstimateSupportedResource(resource), nil
 	default:
 		return nil, &providers.UnsupportedProviderError{Provider: resource.GetIdentification().Provider.String()}
 	}

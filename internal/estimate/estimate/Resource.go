@@ -1,6 +1,7 @@
-package gcp
+package estimate
 
 import (
+	"github.com/carboniferio/carbonifer/internal/estimate/coefficients"
 	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
 
 	"github.com/carboniferio/carbonifer/internal/resources"
@@ -10,10 +11,11 @@ import (
 )
 
 // Get the carbon emissions of a GCP resource
-func EstimateGCP(resource resources.Resource) *estimation.EstimationResource {
+func EstimateSupportedResource(resource resources.Resource) *estimation.EstimationResource {
+
 	var computeResource resources.ComputeResource = resource.(resources.ComputeResource)
 	// Electric power used per unit of time
-	avgWatt := EstimateWattHourGCP(&computeResource) // Watt hour
+	avgWatt := estimateWattHour(&computeResource) // Watt hour
 	if viper.Get("unit.power").(string) == "kW" {
 		avgWatt = avgWatt.Div(decimal.NewFromInt(1000))
 	}
@@ -26,7 +28,7 @@ func EstimateGCP(resource resources.Resource) *estimation.EstimationResource {
 	avgWattStr := avgWatt.String()
 
 	// Regional grid emission per unit of time
-	regionEmissions, err := GCPRegionEmission(resource.GetIdentification().Region) // gCO2eq /kWh
+	regionEmissions, err := coefficients.RegionEmission(resource.GetIdentification().Provider, resource.GetIdentification().Region) // gCO2eq /kWh
 	if err != nil {
 		log.Fatalf("Error while getting region emissions for %v: %v", resource.GetAddress(), err)
 	}
@@ -66,11 +68,12 @@ func EstimateGCP(resource resources.Resource) *estimation.EstimationResource {
 		resource.GetIdentification().Count,
 	)
 
-	return &estimation.EstimationResource{
+	est := &estimation.EstimationResource{
 		Resource:        &computeResource,
 		Power:           avgWatt.RoundFloor(10),
 		CarbonEmissions: carbonEmissionPerTime.RoundFloor(10),
 		AverageCPUUsage: decimal.NewFromFloat(viper.GetFloat64("provider.gcp.avg_cpu_use")).RoundFloor(10),
 		Count:           decimal.NewFromInt(int64(computeResource.Identification.Count)),
 	}
+	return est
 }
