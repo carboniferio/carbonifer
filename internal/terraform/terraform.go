@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/carboniferio/carbonifer/internal/terraform/aws"
 	"github.com/carboniferio/carbonifer/internal/terraform/gcp"
 	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
 	"github.com/hashicorp/go-version"
@@ -206,7 +207,6 @@ func GetResources() (map[string]resources.Resource, error) {
 	}
 
 	// Get default values
-
 	for provider, resConfig := range tfPlan.Config.ProviderConfigs {
 		if provider == "aws" {
 			log.Debugf("Reading provider config %v", resConfig.Name)
@@ -231,7 +231,7 @@ func GetResources() (map[string]resources.Resource, error) {
 			if prefix == "google" {
 				resource = gcp.GetResource(*res, &terraformRefs)
 			} else if prefix == "aws" {
-				resource = gcp.GetResource(*res, &terraformRefs)
+				resource = aws.GetResource(*res, &terraformRefs)
 			} else {
 				log.Warnf("Skipping resource %s. Provider not supported : %s", res.Type, prefix)
 			}
