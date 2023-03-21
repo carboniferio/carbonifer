@@ -1,4 +1,4 @@
-package gcp
+package estimate
 
 import (
 	"github.com/carboniferio/carbonifer/internal/estimate/coefficients"
@@ -7,9 +7,9 @@ import (
 )
 
 func estimateWattStorage(resource *resources.ComputeResource) decimal.Decimal {
-	provider := resource.Identification.Provider.String()
-	storageSsdWhGb := coefficients.GetEnergyCoefficients().GetByName(provider).StorageSsdWhTb.Div(decimal.NewFromInt32(1024))
-	storageHddWhGb := coefficients.GetEnergyCoefficients().GetByName(provider).StorageHddWhTb.Div(decimal.NewFromInt32(1024))
+	provider := resource.Identification.Provider
+	storageSsdWhGb := coefficients.GetEnergyCoefficients().GetByProvider(provider).StorageSsdWhTb.Div(decimal.NewFromInt32(1024))
+	storageHddWhGb := coefficients.GetEnergyCoefficients().GetByProvider(provider).StorageHddWhTb.Div(decimal.NewFromInt32(1024))
 	storageSSDWh := resource.Specs.SsdStorage.Mul(storageSsdWhGb)
 	storageHddWh := resource.Specs.HddStorage.Mul(storageHddWhGb)
 	return storageSSDWh.Add(storageHddWh)

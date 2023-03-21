@@ -4,18 +4,17 @@ import (
 	"strings"
 
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
 	tfjson "github.com/hashicorp/terraform-json"
 	log "github.com/sirupsen/logrus"
 )
 
 func getComputeResourceFromTemplateSpecs(
 	tfResource tfjson.StateResource,
-	dataResources *map[string]resources.DataResource,
-	resourceReferences *map[string]*tfjson.StateResource,
-	resourceConfigs *map[string]*tfjson.ConfigResource) *resources.ComputeResourceSpecs {
+	tfRefs *tfrefs.References) *resources.ComputeResourceSpecs {
 
 	// Get template of instance
-	specs := getTemplateSpecs(tfResource, dataResources, resourceReferences, resourceConfigs)
+	specs := getTemplateSpecs(tfResource, tfRefs)
 	if specs != nil {
 		return specs
 	}
@@ -25,12 +24,10 @@ func getComputeResourceFromTemplateSpecs(
 
 func getTemplateSpecs(
 	tfResource tfjson.StateResource,
-	dataResources *map[string]resources.DataResource,
-	resourceReferences *map[string]*tfjson.StateResource,
-	resourceConfigs *map[string]*tfjson.ConfigResource) *resources.ComputeResourceSpecs {
+	tfRefs *tfrefs.References) *resources.ComputeResourceSpecs {
 
 	// Find google_compute_instance_from_template resourceConfig
-	iftConfig := (*resourceConfigs)[tfResource.Address]
+	iftConfig := (tfRefs.ResourceConfigs)[tfResource.Address]
 
 	var template *tfjson.StateResource
 	sourceTemplateExpr := iftConfig.Expressions["source_instance_template"]
@@ -38,7 +35,7 @@ func getTemplateSpecs(
 		references := sourceTemplateExpr.References
 		for _, reference := range references {
 			if !strings.HasSuffix(reference, ".id") {
-				template = (*resourceReferences)[reference]
+				template = (tfRefs.ResourceReferences)[reference]
 				break
 			}
 		}
@@ -61,7 +58,7 @@ func getTemplateSpecs(
 		if len(zones) == 0 {
 			log.Fatalf("No zone or distribution policy declared for %v", tfResource.Address)
 		}
-		templateResource := GetResourceTemplate(*template, dataResources, zones[0])
+		templateResource := GetResourceTemplate(*template, tfRefs, zones[0])
 		computeTemplate, ok := templateResource.(resources.ComputeResource)
 		if ok {
 			return computeTemplate.Specs

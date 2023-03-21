@@ -2,6 +2,7 @@ package gcp
 
 import (
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
@@ -10,9 +11,9 @@ import (
 
 func getComputeDiskResourceSpecs(
 	resource tfjson.StateResource,
-	dataResources *map[string]resources.DataResource) *resources.ComputeResourceSpecs {
+	tfRefs *tfrefs.References) *resources.ComputeResourceSpecs {
 
-	disk := getDisk(resource.Address, resource.AttributeValues, false, dataResources)
+	disk := getDisk(resource.Address, resource.AttributeValues, false, tfRefs)
 	hddSize := decimal.Zero
 	ssdSize := decimal.Zero
 	if disk.isSSD {
@@ -33,18 +34,18 @@ type disk struct {
 	replicationFactor int32
 }
 
-func getBootDisk(resourceAddress string, bootDiskBlock map[string]interface{}, dataResources *map[string]resources.DataResource) disk {
+func getBootDisk(resourceAddress string, bootDiskBlock map[string]interface{}, tfRefs *tfrefs.References) disk {
 	var disk disk
 	initParams := bootDiskBlock["initialize_params"]
 	for _, iP := range initParams.([]interface{}) {
 		initParam := iP.(map[string]interface{})
-		disk = getDisk(resourceAddress, initParam, true, dataResources)
+		disk = getDisk(resourceAddress, initParam, true, tfRefs)
 
 	}
 	return disk
 }
 
-func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDiskParam bool, dataResources *map[string]resources.DataResource) disk {
+func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDiskParam bool, tfRefs *tfrefs.References) disk {
 	disk := disk{
 		sizeGb:            viper.GetFloat64("provider.gcp.boot_disk.size"),
 		isSSD:             true,
@@ -91,7 +92,7 @@ func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDis
 		}
 		diskImageLink := diskBlock["image"]
 		if diskImageLink != nil {
-			image, ok := (*dataResources)[diskImageLink.(string)]
+			image, ok := (tfRefs.DataResources)[diskImageLink.(string)]
 			if ok {
 				disk.sizeGb = (image.(resources.DataImageResource)).DataImageSpecs.DiskSizeGb
 			} else {

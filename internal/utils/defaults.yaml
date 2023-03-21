@@ -20,5 +20,8 @@ provider:
     disk:
       size: 500
       type: pd-standard
+  aws:
+    avg_cpu_use: 0.5
+    avg_gpu_use: 0.5
 log:
   level : "warn"

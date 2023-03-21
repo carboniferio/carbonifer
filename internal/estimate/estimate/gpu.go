@@ -1,6 +1,9 @@
-package allprovider
+package estimate
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/shopspring/decimal"
@@ -9,7 +12,8 @@ import (
 
 func EstimateWattGPU(resource *resources.ComputeResource) decimal.Decimal {
 	// Get average GPU usage
-	averageCPUUse := decimal.NewFromFloat(viper.GetFloat64("provider.gcp.avg_gpu_use"))
+	provider := strings.ToLower(resource.Identification.Provider.String())
+	averageCPUUse := decimal.NewFromFloat(viper.GetFloat64(fmt.Sprintf("provider.%s.avg_gpu_use", provider)))
 
 	avgWattsTotal := decimal.Zero
 	// Average Watts = Min Watts + Avg GPU Utilization * (Max Watts - Min Watts)

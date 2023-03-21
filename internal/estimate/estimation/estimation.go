@@ -3,6 +3,7 @@ package estimation
 import (
 	"time"
 
+	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/shopspring/decimal"
 )
@@ -33,6 +34,10 @@ type EstimationInfo struct {
 	UnitWattTime            string
 	UnitCarbonEmissionsTime string
 	DateTime                time.Time
-	AverageCPUUsage         float64
-	AverageGPUUsage         float64
+	InfoByProvider          map[providers.Provider]InfoByProvider
+}
+
+type InfoByProvider struct {
+	AverageCPUUsage float64
+	AverageGPUUsage float64
 }

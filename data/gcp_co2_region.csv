@@ -1,0 +1,35 @@
+Region,Location,Grid carbon intensity (gCO2eq / kWh),Source
+asia-east1,Taiwan,456,https://github.com/GoogleCloudPlatform/region-carbon-info
+asia-east2,Hong Kong,360,https://github.com/GoogleCloudPlatform/region-carbon-info
+asia-northeast1,Tokyo,464,https://github.com/GoogleCloudPlatform/region-carbon-info
+asia-northeast2,Osaka,384,https://github.com/GoogleCloudPlatform/region-carbon-info
+asia-northeast3,Seoul,425,https://github.com/GoogleCloudPlatform/region-carbon-info
+asia-south1,Mumbai,670,https://github.com/GoogleCloudPlatform/region-carbon-info
+asia-south2,Delhi,671,https://github.com/GoogleCloudPlatform/region-carbon-info
+asia-southeast1,Singapore,372,https://github.com/GoogleCloudPlatform/region-carbon-info
+asia-southeast2,Jakarta,580,https://github.com/GoogleCloudPlatform/region-carbon-info
+australia-southeast1,Sydney,598,https://github.com/GoogleCloudPlatform/region-carbon-info
+australia-southeast2,Melbourne,521,https://github.com/GoogleCloudPlatform/region-carbon-info
+europe-central2,Warsaw,576,https://github.com/GoogleCloudPlatform/region-carbon-info
+europe-north1,Finland,127,https://github.com/GoogleCloudPlatform/region-carbon-info
+europe-southwest1,Madrid,121,https://github.com/GoogleCloudPlatform/region-carbon-info
+europe-west1,Belgium,110,https://github.com/GoogleCloudPlatform/region-carbon-info
+europe-west2,London,172,https://github.com/GoogleCloudPlatform/region-carbon-info
+europe-west3,Frankfurt,269,https://github.com/GoogleCloudPlatform/region-carbon-info
+europe-west4,Netherlands,283,https://github.com/GoogleCloudPlatform/region-carbon-info
+europe-west6,Zurich,86,https://github.com/GoogleCloudPlatform/region-carbon-info
+europe-west8,Milan,298,https://github.com/GoogleCloudPlatform/region-carbon-info
+europe-west9,Paris,59,https://github.com/GoogleCloudPlatform/region-carbon-info
+northamerica-northeast1,Montréal,0,https://github.com/GoogleCloudPlatform/region-carbon-info
+northamerica-northeast2,Toronto,29,https://github.com/GoogleCloudPlatform/region-carbon-info
+southamerica-east1,São Paulo,129,https://github.com/GoogleCloudPlatform/region-carbon-info
+southamerica-west1,Santiago,190,https://github.com/GoogleCloudPlatform/region-carbon-info
+us-central1,Iowa,394,https://github.com/GoogleCloudPlatform/region-carbon-info
+us-east1,South Carolina,434,https://github.com/GoogleCloudPlatform/region-carbon-info
+us-east4,Northern Virginia,309,https://github.com/GoogleCloudPlatform/region-carbon-info
+us-east5,Columbus,309,https://github.com/GoogleCloudPlatform/region-carbon-info
+us-south1,Dallas,296,https://github.com/GoogleCloudPlatform/region-carbon-info
+us-west1,Oregon,60,https://github.com/GoogleCloudPlatform/region-carbon-info
+us-west2,Los Angeles,190,https://github.com/GoogleCloudPlatform/region-carbon-info
+us-west3,Salt Lake City,448,https://github.com/GoogleCloudPlatform/region-carbon-info
+us-west4,Las Vegas,365,https://github.com/GoogleCloudPlatform/region-carbon-info

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
@@ -12,25 +13,23 @@ import (
 
 func getComputeInstanceGroupManagerSpecs(
 	tfResource tfjson.StateResource,
-	dataResources *map[string]resources.DataResource,
-	resourceReferences *map[string]*tfjson.StateResource,
-	resourceConfigs *map[string]*tfjson.ConfigResource) (*resources.ComputeResourceSpecs, int64) {
+	tfRefs *tfrefs.References) (*resources.ComputeResourceSpecs, int64) {
 
 	// Get template of instance
-	specs, targetSize := getGroupInstanceTemplateSpecs(tfResource, dataResources, resourceReferences, resourceConfigs)
+	specs, targetSize := getGroupInstanceTemplateSpecs(tfResource, tfRefs)
 	if specs == nil {
 		return specs, targetSize
 	}
 
 	// Get targetSize from autoscaler if exists
 	var autoscaler *tfjson.StateResource
-	for _, resourceConfig := range *resourceConfigs {
+	for _, resourceConfig := range tfRefs.ResourceConfigs {
 		if resourceConfig.Type == "google_compute_autoscaler" {
 			targetExpr := (*resourceConfig).Expressions["target"]
 			if targetExpr != nil {
 				for _, target := range (*targetExpr).References {
 					if target == tfResource.Address {
-						autoscaler = (*resourceReferences)[resourceConfig.Address]
+						autoscaler = (tfRefs.ResourceReferences)[resourceConfig.Address]
 						break
 					}
 				}
@@ -41,7 +40,7 @@ func getComputeInstanceGroupManagerSpecs(
 		}
 	}
 	if autoscaler != nil {
-		targetSize = getTargetSizeFromAutoscaler(autoscaler, resourceConfigs, tfResource, resourceReferences, targetSize)
+		targetSize = getTargetSizeFromAutoscaler(autoscaler, &tfRefs.ResourceConfigs, tfResource, &tfRefs.ResourceReferences, targetSize)
 	}
 
 	return specs, targetSize
@@ -76,9 +75,7 @@ func computeTargetSize(minSize decimal.Decimal, maxSize decimal.Decimal) int64 {
 
 func getGroupInstanceTemplateSpecs(
 	tfResource tfjson.StateResource,
-	dataResources *map[string]resources.DataResource,
-	resourceReferences *map[string]*tfjson.StateResource,
-	resourceConfigs *map[string]*tfjson.ConfigResource) (*resources.ComputeResourceSpecs, int64) {
+	tfRefs *tfrefs.References) (*resources.ComputeResourceSpecs, int64) {
 
 	targetSize := int64(0)
 	targetSizeExpr := tfResource.AttributeValues["target_size"]
@@ -87,7 +84,7 @@ func getGroupInstanceTemplateSpecs(
 	}
 
 	var template *tfjson.StateResource
-	templateConfig := (*resourceConfigs)[tfResource.Address]
+	templateConfig := (tfRefs.ResourceConfigs)[tfResource.Address]
 	versionExpr := templateConfig.Expressions["version"]
 	if versionExpr != nil {
 		for _, version := range versionExpr.NestedBlocks {
@@ -96,7 +93,7 @@ func getGroupInstanceTemplateSpecs(
 				references := instanceTemplate.References
 				for _, reference := range references {
 					if !strings.HasSuffix(reference, ".id") {
-						template = (*resourceReferences)[reference]
+						template = (tfRefs.ResourceReferences)[reference]
 					}
 				}
 			}
@@ -120,7 +117,7 @@ func getGroupInstanceTemplateSpecs(
 		if len(zones) == 0 {
 			log.Fatalf("No zone or distribution policy declared for %v", tfResource.Address)
 		}
-		templateResource := GetResourceTemplate(*template, dataResources, zones[0])
+		templateResource := GetResourceTemplate(*template, tfRefs, zones[0])
 		computeTemplate, ok := templateResource.(resources.ComputeResource)
 		if ok {
 			return computeTemplate.Specs, targetSize
