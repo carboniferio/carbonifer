@@ -38,7 +38,11 @@ Data resources:
 
 ### AWS
 
-_to be implemented_
+| Resource | Limitations  | Comment |
+|---|---|---|
+| `aws_instance`| EBS not supported yet | |
+
+_more to be implemented_
 
 ### Azure
 
