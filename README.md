@@ -24,11 +24,13 @@ It can estimate Carbon Emissions of:
     - [X] Machines with GPUs
     - [x] Cloud SQL
     - [x] Instance Group (including regional and with Autoscaler)
+- Amazon Web Services
+  - [x] EC2
 
 The following will also be supported soon:
 
 - Amazon Web Services
-  - [ ] EC2
+  - [ ] EBS
   - [ ] RDS
   - [ ] AutoScaling Group
 - Azure
