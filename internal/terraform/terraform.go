@@ -211,12 +211,17 @@ func GetResources() (map[string]resources.Resource, error) {
 		if provider == "aws" {
 			log.Debugf("Reading provider config %v", resConfig.Name)
 			// TODO #58 Improve way we get default regions (env var, profile...)
+			var region interface{}
 			regionExpr := resConfig.Expressions["region"]
 			if regionExpr != nil {
-				region := regionExpr.ConstantValue
-				if region != nil {
-					terraformRefs.ProviderConfigs["region"] = region.(string)
+				region = regionExpr.ConstantValue
+			} else {
+				if os.Getenv("AWS_REGION") != "" {
+					region = os.Getenv("AWS_REGION")
 				}
+			}
+			if region != nil {
+				terraformRefs.ProviderConfigs["region"] = region.(string)
 			}
 		}
 	}
