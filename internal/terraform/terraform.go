@@ -173,14 +173,12 @@ func GetResources() (map[string]resources.Resource, error) {
 		DataResources:      map[string]resources.DataResource{},
 		ProviderConfigs:    map[string]string{},
 	}
-	if tfPlan.PriorState != nil {
-		for _, priorRes := range tfPlan.PriorState.Values.RootModule.Resources {
-			log.Debugf("Reading prior state resources %v", priorRes.Address)
-			if priorRes.Mode == "data" {
-				if strings.HasPrefix(priorRes.Type, "google") {
-					dataResource := gcp.GetDataResource(*priorRes)
-					terraformRefs.DataResources[dataResource.GetKey()] = dataResource
-				}
+	for _, priorRes := range tfPlan.PlannedValues.RootModule.Resources {
+		log.Debugf("Reading prior state resources %v", priorRes.Address)
+		if priorRes.Mode == "data" {
+			if strings.HasPrefix(priorRes.Type, "google") {
+				dataResource := gcp.GetDataResource(*priorRes)
+				terraformRefs.DataResources[dataResource.GetKey()] = dataResource
 			}
 		}
 	}
