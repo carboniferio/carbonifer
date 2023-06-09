@@ -326,6 +326,6 @@ The targeted terraform folder is provided as the only argument. By default, it u
 | `unit.carbon` |   | `g` | Carbon emission in `g` (gram) or `kg`
 | `out.format` | `-f <format>` `--format=<format>` | `text` | `text` or `json`
 | `out.file` | `-o <filename>` `--output=<filename>`|  | file to write report to. Default is standard output.
-| `data.path` | `<arg>` |  | path of terraform files to analyse
+| `data.path` | `<arg>` |  | path of carbonifer data files (coefficents...). Default uses embedded files
 | `avg_cpu_use` |  | `0.5` | planned [average percentage of CPU used](doc/methodology.md#cpu)
 | `log` |  | `warn` | level of logs `info`, `debug`, `warn`, `error`
