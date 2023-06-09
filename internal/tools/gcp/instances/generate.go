@@ -89,6 +89,45 @@ func getGPUs(machineType *compute.MachineType) []string {
 }
 
 func main() {
+	command := os.Args[1]
+
+	switch command {
+	case "global":
+		generateGlobal()
+	case "regions":
+		generatePerRegion()
+	default:
+		generateGlobal()
+	}
+}
+
+func generatePerRegion() {
+	machineTypesByZone := retrieveData()
+	// Generate the JSON representation of the list
+	jsonData, err := json.MarshalIndent(machineTypesByZone, "", "  ")
+	if err != nil {
+		log.Fatalf("Error generating JSON: %v", err)
+	}
+	fmt.Println(string(jsonData))
+}
+
+func generateGlobal() {
+	machineTypesByZone := retrieveData()
+	machineTypes := map[string]gcp.MachineType{}
+	for _, machineTypesList := range *machineTypesByZone {
+		for name, machineType := range machineTypesList {
+			machineTypes[name] = machineType
+		}
+	}
+	// Generate the JSON representation of the list
+	jsonData, err := json.MarshalIndent(machineTypes, "", "  ")
+	if err != nil {
+		log.Fatalf("Error generating JSON: %v", err)
+	}
+	fmt.Println(string(jsonData))
+}
+
+func retrieveData() *map[string]map[string]gcp.MachineType {
 
 	ctx := context.Background()
 
@@ -108,12 +147,5 @@ func main() {
 	for _, zone := range zones.Items {
 		machineTypesByZone[zone.Name] = getMachineTypesForZone(client, project, zone.Name)
 	}
-
-	// Generate the JSON representation of the list
-	jsonData, err := json.MarshalIndent(machineTypesByZone, "", "  ")
-	if err != nil {
-		log.Fatalf("Error generating JSON: %v", err)
-	}
-
-	fmt.Println(string(jsonData))
+	return &machineTypesByZone
 }

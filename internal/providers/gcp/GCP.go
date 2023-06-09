@@ -38,7 +38,7 @@ type CPUWatt struct {
 	GridCarbonIntensity decimal.Decimal
 }
 
-var gcpInstanceTypes map[string]map[string]MachineType
+var gcpInstanceTypes map[string]MachineType
 var gcpWattPerCPU map[string]CPUWatt
 var gcpSQLTiers map[string]SqlTier
 
@@ -82,7 +82,7 @@ func GetGCPMachineType(machineTypeStr string, zone string) MachineType {
 		}
 	}
 
-	return gcpInstanceTypes[zone][machineTypeStr]
+	return gcpInstanceTypes[machineTypeStr]
 
 }
 
