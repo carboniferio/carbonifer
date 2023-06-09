@@ -111,22 +111,21 @@ func initLogger() {
 
 func checkDataConfig() {
 	dataPath := viper.GetString("data.path")
-	if dataPath == "" {
-		log.Fatalf("Data directory is not set (\"data.path\")")
-	}
-	path, err := filepath.Abs(dataPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	f, err := os.Open(dataPath)
-	if err != nil {
-		log.Fatalf("Cannot read data directory \"%v\": %v", path, err)
-	}
-	defer f.Close()
+	if dataPath != "" {
+		path, err := filepath.Abs(dataPath)
+		if err != nil {
+			log.Fatal(err)
+		}
+		f, err := os.Open(dataPath)
+		if err != nil {
+			log.Fatalf("Cannot read data directory \"%v\": %v", path, err)
+		}
+		defer f.Close()
 
-	_, err = f.Readdirnames(1)
-	if err == io.EOF {
-		log.Fatalf("Empty data directory \"%v\": %v", path, err)
+		_, err = f.Readdirnames(1)
+		if err == io.EOF {
+			log.Fatalf("Empty data directory \"%v\": %v", path, err)
+		}
 	}
 }
 

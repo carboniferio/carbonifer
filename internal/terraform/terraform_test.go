@@ -139,9 +139,9 @@ func TestGetResources(t *testing.T) {
 				MemoryMb:   87040,
 				VCPUs:      12,
 				GpuTypes: []string{
-					"nvidia-tesla-a100", // Default of a2-highgpu-1g"
-					"nvidia-tesla-k80",  // Added by user in main.tf
-					"nvidia-tesla-k80",  // Added by user in main.tf
+					"testing-custom-data-file", // Default of a2-highgpu-1g"
+					"nvidia-tesla-k80",         // Added by user in main.tf
+					"nvidia-tesla-k80",         // Added by user in main.tf
 				},
 				ReplicationFactor: 1,
 			},

@@ -3,13 +3,13 @@ package coefficients
 import (
 	"errors"
 	"fmt"
-	"path/filepath"
+	"strings"
 
+	"github.com/carboniferio/carbonifer/internal/data"
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
 
-	"github.com/spf13/viper"
 	"github.com/yunabe/easycsv"
 )
 
@@ -54,9 +54,9 @@ type Emissions struct {
 func loadEmissionsPerRegion(dataFile string) map[string]Emissions {
 	// Read the CSV records
 	var records []EmissionsCSV
-	regionEmissionFile := filepath.Join(viper.GetString("data.path"), dataFile)
+	regionEmissionFile := data.ReadDataFile(dataFile)
 	log.Debugf("reading GCP region/grid emissions from: %v", regionEmissionFile)
-	if err := easycsv.NewReaderFile(regionEmissionFile).ReadAll(&records); err != nil {
+	if err := easycsv.NewReader(strings.NewReader(string(regionEmissionFile))).ReadAll(&records); err != nil {
 		log.Fatal(err)
 	}
 

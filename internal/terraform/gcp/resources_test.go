@@ -184,7 +184,7 @@ func TestGetResource(t *testing.T) {
 				},
 				Specs: &resources.ComputeResourceSpecs{
 					GpuTypes: []string{
-						"nvidia-tesla-a100",
+						"testing-custom-data-file",
 					},
 					VCPUs:             int32(12),
 					MemoryMb:          int32(87040),
