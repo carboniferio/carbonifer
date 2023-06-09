@@ -35,7 +35,7 @@
     "name": "a2-highgpu-1g",
     "vcpus": 12,
     "gpus": [
-      "nvidia-tesla-a100"
+      "testing-custom-data-file"
     ],
     "memoryMb": 87040,
     "cpuTypes": [

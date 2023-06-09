@@ -23,13 +23,13 @@ Average Watts = Number of vCPU * (Min Watts + Avg vCPU Utilization * (Max Watts 
 
 - `Average Watts` result in Watt Hour
 - `Number of vCPU` : depends on the machine type chosen
-  - [GCP machine types](../data/gcp_instances.json) 
+  - [GCP machine types](../internal/data/data/gcp_instances.json) 
   - AWS
   - Azure
 - `Min Watt` and `Max Watts` depend on CPU architecture
-  - If processor architecture is unknown, we use averages computed by [Carbon Footprint Calculator](https://www.cloudcarbonfootprint.org/docs/methodology/#appendix-i-energy-coefficients): [energy coefficients](../data/energy_coefficients.json)
+  - If processor architecture is unknown, we use averages computed by [Carbon Footprint Calculator](https://www.cloudcarbonfootprint.org/docs/methodology/#appendix-i-energy-coefficients): [energy coefficients](../internal/data/data/energy_coefficients.json)
   - If we do know them, we use a more detailed list:
-    - [GCP Watt per CPU type](../data/gcp_watt_cpu.csv)
+    - [GCP Watt per CPU type](../internal/data/data/gcp_watt_cpu.csv)
 - `Avg vCPU Utilization` because we do this estimation at "plan" time, there is no way to pick a relevant value. However, to be able to plan and compare different CPUs or regions we need to set this constant. This is read from (by descending priority order)
   - user's config file in `$HOME/.carbonifer/config.yml`), variable `avg_cpu_use`
   - targeted folder config file in `$TERRAFORM_PROJECT/.carbonifer/config.yml`), variable `avg_cpu_use`
@@ -45,7 +45,7 @@ Watt hours = Memory usage (GB) x Memory Energy Coefficient
 
 ### Disk Storage
 
-We are using the same `Storage Energy Coefficient` as [Carbon Footprint Calculator](https://www.cloudcarbonfootprint.org/docs/methodology/#storage) in [energy coefficients file](../data/energy_coefficients.json). This coefficient is different for SSD and HDD, so disk type is important.
+We are using the same `Storage Energy Coefficient` as [Carbon Footprint Calculator](https://www.cloudcarbonfootprint.org/docs/methodology/#storage) in [energy coefficients file](../internal/data/data/energy_coefficients.json). This coefficient is different for SSD and HDD, so disk type is important.
 
 ```text
 Watt hours = Disk Size (TB) x Storage Energy Coefficient x Replication Factor
@@ -68,7 +68,7 @@ Unless set by the user in terraform file, the default size can be hard to find:
 
 ### GPU
 
-Similarily to [CPU](#cpu), GPU energy consumption is calculated from the GPU type from min/max Watt described in [Carbon Footprint Calculator](https://www.cloudcarbonfootprint.org/docs/methodology/#graphic-processing-units-gpus), we use min/max watt from constant file [GPU Watt per GPU Type](../data/gpu_watt.csv) and apply same formula as [CPU](#cpu).
+Similarily to [CPU](#cpu), GPU energy consumption is calculated from the GPU type from min/max Watt described in [Carbon Footprint Calculator](https://www.cloudcarbonfootprint.org/docs/methodology/#graphic-processing-units-gpus), we use min/max watt from constant file [GPU Watt per GPU Type](../internal/data/data/gpu_watt.csv) and apply same formula as [CPU](#cpu).
 
 Average GPU Utilization is also read from:
 

@@ -2,16 +2,13 @@ package gcp
 
 import (
 	"encoding/json"
-	"io"
-	"os"
-	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
 
+	"github.com/carboniferio/carbonifer/internal/data"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 
 	"github.com/yunabe/easycsv"
 )
@@ -67,16 +64,8 @@ func GetGCPMachineType(machineTypeStr string, zone string) MachineType {
 		}
 	}
 	if gcpInstanceTypes == nil {
-		gcpInstancesDataFile := filepath.Join(viper.GetString("data.path"), "gcp_instances.json")
-		log.Debugf("  reading gcp instances data from: %v", gcpInstancesDataFile)
-		jsonFile, err := os.Open(gcpInstancesDataFile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer jsonFile.Close()
-
-		byteValue, _ := io.ReadAll(jsonFile)
-		err = json.Unmarshal([]byte(byteValue), &gcpInstanceTypes)
+		byteValue := data.ReadDataFile("gcp_instances.json")
+		err := json.Unmarshal([]byte(byteValue), &gcpInstanceTypes)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -99,9 +88,8 @@ func GetCPUWatt(cpu string) CPUWatt {
 	if gcpWattPerCPU == nil {
 		// Read the CSV records
 		var records []cpuWattCSV
-		gcpPowerDataFile := filepath.Join(viper.GetString("data.path"), "gcp_watt_cpu.csv")
-		log.Debugf("  reading GCP cpu power data from: %v", gcpPowerDataFile)
-		if err := easycsv.NewReaderFile(gcpPowerDataFile).ReadAll(&records); err != nil {
+		fileContents := data.ReadDataFile("gcp_watt_cpu.csv")
+		if err := easycsv.NewReader(strings.NewReader(string(fileContents))).ReadAll(&records); err != nil {
 			log.Fatal(err)
 		}
 
@@ -146,16 +134,8 @@ func GetGCPSQLTier(tierName string) SqlTier {
 		}
 	}
 	if gcpSQLTiers == nil {
-		gcpSQLTierDataFile := filepath.Join(viper.GetString("data.path"), "gcp_sql_tiers.json")
-		log.Debugf("  reading gcp sql tier data from: %v", gcpSQLTierDataFile)
-		jsonFile, err := os.Open(gcpSQLTierDataFile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer jsonFile.Close()
-
-		byteValue, _ := io.ReadAll(jsonFile)
-		err = json.Unmarshal([]byte(byteValue), &gcpSQLTiers)
+		byteValue := data.ReadDataFile("gcp_sql_tiers.json")
+		err := json.Unmarshal([]byte(byteValue), &gcpSQLTiers)
 		if err != nil {
 			log.Fatal(err)
 		}

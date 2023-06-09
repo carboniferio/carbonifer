@@ -2,15 +2,12 @@ package coefficients
 
 import (
 	"encoding/json"
-	"io"
-	"os"
-	"path/filepath"
 	"reflect"
 
+	"github.com/carboniferio/carbonifer/internal/data"
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 )
 
 type Coefficients struct {
@@ -33,16 +30,8 @@ var coefficientsPerProviders *CoefficientsProviders
 
 func GetEnergyCoefficients() *CoefficientsProviders {
 	if coefficientsPerProviders == nil {
-		energyCoefFile := filepath.Join(viper.GetString("data.path"), "energy_coefficients.json")
-		log.Debugf("reading Energy Coefficient Data file from: %v", energyCoefFile)
-		jsonFile, err := os.Open(energyCoefFile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer jsonFile.Close()
-
-		byteValue, _ := io.ReadAll(jsonFile)
-		err = json.Unmarshal([]byte(byteValue), &coefficientsPerProviders)
+		energyCoefFile := data.ReadDataFile("energy_coefficients.json")
+		err := json.Unmarshal(energyCoefFile, &coefficientsPerProviders)
 		if err != nil {
 			log.Fatal(err)
 		}

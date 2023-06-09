@@ -1,12 +1,11 @@
 package providers
 
 import (
-	"path/filepath"
 	"strings"
 
+	"github.com/carboniferio/carbonifer/internal/data"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"github.com/yunabe/easycsv"
 )
 
@@ -30,9 +29,9 @@ func GetGPUWatt(gpuName string) GPUWatt {
 	if wattPerGPU == nil {
 		// Read the CSV records
 		var records []gpuWattCSV
-		gpuPowerDataFile := filepath.Join(viper.GetString("data.path"), "gpu_watt.csv")
+		gpuPowerDataFile := data.ReadDataFile("gpu_watt.csv")
 		log.Debugf("  reading gpu power data from: %v", gpuPowerDataFile)
-		if err := easycsv.NewReaderFile(gpuPowerDataFile).ReadAll(&records); err != nil {
+		if err := easycsv.NewReader(strings.NewReader(string(gpuPowerDataFile))).ReadAll(&records); err != nil {
 			log.Fatal(err)
 		}
 

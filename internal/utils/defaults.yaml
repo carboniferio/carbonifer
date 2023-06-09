@@ -3,8 +3,6 @@
 out:
   format: text
   file:
-data:
-  path: "./data"
 unit:
   time: h
   power: W
