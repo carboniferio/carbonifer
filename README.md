@@ -267,6 +267,15 @@ The report is customizable (text or JSON, per hour, month...), cf [Configuration
 </p>
 </details>
 
+### Existing terraform plan file
+
+In case you want to read an existing terraform file, you need to pass it as argument. It can either be a raw tfplan or a json plan. 
+This is useful when some variables or credentials are required to run `terraform plan`. In that case `carbonifer plan` won't try to run `terraform  plan` for you, and won't expect to have any credentials or variable set (via env var...)
+
+```bash
+carbonifer plan /path/to/my/project.tfplan
+```
+
 ## Methodology
 
 This tool will:
@@ -299,9 +308,12 @@ See the [Scope](doc/scope.md) document for more details.
 
 ## Usage
 
-`carbonifer [path of terraform files]`
+`carbonifer plan [target]`
 
-The targeted terraform folder is provided as the only argument. By default, it uses the current folder.
+- `target` can be
+  - a terraform project folder
+  - a terraform plan file (json or raw)
+  - default: the current folder
 
 ### Prerequisites
 

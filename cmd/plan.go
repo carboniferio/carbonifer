@@ -21,9 +21,21 @@ var test_planCmdHasRun = false
 
 // planCmd represents the plan command
 var planCmd = &cobra.Command{
-	Use:   "plan",
-	Short: "Estimate CO2 from your infrastructure code",
-	Args:  cobra.MaximumNArgs(1),
+	Use: "plan",
+	Long: `Estimate CO2 from your infrastructure code.
+
+The 'plan' command optionally takes a single argument:
+
+    directory : 
+		- default: current directory
+		- directory: a terraform project directory
+		- file: a terraform plan file (raw or json)
+Example usages:
+	carbonifer plan
+	carbonifer plan /path/to/terraform/project
+	carbonifer plan /path/to/terraform/plan.json
+	carbonifer plan /path/to/terraform/plan.tfplan`,
+	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		test_planCmdHasRun = true
 		log.Debug("Running command 'plan'")
