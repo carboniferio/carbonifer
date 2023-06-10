@@ -6,14 +6,14 @@ package cmd
 import (
 	"bufio"
 	"os"
-	"path"
-	"strings"
+	"path/filepath"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/carboniferio/carbonifer/internal/estimate"
 	"github.com/carboniferio/carbonifer/internal/output"
 	"github.com/carboniferio/carbonifer/internal/terraform"
+	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -33,20 +33,45 @@ var planCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		input := workdir
 		if len(args) != 0 {
-			terraformProject := args[0]
-			if strings.HasPrefix(terraformProject, "/") {
-				workdir = terraformProject
-			} else {
-				workdir = path.Join(workdir, terraformProject)
+			input = args[0]
+			if !filepath.IsAbs(input) {
+				input = filepath.Join(workdir, input)
 			}
 		}
 
-		viper.Set("workdir", workdir)
-		log.Debugf("Workdir : %v", workdir)
+		fileInfo, err := os.Stat(input)
+		if err != nil {
+			// Handle error
+			panic(err)
+		}
+
+		var tfPlan *tfjson.Plan
+		// If the path points to a file, run show
+		if !fileInfo.IsDir() {
+			parentDir := filepath.Dir(input)
+			viper.Set("workdir", parentDir)
+			tfPlan, err = terraform.TerraformShow(input)
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else {
+			// If the path points to a directory, run plan
+			viper.Set("workdir", input)
+			tfPlan, err = terraform.TerraformPlan()
+			if err != nil {
+				if e, ok := err.(*terraform.ProviderAuthError); ok {
+					log.Warnf("Skipping Authentication error: %v", e)
+				} else {
+					log.Fatal(err)
+				}
+			}
+		}
 
 		// Read resources from terraform plan
-		resources, err := terraform.GetResources()
+		resources, err := terraform.GetResources(tfPlan)
 		if err != nil {
 			log.Fatal(err)
 		}

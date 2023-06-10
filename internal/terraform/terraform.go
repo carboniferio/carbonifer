@@ -7,10 +7,6 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/carboniferio/carbonifer/internal/resources"
-	"github.com/carboniferio/carbonifer/internal/terraform/aws"
-	"github.com/carboniferio/carbonifer/internal/terraform/gcp"
-	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/hc-install/product"
 	"github.com/hashicorp/hc-install/releases"
@@ -52,6 +48,10 @@ func GetTerraformExec() (*tfexec.Terraform, error) {
 	return terraformExec, nil
 }
 
+func ResetTerraformExec() {
+	terraformExec = nil
+}
+
 func installTerraform() string {
 	var execPath string
 	terraformInstallDir := viper.GetString("terraform.path")
@@ -89,24 +89,33 @@ func installTerraform() string {
 	return execPath
 }
 
-func TerraformPlan() (*tfjson.Plan, error) {
+func TerraformInit() (*tfexec.Terraform, *context.Context, error) {
 	tf, err := GetTerraformExec()
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	log.Debug("Running terraform plan in ", tf.WorkingDir())
+	log.Debug("Running terraform init in ", tf.WorkingDir())
 
 	ctx := context.Background()
 
 	// Terraform init
 	err = tf.Init(ctx)
 	if err != nil {
+		return nil, &ctx, err
+	}
+
+	return tf, &ctx, err
+}
+
+func TerraformPlan() (*tfjson.Plan, error) {
+	tf, ctx, err := TerraformInit()
+	if err != nil {
 		return nil, err
 	}
 
 	// Terraform Validate
-	_, err = tf.Validate(ctx)
+	_, err = tf.Validate(*ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -136,121 +145,55 @@ func TerraformPlan() (*tfjson.Plan, error) {
 
 	// Run Terraform Plan with an output file
 	out := tfexec.Out(tfPlanFile.Name())
-	_, err = tf.Plan(ctx, out)
+	_, err = tf.Plan(*ctx, out)
+	var authError ProviderAuthError
 	if err != nil {
-		if strings.Contains(err.Error(), "invalid authentication credentials") ||
-			strings.Contains(err.Error(), "No credentials loaded") ||
-			strings.Contains(err.Error(), "no valid credential") {
-			return nil, &ProviderAuthError{ParentError: err}
+		uwErr := err.Error()
+		if strings.Contains(uwErr, "invalid authentication credentials") ||
+			strings.Contains(uwErr, "No credentials loaded") ||
+			strings.Contains(uwErr, "no valid credential") {
+			authError = ProviderAuthError{ParentError: err}
+		} else {
+			log.Errorf("error running  Terraform Plan: %s", err)
+			return nil, err
 		}
-		return nil, err
 	}
 
 	// Run Terraform Show reading file outputed in step above
-	tfplan, err := tf.ShowPlanFile(ctx, tfPlanFile.Name())
+	tfplan, err := tf.ShowPlanFile(*ctx, tfPlanFile.Name())
 	if err != nil {
 		log.Infof("error running  Terraform Show: %s", err)
 		return nil, err
 	}
-	return tfplan, nil
+	return tfplan, &authError
 }
 
-func GetResources() (map[string]resources.Resource, error) {
-	log.Debug("Reading planned resources from Terraform plan")
-	tfPlan, err := TerraformPlan()
+func TerraformShow(planFilePath string) (*tfjson.Plan, error) {
+	if strings.HasSuffix(planFilePath, ".json") {
+		log.Debugf("Reading Terraform plan from %v", planFilePath)
+		jsonFile, err := os.Open(planFilePath)
+		if err != nil {
+			return nil, err
+		}
+		defer jsonFile.Close()
+		byteValue, _ := os.ReadFile(planFilePath)
+		var tfplan tfjson.Plan
+		err = json.Unmarshal(byteValue, &tfplan)
+		if err != nil {
+			return nil, err
+		}
+		return &tfplan, nil
+	}
+
+	tf, ctx, err := TerraformInit()
 	if err != nil {
-		if e, ok := err.(*ProviderAuthError); ok {
-			return nil, e
-		} else {
-			log.Fatal(err)
-		}
-	}
-	log.Debugf("Reading resources from Terraform plan: %d resources", len(tfPlan.PlannedValues.RootModule.Resources))
-	resourcesMap := make(map[string]resources.Resource)
-	terraformRefs := tfrefs.References{
-		ResourceConfigs:    map[string]*tfjson.ConfigResource{},
-		ResourceReferences: map[string]*tfjson.StateResource{},
-		DataResources:      map[string]resources.DataResource{},
-		ProviderConfigs:    map[string]string{},
-	}
-	for _, priorRes := range tfPlan.PlannedValues.RootModule.Resources {
-		log.Debugf("Reading prior state resources %v", priorRes.Address)
-		if priorRes.Mode == "data" {
-			if strings.HasPrefix(priorRes.Type, "google") {
-				dataResource := gcp.GetDataResource(*priorRes)
-				terraformRefs.DataResources[dataResource.GetKey()] = dataResource
-			}
-		}
+		return nil, err
 	}
 
-	// Find template first
-	for _, res := range tfPlan.PlannedValues.RootModule.Resources {
-		log.Debugf("Reading resource %v", res.Address)
-		if strings.HasPrefix(res.Type, "google") && (strings.HasSuffix(res.Type, "_template") ||
-			strings.HasSuffix(res.Type, "_autoscaler")) {
-			if res.Mode == "managed" {
-				terraformRefs.ResourceReferences[res.Address] = res
-			}
-		}
+	// Run Terraform Show
+	tfstate, err := tf.ShowPlanFile(*ctx, planFilePath)
+	if err != nil {
+		return nil, err
 	}
-
-	// Index configurations in order to find relationships
-	for _, resConfig := range tfPlan.Config.RootModule.Resources {
-		log.Debugf("Reading resource config %v", resConfig.Address)
-		if strings.HasPrefix(resConfig.Type, "google") {
-			if resConfig.Mode == "managed" {
-				terraformRefs.ResourceConfigs[resConfig.Address] = resConfig
-			}
-		}
-	}
-
-	// Get default values
-	for provider, resConfig := range tfPlan.Config.ProviderConfigs {
-		if provider == "aws" {
-			log.Debugf("Reading provider config %v", resConfig.Name)
-			// TODO #58 Improve way we get default regions (env var, profile...)
-			var region interface{}
-			regionExpr := resConfig.Expressions["region"]
-			if regionExpr != nil {
-				region = regionExpr.ConstantValue
-			} else {
-				if os.Getenv("AWS_REGION") != "" {
-					region = os.Getenv("AWS_REGION")
-				}
-			}
-			if region != nil {
-				terraformRefs.ProviderConfigs["region"] = region.(string)
-			}
-		}
-	}
-
-	// Get All resources
-	for _, res := range tfPlan.PlannedValues.RootModule.Resources {
-		log.Debugf("Reading resource %v", res.Address)
-
-		if res.Mode == "managed" {
-			var resource resources.Resource
-			prefix := strings.Split(res.Type, "_")[0]
-			if prefix == "google" {
-				resource = gcp.GetResource(*res, &terraformRefs)
-			} else if prefix == "aws" {
-				resource = aws.GetResource(*res, &terraformRefs)
-			} else {
-				log.Warnf("Skipping resource %s. Provider not supported : %s", res.Type, prefix)
-			}
-			if resource != nil {
-				resourcesMap[resource.GetAddress()] = resource
-				if log.IsLevelEnabled(log.DebugLevel) {
-					computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"
-					if resource.IsSupported() {
-						computeJson, _ := json.Marshal(resource)
-						computeJsonStr = string(computeJson)
-					}
-					log.Debugf("  Compute resource : %v", string(computeJsonStr))
-				}
-			}
-		}
-
-	}
-	return resourcesMap, nil
+	return tfstate, nil
 }
