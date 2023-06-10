@@ -192,8 +192,6 @@ func TestGetResources_GroupInstance(t *testing.T) {
 	// reset
 	terraform.ResetTerraformExec()
 
-	t.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "")
-
 	wd := path.Join(testutils.RootDir, "test/terraform/gcp_group")
 	viper.Set("workdir", wd)
 
@@ -250,8 +248,6 @@ func TestGetResources_GroupInstance(t *testing.T) {
 func TestGetResources_InstanceFromTemplate(t *testing.T) {
 	// reset
 	terraform.ResetTerraformExec()
-
-	t.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "")
 
 	wd := path.Join(testutils.RootDir, "test/terraform/gcp_cit")
 	viper.Set("workdir", wd)
