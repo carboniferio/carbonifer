@@ -13,7 +13,6 @@ import (
 	"github.com/carboniferio/carbonifer/internal/estimate"
 	"github.com/carboniferio/carbonifer/internal/output"
 	"github.com/carboniferio/carbonifer/internal/terraform"
-	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -42,32 +41,10 @@ var planCmd = &cobra.Command{
 			}
 		}
 
-		fileInfo, err := os.Stat(input)
+		// Generate or Read Terraform plan
+		tfPlan, err := terraform.CarboniferPlan(input)
 		if err != nil {
-			// Handle error
-			panic(err)
-		}
-
-		var tfPlan *tfjson.Plan
-		// If the path points to a file, run show
-		if !fileInfo.IsDir() {
-			parentDir := filepath.Dir(input)
-			viper.Set("workdir", parentDir)
-			tfPlan, err = terraform.TerraformShow(input)
-			if err != nil {
-				log.Fatal(err)
-			}
-		} else {
-			// If the path points to a directory, run plan
-			viper.Set("workdir", input)
-			tfPlan, err = terraform.TerraformPlan()
-			if err != nil {
-				if e, ok := err.(*terraform.ProviderAuthError); ok {
-					log.Warnf("Skipping Authentication error: %v", e)
-				} else {
-					log.Fatal(err)
-				}
-			}
+			log.Fatal(err)
 		}
 
 		// Read resources from terraform plan

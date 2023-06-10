@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/hashicorp/go-version"
@@ -108,6 +109,34 @@ func TerraformInit() (*tfexec.Terraform, *context.Context, error) {
 	return tf, &ctx, err
 }
 
+func CarboniferPlan(input string) (*tfjson.Plan, error) {
+	fileInfo, err := os.Stat(input)
+	if err != nil {
+		return nil, err
+	}
+
+	// If the path points to a file, run show
+	if !fileInfo.IsDir() {
+		parentDir := filepath.Dir(input)
+		fileName := filepath.Base(input)
+		viper.Set("workdir", parentDir)
+		tfPlan, err := TerraformShow(fileName)
+		return tfPlan, err
+	} else {
+		// If the path points to a directory, run plan
+		viper.Set("workdir", input)
+		tfPlan, err := TerraformPlan()
+		if err != nil {
+			if e, ok := err.(*ProviderAuthError); ok {
+				log.Warnf("Skipping Authentication error: %v", e)
+			} else {
+				return nil, err
+			}
+		}
+		return tfPlan, err
+	}
+}
+
 func TerraformPlan() (*tfjson.Plan, error) {
 	tf, ctx, err := TerraformInit()
 	if err != nil {
@@ -144,20 +173,9 @@ func TerraformPlan() (*tfjson.Plan, error) {
 	log.Debugf("Running terraform exec %v", tf.ExecPath())
 
 	// Run Terraform Plan with an output file
-	out := tfexec.Out(tfPlanFile.Name())
-	_, err = tf.Plan(*ctx, out)
-	var authError ProviderAuthError
+	err = terraformPlanExec(tf, *ctx, tfPlanFile)
 	if err != nil {
-		uwErr := err.Error()
-		if strings.Contains(uwErr, "invalid authentication credentials") ||
-			strings.Contains(uwErr, "No credentials loaded") ||
-			strings.Contains(uwErr, "no valid credential") {
-			authError = ProviderAuthError{ParentError: err}
-			return nil, &authError
-		} else {
-			log.Errorf("error running  Terraform Plan: %s", err)
-			return nil, err
-		}
+		return nil, err
 	}
 
 	// Run Terraform Show reading file outputed in step above
@@ -166,11 +184,31 @@ func TerraformPlan() (*tfjson.Plan, error) {
 		log.Infof("error running  Terraform Show: %s", err)
 		return nil, err
 	}
-	return tfplan, &authError
+	return tfplan, nil
 }
 
-func TerraformShow(planFilePath string) (*tfjson.Plan, error) {
-	if strings.HasSuffix(planFilePath, ".json") {
+func terraformPlanExec(tf *tfexec.Terraform, ctx context.Context, tfPlanFile *os.File) error {
+	out := tfexec.Out(tfPlanFile.Name())
+	_, err := tf.Plan(ctx, out)
+	var authError ProviderAuthError
+	if err != nil {
+		uwErr := err.Error()
+		if strings.Contains(uwErr, "invalid authentication credentials") ||
+			strings.Contains(uwErr, "No credentials loaded") ||
+			strings.Contains(uwErr, "no valid credential") {
+			authError = ProviderAuthError{ParentError: err}
+			return &authError
+		} else {
+			log.Errorf("error running  Terraform Plan: %s", err)
+			return err
+		}
+	}
+	return nil
+}
+
+func TerraformShow(fileName string) (*tfjson.Plan, error) {
+	if strings.HasSuffix(fileName, ".json") {
+		planFilePath := filepath.Join(viper.GetString("workdir"), fileName)
 		log.Debugf("Reading Terraform plan from %v", planFilePath)
 		jsonFile, err := os.Open(planFilePath)
 		if err != nil {
@@ -192,7 +230,7 @@ func TerraformShow(planFilePath string) (*tfjson.Plan, error) {
 	}
 
 	// Run Terraform Show
-	tfstate, err := tf.ShowPlanFile(*ctx, planFilePath)
+	tfstate, err := tf.ShowPlanFile(*ctx, fileName)
 	if err != nil {
 		return nil, err
 	}

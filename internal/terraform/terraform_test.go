@@ -15,7 +15,7 @@ import (
 
 func TestGetTerraformExec(t *testing.T) {
 	// reset
-	terraformExec = nil
+	ResetTerraformExec()
 
 	viper.Set("workdir", ".")
 	tfExec, err := GetTerraformExec()
@@ -27,12 +27,12 @@ func TestGetTerraformExec(t *testing.T) {
 func TestGetTerraformExec_NotExistingExactVersion(t *testing.T) {
 	// reset
 	t.Setenv("PATH", "")
-	terraformExec = nil
+	ResetTerraformExec()
 
 	wantedVersion := "1.2.0"
 	viper.Set("workdir", ".")
 	viper.Set("terraform.version", wantedVersion)
-	terraformExec = nil
+	ResetTerraformExec()
 	tfExec, err := GetTerraformExec()
 	assert.NoError(t, err)
 	assert.NotNil(t, tfExec)
@@ -47,7 +47,7 @@ func TestGetTerraformExec_NotExistingExactVersion(t *testing.T) {
 func TestGetTerraformExec_NotExistingNoVersion(t *testing.T) {
 	// reset
 	t.Setenv("PATH", "")
-	terraformExec = nil
+	ResetTerraformExec()
 	viper.Set("terraform.version", "")
 
 	viper.Set("workdir", ".")
@@ -59,7 +59,7 @@ func TestGetTerraformExec_NotExistingNoVersion(t *testing.T) {
 
 func TestTerraformPlan_NoFile(t *testing.T) {
 	// reset
-	terraformExec = nil
+	ResetTerraformExec()
 
 	wd := path.Join(testutils.RootDir, "test/terraform/empty")
 	logrus.Infof("workdir: %v", wd)
@@ -72,7 +72,7 @@ func TestTerraformPlan_NoFile(t *testing.T) {
 
 func TestTerraformPlan_NoTfFile(t *testing.T) {
 	// reset
-	terraformExec = nil
+	ResetTerraformExec()
 
 	wd := path.Join(testutils.RootDir, "test/terraform/notTf")
 	logrus.Infof("workdir: %v", wd)
@@ -85,7 +85,7 @@ func TestTerraformPlan_NoTfFile(t *testing.T) {
 
 func TestTerraformPlan_BadTfFile(t *testing.T) {
 	// reset
-	terraformExec = nil
+	ResetTerraformExec()
 
 	wd := path.Join(testutils.RootDir, "test/terraform/badTf")
 	logrus.Infof("workdir: %v", wd)
@@ -105,4 +105,59 @@ func TestTerraformPlan_MissingCreds(t *testing.T) {
 
 	_, err := TerraformPlan()
 	assert.IsType(t, (*ProviderAuthError)(nil), err)
+}
+
+func TestTerraformShow_JSON(t *testing.T) {
+	// reset
+	ResetTerraformExec()
+
+	tfPlan, err := CarboniferPlan("test/terraform/planJson/plan.json")
+	assert.NoError(t, err)
+	assert.Equal(t, tfPlan.TerraformVersion, "1.3.7")
+
+}
+
+func TestTerraformShow_NotExistJSON(t *testing.T) {
+	// reset
+	ResetTerraformExec()
+
+	_, err := CarboniferPlan("test/terraform/planJson/plan2.json")
+	assert.Error(t, err)
+}
+
+func TestTerraformShow_RawPlan(t *testing.T) {
+	// reset
+	ResetTerraformExec()
+
+	tfPlan, err := CarboniferPlan("test/terraform/planRaw/plan.tfplan")
+	assert.NoError(t, err)
+	assert.Equal(t, tfPlan.TerraformVersion, "1.4.6")
+
+}
+
+func TestTerraformShow_WithUnsetVar(t *testing.T) {
+	// reset
+	ResetTerraformExec()
+
+	_, err := CarboniferPlan("test/terraform/planRaw")
+	assert.Error(t, err)
+	assert.ErrorContains(t, err, "was required but not supplied")
+
+}
+
+func TestTerraformShow_SetVarDifferentFromPlanFile(t *testing.T) {
+	// reset
+	ResetTerraformExec()
+
+	t.Setenv("TF_VAR_machine_type", "f1-medium")
+
+	wd := path.Join(testutils.RootDir, "test/terraform/planRaw")
+	plan, err := CarboniferPlan(wd)
+	assert.NoError(t, err)
+	assert.Equal(t, plan.Variables["machine_type"].Value, "f1-medium")
+
+	wd2 := path.Join(testutils.RootDir, "test/terraform/planRaw/plan.tfplan")
+	plan2, err2 := CarboniferPlan(wd2)
+	assert.NoError(t, err2)
+	assert.Equal(t, plan2.Variables["machine_type"].Value, "f1-micro")
 }
