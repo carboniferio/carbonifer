@@ -95,3 +95,14 @@ func TestTerraformPlan_BadTfFile(t *testing.T) {
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "configuration is invalid")
 }
+
+func TestTerraformPlan_MissingCreds(t *testing.T) {
+	// reset
+	ResetTerraformExec()
+
+	wd := path.Join(testutils.RootDir, "test/terraform/gcp_images")
+	viper.Set("workdir", wd)
+
+	_, err := TerraformPlan()
+	assert.IsType(t, (*ProviderAuthError)(nil), err)
+}

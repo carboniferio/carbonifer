@@ -153,6 +153,7 @@ func TerraformPlan() (*tfjson.Plan, error) {
 			strings.Contains(uwErr, "No credentials loaded") ||
 			strings.Contains(uwErr, "no valid credential") {
 			authError = ProviderAuthError{ParentError: err}
+			return nil, &authError
 		} else {
 			log.Errorf("error running  Terraform Plan: %s", err)
 			return nil, err

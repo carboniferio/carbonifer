@@ -144,17 +144,6 @@ func TestGetResources(t *testing.T) {
 	}
 }
 
-func TestGetResources_MissingCreds(t *testing.T) {
-	// reset
-	terraform.ResetTerraformExec()
-
-	wd := path.Join(testutils.RootDir, "test/terraform/gcp_images")
-	viper.Set("workdir", wd)
-
-	_, err := terraform.TerraformPlan()
-	assert.IsType(t, (*terraform.ProviderAuthError)(nil), err)
-}
-
 func TestGetResources_DiskImage(t *testing.T) {
 	testutils.SkipWithCreds(t)
 	// reset
