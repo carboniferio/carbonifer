@@ -6,8 +6,7 @@ package cmd
 import (
 	"bufio"
 	"os"
-	"path"
-	"strings"
+	"path/filepath"
 
 	log "github.com/sirupsen/logrus"
 
@@ -22,9 +21,21 @@ var test_planCmdHasRun = false
 
 // planCmd represents the plan command
 var planCmd = &cobra.Command{
-	Use:   "plan",
-	Short: "Estimate CO2 from your infrastructure code",
-	Args:  cobra.MaximumNArgs(1),
+	Use: "plan",
+	Long: `Estimate CO2 from your infrastructure code.
+
+The 'plan' command optionally takes a single argument:
+
+    directory : 
+		- default: current directory
+		- directory: a terraform project directory
+		- file: a terraform plan file (raw or json)
+Example usages:
+	carbonifer plan
+	carbonifer plan /path/to/terraform/project
+	carbonifer plan /path/to/terraform/plan.json
+	carbonifer plan /path/to/terraform/plan.tfplan`,
+	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		test_planCmdHasRun = true
 		log.Debug("Running command 'plan'")
@@ -33,20 +44,23 @@ var planCmd = &cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
+
+		input := workdir
 		if len(args) != 0 {
-			terraformProject := args[0]
-			if strings.HasPrefix(terraformProject, "/") {
-				workdir = terraformProject
-			} else {
-				workdir = path.Join(workdir, terraformProject)
+			input = args[0]
+			if !filepath.IsAbs(input) {
+				input = filepath.Join(workdir, input)
 			}
 		}
 
-		viper.Set("workdir", workdir)
-		log.Debugf("Workdir : %v", workdir)
+		// Generate or Read Terraform plan
+		tfPlan, err := terraform.CarboniferPlan(input)
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		// Read resources from terraform plan
-		resources, err := terraform.GetResources()
+		resources, err := terraform.GetResources(tfPlan)
 		if err != nil {
 			log.Fatal(err)
 		}

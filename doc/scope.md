@@ -6,6 +6,7 @@
 
 Currently, Carbonifer can read only Terraform files. It has been tested with the following versions:
 
+- 1.4.6
 - 1.3.7
 - 1.3.6
 

@@ -1,0 +1,2608 @@
+{
+  "format_version": "1.1",
+  "terraform_version": "1.3.7",
+  "variables": {
+    "instance_count": {
+      "value": 2
+    }
+  },
+  "planned_values": {
+    "root_module": {
+      "resources": [
+        {
+          "address": "google_compute_autoscaler.foobar",
+          "mode": "managed",
+          "type": "google_compute_autoscaler",
+          "name": "foobar",
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 0,
+          "values": {
+            "autoscaling_policy": [
+              {
+                "cooldown_period": 60,
+                "cpu_utilization": [
+                  {
+                    "predictive_method": "NONE",
+                    "target": 0.5
+                  }
+                ],
+                "load_balancing_utilization": [],
+                "max_replicas": 10,
+                "metric": [],
+                "min_replicas": 1,
+                "mode": "ON",
+                "scale_in_control": [],
+                "scaling_schedules": []
+              }
+            ],
+            "description": null,
+            "name": "my-autoscaler",
+            "timeouts": null
+          },
+          "sensitive_values": {
+            "autoscaling_policy": [
+              {
+                "cpu_utilization": [
+                  {}
+                ],
+                "load_balancing_utilization": [],
+                "metric": [],
+                "scale_in_control": [],
+                "scaling_schedules": []
+              }
+            ]
+          }
+        },
+        {
+          "address": "google_compute_disk.first",
+          "mode": "managed",
+          "type": "google_compute_disk",
+          "name": "first",
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 0,
+          "values": {
+            "description": null,
+            "disk_encryption_key": [],
+            "image": null,
+            "labels": null,
+            "name": "cbf-disk-first",
+            "snapshot": null,
+            "source_disk": null,
+            "source_image_encryption_key": [],
+            "source_snapshot_encryption_key": [],
+            "timeouts": null,
+            "type": "pd-standard",
+            "zone": "europe-west9-a"
+          },
+          "sensitive_values": {
+            "disk_encryption_key": [],
+            "source_image_encryption_key": [],
+            "source_snapshot_encryption_key": [],
+            "users": []
+          }
+        },
+        {
+          "address": "google_compute_instance.default[0]",
+          "mode": "managed",
+          "type": "google_compute_instance",
+          "name": "default",
+          "index": 0,
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 6,
+          "values": {
+            "advanced_machine_features": [],
+            "allow_stopping_for_update": null,
+            "attached_disk": [
+              {
+                "disk_encryption_key_raw": null,
+                "mode": "READ_WRITE"
+              }
+            ],
+            "boot_disk": [
+              {
+                "auto_delete": true,
+                "disk_encryption_key_raw": null,
+                "initialize_params": [
+                  {
+                    "image": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20230206",
+                    "size": 564
+                  }
+                ],
+                "mode": "READ_WRITE"
+              }
+            ],
+            "can_ip_forward": false,
+            "deletion_protection": false,
+            "description": null,
+            "desired_status": null,
+            "enable_display": null,
+            "guest_accelerator": [
+              {
+                "count": 2,
+                "type": "nvidia-tesla-k80"
+              }
+            ],
+            "hostname": null,
+            "labels": null,
+            "machine_type": "n1-standard-2",
+            "metadata": null,
+            "metadata_startup_script": "sudo apt-get update; sudo apt-get install -yq build-essential python3-pip rsync; pip install flask",
+            "name": "cbf-test-vm",
+            "network_interface": [
+              {
+                "access_config": [
+                  {
+                    "public_ptr_domain_name": null
+                  }
+                ],
+                "alias_ip_range": [],
+                "ipv6_access_config": [],
+                "nic_type": null,
+                "queue_count": null
+              }
+            ],
+            "resource_policies": null,
+            "scratch_disk": [],
+            "service_account": [],
+            "shielded_instance_config": [],
+            "tags": [
+              "ssh"
+            ],
+            "timeouts": null,
+            "zone": "europe-west9-a"
+          },
+          "sensitive_values": {
+            "advanced_machine_features": [],
+            "attached_disk": [
+              {}
+            ],
+            "boot_disk": [
+              {
+                "initialize_params": [
+                  {
+                    "labels": {}
+                  }
+                ]
+              }
+            ],
+            "confidential_instance_config": [],
+            "guest_accelerator": [
+              {}
+            ],
+            "network_interface": [
+              {
+                "access_config": [
+                  {}
+                ],
+                "alias_ip_range": [],
+                "ipv6_access_config": []
+              }
+            ],
+            "reservation_affinity": [],
+            "scheduling": [],
+            "scratch_disk": [],
+            "service_account": [],
+            "shielded_instance_config": [],
+            "tags": [
+              false
+            ]
+          }
+        },
+        {
+          "address": "google_compute_instance.default[1]",
+          "mode": "managed",
+          "type": "google_compute_instance",
+          "name": "default",
+          "index": 1,
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 6,
+          "values": {
+            "advanced_machine_features": [],
+            "allow_stopping_for_update": null,
+            "attached_disk": [
+              {
+                "disk_encryption_key_raw": null,
+                "mode": "READ_WRITE"
+              }
+            ],
+            "boot_disk": [
+              {
+                "auto_delete": true,
+                "disk_encryption_key_raw": null,
+                "initialize_params": [
+                  {
+                    "image": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20230206",
+                    "size": 564
+                  }
+                ],
+                "mode": "READ_WRITE"
+              }
+            ],
+            "can_ip_forward": false,
+            "deletion_protection": false,
+            "description": null,
+            "desired_status": null,
+            "enable_display": null,
+            "guest_accelerator": [
+              {
+                "count": 2,
+                "type": "nvidia-tesla-k80"
+              }
+            ],
+            "hostname": null,
+            "labels": null,
+            "machine_type": "n1-standard-2",
+            "metadata": null,
+            "metadata_startup_script": "sudo apt-get update; sudo apt-get install -yq build-essential python3-pip rsync; pip install flask",
+            "name": "cbf-test-vm",
+            "network_interface": [
+              {
+                "access_config": [
+                  {
+                    "public_ptr_domain_name": null
+                  }
+                ],
+                "alias_ip_range": [],
+                "ipv6_access_config": [],
+                "nic_type": null,
+                "queue_count": null
+              }
+            ],
+            "resource_policies": null,
+            "scratch_disk": [],
+            "service_account": [],
+            "shielded_instance_config": [],
+            "tags": [
+              "ssh"
+            ],
+            "timeouts": null,
+            "zone": "europe-west9-a"
+          },
+          "sensitive_values": {
+            "advanced_machine_features": [],
+            "attached_disk": [
+              {}
+            ],
+            "boot_disk": [
+              {
+                "initialize_params": [
+                  {
+                    "labels": {}
+                  }
+                ]
+              }
+            ],
+            "confidential_instance_config": [],
+            "guest_accelerator": [
+              {}
+            ],
+            "network_interface": [
+              {
+                "access_config": [
+                  {}
+                ],
+                "alias_ip_range": [],
+                "ipv6_access_config": []
+              }
+            ],
+            "reservation_affinity": [],
+            "scheduling": [],
+            "scratch_disk": [],
+            "service_account": [],
+            "shielded_instance_config": [],
+            "tags": [
+              false
+            ]
+          }
+        },
+        {
+          "address": "google_compute_instance.foo[0]",
+          "mode": "managed",
+          "type": "google_compute_instance",
+          "name": "foo",
+          "index": 0,
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 6,
+          "values": {
+            "advanced_machine_features": [],
+            "allow_stopping_for_update": null,
+            "attached_disk": [],
+            "boot_disk": [
+              {
+                "auto_delete": true,
+                "disk_encryption_key_raw": null,
+                "initialize_params": [
+                  {
+                    "image": "debian-cloud/debian-11"
+                  }
+                ],
+                "mode": "READ_WRITE"
+              }
+            ],
+            "can_ip_forward": false,
+            "deletion_protection": false,
+            "description": null,
+            "desired_status": null,
+            "enable_display": null,
+            "hostname": null,
+            "labels": null,
+            "machine_type": "n2-standard-2",
+            "metadata": null,
+            "metadata_startup_script": "sudo apt-get update; sudo apt-get install -yq build-essential python3-pip rsync; pip install flask",
+            "min_cpu_platform": "Intel Cascade Lake",
+            "name": "cbf-test-other",
+            "network_interface": [
+              {
+                "access_config": [
+                  {
+                    "public_ptr_domain_name": null
+                  }
+                ],
+                "alias_ip_range": [],
+                "ipv6_access_config": [],
+                "nic_type": null,
+                "queue_count": null
+              }
+            ],
+            "resource_policies": null,
+            "scratch_disk": [],
+            "service_account": [],
+            "shielded_instance_config": [],
+            "tags": [
+              "ssh"
+            ],
+            "timeouts": null,
+            "zone": "europe-west9-a"
+          },
+          "sensitive_values": {
+            "advanced_machine_features": [],
+            "attached_disk": [],
+            "boot_disk": [
+              {
+                "initialize_params": [
+                  {
+                    "labels": {}
+                  }
+                ]
+              }
+            ],
+            "confidential_instance_config": [],
+            "guest_accelerator": [],
+            "network_interface": [
+              {
+                "access_config": [
+                  {}
+                ],
+                "alias_ip_range": [],
+                "ipv6_access_config": []
+              }
+            ],
+            "reservation_affinity": [],
+            "scheduling": [],
+            "scratch_disk": [],
+            "service_account": [],
+            "shielded_instance_config": [],
+            "tags": [
+              false
+            ]
+          }
+        },
+        {
+          "address": "google_compute_instance.foo[1]",
+          "mode": "managed",
+          "type": "google_compute_instance",
+          "name": "foo",
+          "index": 1,
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 6,
+          "values": {
+            "advanced_machine_features": [],
+            "allow_stopping_for_update": null,
+            "attached_disk": [],
+            "boot_disk": [
+              {
+                "auto_delete": true,
+                "disk_encryption_key_raw": null,
+                "initialize_params": [
+                  {
+                    "image": "debian-cloud/debian-11"
+                  }
+                ],
+                "mode": "READ_WRITE"
+              }
+            ],
+            "can_ip_forward": false,
+            "deletion_protection": false,
+            "description": null,
+            "desired_status": null,
+            "enable_display": null,
+            "hostname": null,
+            "labels": null,
+            "machine_type": "n2-standard-2",
+            "metadata": null,
+            "metadata_startup_script": "sudo apt-get update; sudo apt-get install -yq build-essential python3-pip rsync; pip install flask",
+            "min_cpu_platform": "Intel Cascade Lake",
+            "name": "cbf-test-other",
+            "network_interface": [
+              {
+                "access_config": [
+                  {
+                    "public_ptr_domain_name": null
+                  }
+                ],
+                "alias_ip_range": [],
+                "ipv6_access_config": [],
+                "nic_type": null,
+                "queue_count": null
+              }
+            ],
+            "resource_policies": null,
+            "scratch_disk": [],
+            "service_account": [],
+            "shielded_instance_config": [],
+            "tags": [
+              "ssh"
+            ],
+            "timeouts": null,
+            "zone": "europe-west9-a"
+          },
+          "sensitive_values": {
+            "advanced_machine_features": [],
+            "attached_disk": [],
+            "boot_disk": [
+              {
+                "initialize_params": [
+                  {
+                    "labels": {}
+                  }
+                ]
+              }
+            ],
+            "confidential_instance_config": [],
+            "guest_accelerator": [],
+            "network_interface": [
+              {
+                "access_config": [
+                  {}
+                ],
+                "alias_ip_range": [],
+                "ipv6_access_config": []
+              }
+            ],
+            "reservation_affinity": [],
+            "scheduling": [],
+            "scratch_disk": [],
+            "service_account": [],
+            "shielded_instance_config": [],
+            "tags": [
+              false
+            ]
+          }
+        },
+        {
+          "address": "google_compute_instance_from_template.ifromtpl",
+          "mode": "managed",
+          "type": "google_compute_instance_from_template",
+          "name": "ifromtpl",
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 0,
+          "values": {
+            "can_ip_forward": false,
+            "labels": {
+              "my_key": "my_value"
+            },
+            "name": "instance-from-template",
+            "shielded_instance_config": [],
+            "timeouts": null,
+            "zone": "europe-west9-a"
+          },
+          "sensitive_values": {
+            "advanced_machine_features": [],
+            "attached_disk": [],
+            "boot_disk": [],
+            "confidential_instance_config": [],
+            "guest_accelerator": [],
+            "labels": {},
+            "metadata": {},
+            "network_interface": [],
+            "reservation_affinity": [],
+            "resource_policies": [],
+            "scheduling": [],
+            "scratch_disk": [],
+            "service_account": [],
+            "shielded_instance_config": [],
+            "tags": []
+          }
+        },
+        {
+          "address": "google_compute_instance_template.my-instance-template",
+          "mode": "managed",
+          "type": "google_compute_instance_template",
+          "name": "my-instance-template",
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 1,
+          "values": {
+            "advanced_machine_features": [],
+            "can_ip_forward": false,
+            "description": null,
+            "disk": [
+              {
+                "auto_delete": true,
+                "boot": true,
+                "disk_encryption_key": [],
+                "disk_name": null,
+                "disk_size_gb": 20,
+                "labels": null,
+                "resource_policies": null,
+                "source": null,
+                "source_image_encryption_key": [],
+                "source_snapshot": null,
+                "source_snapshot_encryption_key": []
+              }
+            ],
+            "guest_accelerator": [],
+            "instance_description": null,
+            "labels": null,
+            "machine_type": "n2-standard-2",
+            "metadata": null,
+            "metadata_startup_script": null,
+            "min_cpu_platform": null,
+            "name": "my-instance-template",
+            "network_interface": [
+              {
+                "access_config": [],
+                "alias_ip_range": [],
+                "ipv6_access_config": [],
+                "network_ip": null,
+                "nic_type": null,
+                "queue_count": null
+              }
+            ],
+            "reservation_affinity": [],
+            "service_account": [],
+            "shielded_instance_config": [],
+            "tags": null,
+            "timeouts": null
+          },
+          "sensitive_values": {
+            "advanced_machine_features": [],
+            "confidential_instance_config": [],
+            "disk": [
+              {
+                "disk_encryption_key": [],
+                "source_image_encryption_key": [],
+                "source_snapshot_encryption_key": []
+              }
+            ],
+            "guest_accelerator": [],
+            "network_interface": [
+              {
+                "access_config": [],
+                "alias_ip_range": [],
+                "ipv6_access_config": []
+              }
+            ],
+            "reservation_affinity": [],
+            "scheduling": [],
+            "service_account": [],
+            "shielded_instance_config": []
+          }
+        },
+        {
+          "address": "google_compute_network.vpc_network",
+          "mode": "managed",
+          "type": "google_compute_network",
+          "name": "vpc_network",
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 0,
+          "values": {
+            "auto_create_subnetworks": false,
+            "delete_default_routes_on_create": false,
+            "description": null,
+            "enable_ula_internal_ipv6": null,
+            "mtu": 1460,
+            "name": "cbf-network",
+            "timeouts": null
+          },
+          "sensitive_values": {}
+        },
+        {
+          "address": "google_compute_region_disk.second",
+          "mode": "managed",
+          "type": "google_compute_region_disk",
+          "name": "second",
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 0,
+          "values": {
+            "description": null,
+            "disk_encryption_key": [],
+            "labels": null,
+            "name": "cbf-disk-second",
+            "replica_zones": [
+              "europe-west9-a",
+              "europe-west6-b"
+            ],
+            "snapshot": null,
+            "source_disk": null,
+            "source_snapshot_encryption_key": [],
+            "timeouts": null,
+            "type": "pd-standard"
+          },
+          "sensitive_values": {
+            "disk_encryption_key": [],
+            "replica_zones": [
+              false,
+              false
+            ],
+            "source_snapshot_encryption_key": [],
+            "users": []
+          }
+        },
+        {
+          "address": "google_compute_region_instance_group_manager.my-group-manager",
+          "mode": "managed",
+          "type": "google_compute_region_instance_group_manager",
+          "name": "my-group-manager",
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 0,
+          "values": {
+            "auto_healing_policies": [],
+            "base_instance_name": "managed",
+            "description": null,
+            "distribution_policy_zones": [
+              "europe-west9-a",
+              "europe-west9-b"
+            ],
+            "list_managed_instances_results": "PAGELESS",
+            "name": "my-group-manager",
+            "named_port": [],
+            "stateful_disk": [],
+            "target_pools": null,
+            "target_size": 3,
+            "timeouts": null,
+            "version": [
+              {
+                "name": null,
+                "target_size": []
+              }
+            ],
+            "wait_for_instances": false,
+            "wait_for_instances_status": "STABLE"
+          },
+          "sensitive_values": {
+            "auto_healing_policies": [],
+            "distribution_policy_zones": [
+              false,
+              false
+            ],
+            "named_port": [],
+            "stateful_disk": [],
+            "status": [],
+            "update_policy": [],
+            "version": [
+              {
+                "target_size": []
+              }
+            ]
+          }
+        },
+        {
+          "address": "google_compute_subnetwork.default",
+          "mode": "managed",
+          "type": "google_compute_subnetwork",
+          "name": "default",
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 0,
+          "values": {
+            "description": null,
+            "ip_cidr_range": "10.0.1.0/24",
+            "ipv6_access_type": null,
+            "log_config": [],
+            "name": "cbf-subnet",
+            "region": "europe-west9",
+            "role": null,
+            "timeouts": null
+          },
+          "sensitive_values": {
+            "log_config": [],
+            "secondary_ip_range": []
+          }
+        },
+        {
+          "address": "google_sql_database_instance.instance",
+          "mode": "managed",
+          "type": "google_sql_database_instance",
+          "name": "instance",
+          "provider_name": "registry.terraform.io/hashicorp/google",
+          "schema_version": 0,
+          "values": {
+            "clone": [],
+            "database_version": "POSTGRES_14",
+            "deletion_protection": true,
+            "name": "my-database-instance",
+            "region": "europe-west9",
+            "restore_backup_context": [],
+            "root_password": null,
+            "settings": [
+              {
+                "activation_policy": "ALWAYS",
+                "active_directory_config": [],
+                "availability_type": "REGIONAL",
+                "collation": null,
+                "database_flags": [],
+                "deletion_protection_enabled": null,
+                "deny_maintenance_period": [],
+                "disk_autoresize": true,
+                "disk_autoresize_limit": 0,
+                "disk_type": "PD_SSD",
+                "insights_config": [],
+                "maintenance_window": [],
+                "password_validation_policy": [],
+                "pricing_plan": "PER_USE",
+                "sql_server_audit_config": [],
+                "tier": "db-g1-small",
+                "time_zone": null
+              }
+            ],
+            "timeouts": null
+          },
+          "sensitive_values": {
+            "available_maintenance_versions": [],
+            "clone": [],
+            "ip_address": [],
+            "replica_configuration": [],
+            "restore_backup_context": [],
+            "server_ca_cert": [],
+            "settings": [
+              {
+                "active_directory_config": [],
+                "backup_configuration": [],
+                "database_flags": [],
+                "deny_maintenance_period": [],
+                "insights_config": [],
+                "ip_configuration": [],
+                "location_preference": [],
+                "maintenance_window": [],
+                "password_validation_policy": [],
+                "sql_server_audit_config": [],
+                "user_labels": {}
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resource_changes": [
+    {
+      "address": "google_compute_autoscaler.foobar",
+      "mode": "managed",
+      "type": "google_compute_autoscaler",
+      "name": "foobar",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "autoscaling_policy": [
+            {
+              "cooldown_period": 60,
+              "cpu_utilization": [
+                {
+                  "predictive_method": "NONE",
+                  "target": 0.5
+                }
+              ],
+              "load_balancing_utilization": [],
+              "max_replicas": 10,
+              "metric": [],
+              "min_replicas": 1,
+              "mode": "ON",
+              "scale_in_control": [],
+              "scaling_schedules": []
+            }
+          ],
+          "description": null,
+          "name": "my-autoscaler",
+          "timeouts": null
+        },
+        "after_unknown": {
+          "autoscaling_policy": [
+            {
+              "cpu_utilization": [
+                {}
+              ],
+              "load_balancing_utilization": [],
+              "metric": [],
+              "scale_in_control": [],
+              "scaling_schedules": []
+            }
+          ],
+          "creation_timestamp": true,
+          "id": true,
+          "project": true,
+          "self_link": true,
+          "target": true,
+          "zone": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "autoscaling_policy": [
+            {
+              "cpu_utilization": [
+                {}
+              ],
+              "load_balancing_utilization": [],
+              "metric": [],
+              "scale_in_control": [],
+              "scaling_schedules": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_disk.first",
+      "mode": "managed",
+      "type": "google_compute_disk",
+      "name": "first",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "description": null,
+          "disk_encryption_key": [],
+          "image": null,
+          "labels": null,
+          "name": "cbf-disk-first",
+          "snapshot": null,
+          "source_disk": null,
+          "source_image_encryption_key": [],
+          "source_snapshot_encryption_key": [],
+          "timeouts": null,
+          "type": "pd-standard",
+          "zone": "europe-west9-a"
+        },
+        "after_unknown": {
+          "creation_timestamp": true,
+          "disk_encryption_key": [],
+          "id": true,
+          "label_fingerprint": true,
+          "last_attach_timestamp": true,
+          "last_detach_timestamp": true,
+          "physical_block_size_bytes": true,
+          "project": true,
+          "provisioned_iops": true,
+          "self_link": true,
+          "size": true,
+          "source_disk_id": true,
+          "source_image_encryption_key": [],
+          "source_image_id": true,
+          "source_snapshot_encryption_key": [],
+          "source_snapshot_id": true,
+          "users": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "disk_encryption_key": [],
+          "source_image_encryption_key": [],
+          "source_snapshot_encryption_key": [],
+          "users": []
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.default[0]",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "default",
+      "index": 0,
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "advanced_machine_features": [],
+          "allow_stopping_for_update": null,
+          "attached_disk": [
+            {
+              "disk_encryption_key_raw": null,
+              "mode": "READ_WRITE"
+            }
+          ],
+          "boot_disk": [
+            {
+              "auto_delete": true,
+              "disk_encryption_key_raw": null,
+              "initialize_params": [
+                {
+                  "image": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20230206",
+                  "size": 564
+                }
+              ],
+              "mode": "READ_WRITE"
+            }
+          ],
+          "can_ip_forward": false,
+          "deletion_protection": false,
+          "description": null,
+          "desired_status": null,
+          "enable_display": null,
+          "guest_accelerator": [
+            {
+              "count": 2,
+              "type": "nvidia-tesla-k80"
+            }
+          ],
+          "hostname": null,
+          "labels": null,
+          "machine_type": "n1-standard-2",
+          "metadata": null,
+          "metadata_startup_script": "sudo apt-get update; sudo apt-get install -yq build-essential python3-pip rsync; pip install flask",
+          "name": "cbf-test-vm",
+          "network_interface": [
+            {
+              "access_config": [
+                {
+                  "public_ptr_domain_name": null
+                }
+              ],
+              "alias_ip_range": [],
+              "ipv6_access_config": [],
+              "nic_type": null,
+              "queue_count": null
+            }
+          ],
+          "resource_policies": null,
+          "scratch_disk": [],
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": [
+            "ssh"
+          ],
+          "timeouts": null,
+          "zone": "europe-west9-a"
+        },
+        "after_unknown": {
+          "advanced_machine_features": [],
+          "attached_disk": [
+            {
+              "device_name": true,
+              "disk_encryption_key_sha256": true,
+              "kms_key_self_link": true,
+              "source": true
+            }
+          ],
+          "boot_disk": [
+            {
+              "device_name": true,
+              "disk_encryption_key_sha256": true,
+              "initialize_params": [
+                {
+                  "labels": true,
+                  "type": true
+                }
+              ],
+              "kms_key_self_link": true,
+              "source": true
+            }
+          ],
+          "confidential_instance_config": true,
+          "cpu_platform": true,
+          "current_status": true,
+          "guest_accelerator": [
+            {}
+          ],
+          "id": true,
+          "instance_id": true,
+          "label_fingerprint": true,
+          "metadata_fingerprint": true,
+          "min_cpu_platform": true,
+          "network_interface": [
+            {
+              "access_config": [
+                {
+                  "nat_ip": true,
+                  "network_tier": true
+                }
+              ],
+              "alias_ip_range": [],
+              "ipv6_access_config": [],
+              "ipv6_access_type": true,
+              "name": true,
+              "network": true,
+              "network_ip": true,
+              "stack_type": true,
+              "subnetwork": true,
+              "subnetwork_project": true
+            }
+          ],
+          "project": true,
+          "reservation_affinity": true,
+          "scheduling": true,
+          "scratch_disk": [],
+          "self_link": true,
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": [
+            false
+          ],
+          "tags_fingerprint": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "advanced_machine_features": [],
+          "attached_disk": [
+            {
+              "disk_encryption_key_raw": true
+            }
+          ],
+          "boot_disk": [
+            {
+              "disk_encryption_key_raw": true,
+              "initialize_params": [
+                {
+                  "labels": {}
+                }
+              ]
+            }
+          ],
+          "confidential_instance_config": [],
+          "guest_accelerator": [
+            {}
+          ],
+          "network_interface": [
+            {
+              "access_config": [
+                {}
+              ],
+              "alias_ip_range": [],
+              "ipv6_access_config": []
+            }
+          ],
+          "reservation_affinity": [],
+          "scheduling": [],
+          "scratch_disk": [],
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": [
+            false
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.default[1]",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "default",
+      "index": 1,
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "advanced_machine_features": [],
+          "allow_stopping_for_update": null,
+          "attached_disk": [
+            {
+              "disk_encryption_key_raw": null,
+              "mode": "READ_WRITE"
+            }
+          ],
+          "boot_disk": [
+            {
+              "auto_delete": true,
+              "disk_encryption_key_raw": null,
+              "initialize_params": [
+                {
+                  "image": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20230206",
+                  "size": 564
+                }
+              ],
+              "mode": "READ_WRITE"
+            }
+          ],
+          "can_ip_forward": false,
+          "deletion_protection": false,
+          "description": null,
+          "desired_status": null,
+          "enable_display": null,
+          "guest_accelerator": [
+            {
+              "count": 2,
+              "type": "nvidia-tesla-k80"
+            }
+          ],
+          "hostname": null,
+          "labels": null,
+          "machine_type": "n1-standard-2",
+          "metadata": null,
+          "metadata_startup_script": "sudo apt-get update; sudo apt-get install -yq build-essential python3-pip rsync; pip install flask",
+          "name": "cbf-test-vm",
+          "network_interface": [
+            {
+              "access_config": [
+                {
+                  "public_ptr_domain_name": null
+                }
+              ],
+              "alias_ip_range": [],
+              "ipv6_access_config": [],
+              "nic_type": null,
+              "queue_count": null
+            }
+          ],
+          "resource_policies": null,
+          "scratch_disk": [],
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": [
+            "ssh"
+          ],
+          "timeouts": null,
+          "zone": "europe-west9-a"
+        },
+        "after_unknown": {
+          "advanced_machine_features": [],
+          "attached_disk": [
+            {
+              "device_name": true,
+              "disk_encryption_key_sha256": true,
+              "kms_key_self_link": true,
+              "source": true
+            }
+          ],
+          "boot_disk": [
+            {
+              "device_name": true,
+              "disk_encryption_key_sha256": true,
+              "initialize_params": [
+                {
+                  "labels": true,
+                  "type": true
+                }
+              ],
+              "kms_key_self_link": true,
+              "source": true
+            }
+          ],
+          "confidential_instance_config": true,
+          "cpu_platform": true,
+          "current_status": true,
+          "guest_accelerator": [
+            {}
+          ],
+          "id": true,
+          "instance_id": true,
+          "label_fingerprint": true,
+          "metadata_fingerprint": true,
+          "min_cpu_platform": true,
+          "network_interface": [
+            {
+              "access_config": [
+                {
+                  "nat_ip": true,
+                  "network_tier": true
+                }
+              ],
+              "alias_ip_range": [],
+              "ipv6_access_config": [],
+              "ipv6_access_type": true,
+              "name": true,
+              "network": true,
+              "network_ip": true,
+              "stack_type": true,
+              "subnetwork": true,
+              "subnetwork_project": true
+            }
+          ],
+          "project": true,
+          "reservation_affinity": true,
+          "scheduling": true,
+          "scratch_disk": [],
+          "self_link": true,
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": [
+            false
+          ],
+          "tags_fingerprint": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "advanced_machine_features": [],
+          "attached_disk": [
+            {
+              "disk_encryption_key_raw": true
+            }
+          ],
+          "boot_disk": [
+            {
+              "disk_encryption_key_raw": true,
+              "initialize_params": [
+                {
+                  "labels": {}
+                }
+              ]
+            }
+          ],
+          "confidential_instance_config": [],
+          "guest_accelerator": [
+            {}
+          ],
+          "network_interface": [
+            {
+              "access_config": [
+                {}
+              ],
+              "alias_ip_range": [],
+              "ipv6_access_config": []
+            }
+          ],
+          "reservation_affinity": [],
+          "scheduling": [],
+          "scratch_disk": [],
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": [
+            false
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.foo[0]",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "foo",
+      "index": 0,
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "advanced_machine_features": [],
+          "allow_stopping_for_update": null,
+          "attached_disk": [],
+          "boot_disk": [
+            {
+              "auto_delete": true,
+              "disk_encryption_key_raw": null,
+              "initialize_params": [
+                {
+                  "image": "debian-cloud/debian-11"
+                }
+              ],
+              "mode": "READ_WRITE"
+            }
+          ],
+          "can_ip_forward": false,
+          "deletion_protection": false,
+          "description": null,
+          "desired_status": null,
+          "enable_display": null,
+          "hostname": null,
+          "labels": null,
+          "machine_type": "n2-standard-2",
+          "metadata": null,
+          "metadata_startup_script": "sudo apt-get update; sudo apt-get install -yq build-essential python3-pip rsync; pip install flask",
+          "min_cpu_platform": "Intel Cascade Lake",
+          "name": "cbf-test-other",
+          "network_interface": [
+            {
+              "access_config": [
+                {
+                  "public_ptr_domain_name": null
+                }
+              ],
+              "alias_ip_range": [],
+              "ipv6_access_config": [],
+              "nic_type": null,
+              "queue_count": null
+            }
+          ],
+          "resource_policies": null,
+          "scratch_disk": [],
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": [
+            "ssh"
+          ],
+          "timeouts": null,
+          "zone": "europe-west9-a"
+        },
+        "after_unknown": {
+          "advanced_machine_features": [],
+          "attached_disk": [],
+          "boot_disk": [
+            {
+              "device_name": true,
+              "disk_encryption_key_sha256": true,
+              "initialize_params": [
+                {
+                  "labels": true,
+                  "size": true,
+                  "type": true
+                }
+              ],
+              "kms_key_self_link": true,
+              "source": true
+            }
+          ],
+          "confidential_instance_config": true,
+          "cpu_platform": true,
+          "current_status": true,
+          "guest_accelerator": true,
+          "id": true,
+          "instance_id": true,
+          "label_fingerprint": true,
+          "metadata_fingerprint": true,
+          "network_interface": [
+            {
+              "access_config": [
+                {
+                  "nat_ip": true,
+                  "network_tier": true
+                }
+              ],
+              "alias_ip_range": [],
+              "ipv6_access_config": [],
+              "ipv6_access_type": true,
+              "name": true,
+              "network": true,
+              "network_ip": true,
+              "stack_type": true,
+              "subnetwork": true,
+              "subnetwork_project": true
+            }
+          ],
+          "project": true,
+          "reservation_affinity": true,
+          "scheduling": true,
+          "scratch_disk": [],
+          "self_link": true,
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": [
+            false
+          ],
+          "tags_fingerprint": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "advanced_machine_features": [],
+          "attached_disk": [],
+          "boot_disk": [
+            {
+              "disk_encryption_key_raw": true,
+              "initialize_params": [
+                {
+                  "labels": {}
+                }
+              ]
+            }
+          ],
+          "confidential_instance_config": [],
+          "guest_accelerator": [],
+          "network_interface": [
+            {
+              "access_config": [
+                {}
+              ],
+              "alias_ip_range": [],
+              "ipv6_access_config": []
+            }
+          ],
+          "reservation_affinity": [],
+          "scheduling": [],
+          "scratch_disk": [],
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": [
+            false
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance.foo[1]",
+      "mode": "managed",
+      "type": "google_compute_instance",
+      "name": "foo",
+      "index": 1,
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "advanced_machine_features": [],
+          "allow_stopping_for_update": null,
+          "attached_disk": [],
+          "boot_disk": [
+            {
+              "auto_delete": true,
+              "disk_encryption_key_raw": null,
+              "initialize_params": [
+                {
+                  "image": "debian-cloud/debian-11"
+                }
+              ],
+              "mode": "READ_WRITE"
+            }
+          ],
+          "can_ip_forward": false,
+          "deletion_protection": false,
+          "description": null,
+          "desired_status": null,
+          "enable_display": null,
+          "hostname": null,
+          "labels": null,
+          "machine_type": "n2-standard-2",
+          "metadata": null,
+          "metadata_startup_script": "sudo apt-get update; sudo apt-get install -yq build-essential python3-pip rsync; pip install flask",
+          "min_cpu_platform": "Intel Cascade Lake",
+          "name": "cbf-test-other",
+          "network_interface": [
+            {
+              "access_config": [
+                {
+                  "public_ptr_domain_name": null
+                }
+              ],
+              "alias_ip_range": [],
+              "ipv6_access_config": [],
+              "nic_type": null,
+              "queue_count": null
+            }
+          ],
+          "resource_policies": null,
+          "scratch_disk": [],
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": [
+            "ssh"
+          ],
+          "timeouts": null,
+          "zone": "europe-west9-a"
+        },
+        "after_unknown": {
+          "advanced_machine_features": [],
+          "attached_disk": [],
+          "boot_disk": [
+            {
+              "device_name": true,
+              "disk_encryption_key_sha256": true,
+              "initialize_params": [
+                {
+                  "labels": true,
+                  "size": true,
+                  "type": true
+                }
+              ],
+              "kms_key_self_link": true,
+              "source": true
+            }
+          ],
+          "confidential_instance_config": true,
+          "cpu_platform": true,
+          "current_status": true,
+          "guest_accelerator": true,
+          "id": true,
+          "instance_id": true,
+          "label_fingerprint": true,
+          "metadata_fingerprint": true,
+          "network_interface": [
+            {
+              "access_config": [
+                {
+                  "nat_ip": true,
+                  "network_tier": true
+                }
+              ],
+              "alias_ip_range": [],
+              "ipv6_access_config": [],
+              "ipv6_access_type": true,
+              "name": true,
+              "network": true,
+              "network_ip": true,
+              "stack_type": true,
+              "subnetwork": true,
+              "subnetwork_project": true
+            }
+          ],
+          "project": true,
+          "reservation_affinity": true,
+          "scheduling": true,
+          "scratch_disk": [],
+          "self_link": true,
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": [
+            false
+          ],
+          "tags_fingerprint": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "advanced_machine_features": [],
+          "attached_disk": [],
+          "boot_disk": [
+            {
+              "disk_encryption_key_raw": true,
+              "initialize_params": [
+                {
+                  "labels": {}
+                }
+              ]
+            }
+          ],
+          "confidential_instance_config": [],
+          "guest_accelerator": [],
+          "network_interface": [
+            {
+              "access_config": [
+                {}
+              ],
+              "alias_ip_range": [],
+              "ipv6_access_config": []
+            }
+          ],
+          "reservation_affinity": [],
+          "scheduling": [],
+          "scratch_disk": [],
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": [
+            false
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance_from_template.ifromtpl",
+      "mode": "managed",
+      "type": "google_compute_instance_from_template",
+      "name": "ifromtpl",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "can_ip_forward": false,
+          "labels": {
+            "my_key": "my_value"
+          },
+          "name": "instance-from-template",
+          "shielded_instance_config": [],
+          "timeouts": null,
+          "zone": "europe-west9-a"
+        },
+        "after_unknown": {
+          "advanced_machine_features": true,
+          "allow_stopping_for_update": true,
+          "attached_disk": true,
+          "boot_disk": true,
+          "confidential_instance_config": true,
+          "cpu_platform": true,
+          "current_status": true,
+          "deletion_protection": true,
+          "description": true,
+          "desired_status": true,
+          "enable_display": true,
+          "guest_accelerator": true,
+          "hostname": true,
+          "id": true,
+          "instance_id": true,
+          "label_fingerprint": true,
+          "labels": {},
+          "machine_type": true,
+          "metadata": true,
+          "metadata_fingerprint": true,
+          "metadata_startup_script": true,
+          "min_cpu_platform": true,
+          "network_interface": true,
+          "project": true,
+          "reservation_affinity": true,
+          "resource_policies": true,
+          "scheduling": true,
+          "scratch_disk": true,
+          "self_link": true,
+          "service_account": true,
+          "shielded_instance_config": [],
+          "source_instance_template": true,
+          "tags": true,
+          "tags_fingerprint": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "advanced_machine_features": [],
+          "attached_disk": [],
+          "boot_disk": [],
+          "confidential_instance_config": [],
+          "guest_accelerator": [],
+          "labels": {},
+          "metadata": {},
+          "network_interface": [],
+          "reservation_affinity": [],
+          "resource_policies": [],
+          "scheduling": [],
+          "scratch_disk": [],
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": []
+        }
+      }
+    },
+    {
+      "address": "google_compute_instance_template.my-instance-template",
+      "mode": "managed",
+      "type": "google_compute_instance_template",
+      "name": "my-instance-template",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "advanced_machine_features": [],
+          "can_ip_forward": false,
+          "description": null,
+          "disk": [
+            {
+              "auto_delete": true,
+              "boot": true,
+              "disk_encryption_key": [],
+              "disk_name": null,
+              "disk_size_gb": 20,
+              "labels": null,
+              "resource_policies": null,
+              "source": null,
+              "source_image_encryption_key": [],
+              "source_snapshot": null,
+              "source_snapshot_encryption_key": []
+            }
+          ],
+          "guest_accelerator": [],
+          "instance_description": null,
+          "labels": null,
+          "machine_type": "n2-standard-2",
+          "metadata": null,
+          "metadata_startup_script": null,
+          "min_cpu_platform": null,
+          "name": "my-instance-template",
+          "network_interface": [
+            {
+              "access_config": [],
+              "alias_ip_range": [],
+              "ipv6_access_config": [],
+              "network_ip": null,
+              "nic_type": null,
+              "queue_count": null
+            }
+          ],
+          "reservation_affinity": [],
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags": null,
+          "timeouts": null
+        },
+        "after_unknown": {
+          "advanced_machine_features": [],
+          "confidential_instance_config": true,
+          "disk": [
+            {
+              "device_name": true,
+              "disk_encryption_key": [],
+              "disk_type": true,
+              "interface": true,
+              "mode": true,
+              "source_image": true,
+              "source_image_encryption_key": [],
+              "source_snapshot_encryption_key": [],
+              "type": true
+            }
+          ],
+          "guest_accelerator": [],
+          "id": true,
+          "metadata_fingerprint": true,
+          "name_prefix": true,
+          "network_interface": [
+            {
+              "access_config": [],
+              "alias_ip_range": [],
+              "ipv6_access_config": [],
+              "ipv6_access_type": true,
+              "name": true,
+              "network": true,
+              "stack_type": true,
+              "subnetwork": true,
+              "subnetwork_project": true
+            }
+          ],
+          "project": true,
+          "region": true,
+          "reservation_affinity": [],
+          "scheduling": true,
+          "self_link": true,
+          "service_account": [],
+          "shielded_instance_config": [],
+          "tags_fingerprint": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "advanced_machine_features": [],
+          "confidential_instance_config": [],
+          "disk": [
+            {
+              "disk_encryption_key": [],
+              "source_image_encryption_key": [],
+              "source_snapshot_encryption_key": []
+            }
+          ],
+          "guest_accelerator": [],
+          "network_interface": [
+            {
+              "access_config": [],
+              "alias_ip_range": [],
+              "ipv6_access_config": []
+            }
+          ],
+          "reservation_affinity": [],
+          "scheduling": [],
+          "service_account": [],
+          "shielded_instance_config": []
+        }
+      }
+    },
+    {
+      "address": "google_compute_network.vpc_network",
+      "mode": "managed",
+      "type": "google_compute_network",
+      "name": "vpc_network",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "auto_create_subnetworks": false,
+          "delete_default_routes_on_create": false,
+          "description": null,
+          "enable_ula_internal_ipv6": null,
+          "mtu": 1460,
+          "name": "cbf-network",
+          "timeouts": null
+        },
+        "after_unknown": {
+          "gateway_ipv4": true,
+          "id": true,
+          "internal_ipv6_range": true,
+          "project": true,
+          "routing_mode": true,
+          "self_link": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {}
+      }
+    },
+    {
+      "address": "google_compute_region_disk.second",
+      "mode": "managed",
+      "type": "google_compute_region_disk",
+      "name": "second",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "description": null,
+          "disk_encryption_key": [],
+          "labels": null,
+          "name": "cbf-disk-second",
+          "replica_zones": [
+            "europe-west9-a",
+            "europe-west6-b"
+          ],
+          "snapshot": null,
+          "source_disk": null,
+          "source_snapshot_encryption_key": [],
+          "timeouts": null,
+          "type": "pd-standard"
+        },
+        "after_unknown": {
+          "creation_timestamp": true,
+          "disk_encryption_key": [],
+          "id": true,
+          "label_fingerprint": true,
+          "last_attach_timestamp": true,
+          "last_detach_timestamp": true,
+          "physical_block_size_bytes": true,
+          "project": true,
+          "region": true,
+          "replica_zones": [
+            false,
+            false
+          ],
+          "self_link": true,
+          "size": true,
+          "source_disk_id": true,
+          "source_snapshot_encryption_key": [],
+          "source_snapshot_id": true,
+          "users": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "disk_encryption_key": [],
+          "replica_zones": [
+            false,
+            false
+          ],
+          "source_snapshot_encryption_key": [],
+          "users": []
+        }
+      }
+    },
+    {
+      "address": "google_compute_region_instance_group_manager.my-group-manager",
+      "mode": "managed",
+      "type": "google_compute_region_instance_group_manager",
+      "name": "my-group-manager",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "auto_healing_policies": [],
+          "base_instance_name": "managed",
+          "description": null,
+          "distribution_policy_zones": [
+            "europe-west9-a",
+            "europe-west9-b"
+          ],
+          "list_managed_instances_results": "PAGELESS",
+          "name": "my-group-manager",
+          "named_port": [],
+          "stateful_disk": [],
+          "target_pools": null,
+          "target_size": 3,
+          "timeouts": null,
+          "version": [
+            {
+              "name": null,
+              "target_size": []
+            }
+          ],
+          "wait_for_instances": false,
+          "wait_for_instances_status": "STABLE"
+        },
+        "after_unknown": {
+          "auto_healing_policies": [],
+          "distribution_policy_target_shape": true,
+          "distribution_policy_zones": [
+            false,
+            false
+          ],
+          "fingerprint": true,
+          "id": true,
+          "instance_group": true,
+          "named_port": [],
+          "project": true,
+          "region": true,
+          "self_link": true,
+          "stateful_disk": [],
+          "status": true,
+          "update_policy": true,
+          "version": [
+            {
+              "instance_template": true,
+              "target_size": []
+            }
+          ]
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "auto_healing_policies": [],
+          "distribution_policy_zones": [
+            false,
+            false
+          ],
+          "named_port": [],
+          "stateful_disk": [],
+          "status": [],
+          "update_policy": [],
+          "version": [
+            {
+              "target_size": []
+            }
+          ]
+        }
+      }
+    },
+    {
+      "address": "google_compute_subnetwork.default",
+      "mode": "managed",
+      "type": "google_compute_subnetwork",
+      "name": "default",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "description": null,
+          "ip_cidr_range": "10.0.1.0/24",
+          "ipv6_access_type": null,
+          "log_config": [],
+          "name": "cbf-subnet",
+          "region": "europe-west9",
+          "role": null,
+          "timeouts": null
+        },
+        "after_unknown": {
+          "creation_timestamp": true,
+          "external_ipv6_prefix": true,
+          "fingerprint": true,
+          "gateway_address": true,
+          "id": true,
+          "ipv6_cidr_range": true,
+          "log_config": [],
+          "network": true,
+          "private_ip_google_access": true,
+          "private_ipv6_google_access": true,
+          "project": true,
+          "purpose": true,
+          "secondary_ip_range": true,
+          "self_link": true,
+          "stack_type": true
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "log_config": [],
+          "secondary_ip_range": []
+        }
+      }
+    },
+    {
+      "address": "google_sql_database_instance.instance",
+      "mode": "managed",
+      "type": "google_sql_database_instance",
+      "name": "instance",
+      "provider_name": "registry.terraform.io/hashicorp/google",
+      "change": {
+        "actions": [
+          "create"
+        ],
+        "before": null,
+        "after": {
+          "clone": [],
+          "database_version": "POSTGRES_14",
+          "deletion_protection": true,
+          "name": "my-database-instance",
+          "region": "europe-west9",
+          "restore_backup_context": [],
+          "root_password": null,
+          "settings": [
+            {
+              "activation_policy": "ALWAYS",
+              "active_directory_config": [],
+              "availability_type": "REGIONAL",
+              "collation": null,
+              "database_flags": [],
+              "deletion_protection_enabled": null,
+              "deny_maintenance_period": [],
+              "disk_autoresize": true,
+              "disk_autoresize_limit": 0,
+              "disk_type": "PD_SSD",
+              "insights_config": [],
+              "maintenance_window": [],
+              "password_validation_policy": [],
+              "pricing_plan": "PER_USE",
+              "sql_server_audit_config": [],
+              "tier": "db-g1-small",
+              "time_zone": null
+            }
+          ],
+          "timeouts": null
+        },
+        "after_unknown": {
+          "available_maintenance_versions": true,
+          "clone": [],
+          "connection_name": true,
+          "encryption_key_name": true,
+          "first_ip_address": true,
+          "id": true,
+          "instance_type": true,
+          "ip_address": true,
+          "maintenance_version": true,
+          "master_instance_name": true,
+          "private_ip_address": true,
+          "project": true,
+          "public_ip_address": true,
+          "replica_configuration": true,
+          "restore_backup_context": [],
+          "self_link": true,
+          "server_ca_cert": true,
+          "service_account_email_address": true,
+          "settings": [
+            {
+              "active_directory_config": [],
+              "backup_configuration": true,
+              "connector_enforcement": true,
+              "database_flags": [],
+              "deny_maintenance_period": [],
+              "disk_size": true,
+              "insights_config": [],
+              "ip_configuration": true,
+              "location_preference": true,
+              "maintenance_window": [],
+              "password_validation_policy": [],
+              "sql_server_audit_config": [],
+              "user_labels": true,
+              "version": true
+            }
+          ]
+        },
+        "before_sensitive": false,
+        "after_sensitive": {
+          "available_maintenance_versions": [],
+          "clone": [],
+          "ip_address": [],
+          "replica_configuration": [],
+          "restore_backup_context": [],
+          "root_password": true,
+          "server_ca_cert": [],
+          "settings": [
+            {
+              "active_directory_config": [],
+              "backup_configuration": [],
+              "database_flags": [],
+              "deny_maintenance_period": [],
+              "insights_config": [],
+              "ip_configuration": [],
+              "location_preference": [],
+              "maintenance_window": [],
+              "password_validation_policy": [],
+              "sql_server_audit_config": [],
+              "user_labels": {}
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "prior_state": {
+    "format_version": "1.0",
+    "terraform_version": "1.3.7",
+    "values": {
+      "root_module": {
+        "resources": [
+          {
+            "address": "data.google_compute_image.debian",
+            "mode": "data",
+            "type": "google_compute_image",
+            "name": "debian",
+            "provider_name": "registry.terraform.io/hashicorp/google",
+            "schema_version": 0,
+            "values": {
+              "archive_size_bytes": 1675957440,
+              "creation_timestamp": "2023-02-06T09:16:17.455-08:00",
+              "description": "Debian, Debian GNU/Linux, 11 (bullseye), amd64 built on 20230206, supports Shielded VM features",
+              "disk_size_gb": 10,
+              "family": "debian-11",
+              "filter": null,
+              "id": "projects/debian-cloud/global/images/debian-11-bullseye-v20230206",
+              "image_encryption_key_sha256": "",
+              "image_id": "2681395124550535951",
+              "label_fingerprint": "42WmSpB8rSM=",
+              "labels": {},
+              "licenses": [
+                "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+              ],
+              "name": "debian-11-bullseye-v20230206",
+              "project": "debian-cloud",
+              "self_link": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20230206",
+              "source_disk": "",
+              "source_disk_encryption_key_sha256": "",
+              "source_disk_id": "",
+              "source_image_id": "",
+              "status": "READY"
+            },
+            "sensitive_values": {
+              "labels": {},
+              "licenses": [
+                false
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "configuration": {
+    "provider_config": {
+      "google": {
+        "name": "google",
+        "full_name": "registry.terraform.io/hashicorp/google",
+        "expressions": {
+          "credentials": {},
+          "region": {
+            "constant_value": "europe-west9"
+          }
+        }
+      }
+    },
+    "root_module": {
+      "resources": [
+        {
+          "address": "google_compute_autoscaler.foobar",
+          "mode": "managed",
+          "type": "google_compute_autoscaler",
+          "name": "foobar",
+          "provider_config_key": "google",
+          "expressions": {
+            "autoscaling_policy": [
+              {
+                "cooldown_period": {
+                  "constant_value": 60
+                },
+                "cpu_utilization": [
+                  {
+                    "target": {
+                      "constant_value": 0.5
+                    }
+                  }
+                ],
+                "max_replicas": {
+                  "constant_value": 10
+                },
+                "min_replicas": {
+                  "constant_value": 1
+                }
+              }
+            ],
+            "name": {
+              "constant_value": "my-autoscaler"
+            },
+            "target": {
+              "references": [
+                "google_compute_region_instance_group_manager.my-group-manager.id",
+                "google_compute_region_instance_group_manager.my-group-manager"
+              ]
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "google_compute_disk.first",
+          "mode": "managed",
+          "type": "google_compute_disk",
+          "name": "first",
+          "provider_config_key": "google",
+          "expressions": {
+            "name": {
+              "constant_value": "cbf-disk-first"
+            },
+            "zone": {
+              "constant_value": "europe-west9-a"
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "google_compute_instance.default",
+          "mode": "managed",
+          "type": "google_compute_instance",
+          "name": "default",
+          "provider_config_key": "google",
+          "expressions": {
+            "attached_disk": [
+              {
+                "source": {
+                  "references": [
+                    "google_compute_disk.first.self_link",
+                    "google_compute_disk.first"
+                  ]
+                }
+              }
+            ],
+            "boot_disk": [
+              {
+                "initialize_params": [
+                  {
+                    "image": {
+                      "references": [
+                        "data.google_compute_image.debian.self_link",
+                        "data.google_compute_image.debian"
+                      ]
+                    },
+                    "size": {
+                      "constant_value": 564
+                    }
+                  }
+                ]
+              }
+            ],
+            "guest_accelerator": {
+              "constant_value": [
+                {
+                  "count": 2,
+                  "type": "nvidia-tesla-k80"
+                }
+              ]
+            },
+            "machine_type": {
+              "constant_value": "n1-standard-2"
+            },
+            "metadata_startup_script": {
+              "constant_value": "sudo apt-get update; sudo apt-get install -yq build-essential python3-pip rsync; pip install flask"
+            },
+            "name": {
+              "constant_value": "cbf-test-vm"
+            },
+            "network_interface": [
+              {
+                "access_config": [
+                  {}
+                ],
+                "subnetwork": {
+                  "references": [
+                    "google_compute_subnetwork.default.id",
+                    "google_compute_subnetwork.default"
+                  ]
+                }
+              }
+            ],
+            "tags": {
+              "constant_value": [
+                "ssh"
+              ]
+            },
+            "zone": {
+              "constant_value": "europe-west9-a"
+            }
+          },
+          "schema_version": 6,
+          "count_expression": {
+            "references": [
+              "var.instance_count"
+            ]
+          }
+        },
+        {
+          "address": "google_compute_instance.foo",
+          "mode": "managed",
+          "type": "google_compute_instance",
+          "name": "foo",
+          "provider_config_key": "google",
+          "expressions": {
+            "boot_disk": [
+              {
+                "initialize_params": [
+                  {
+                    "image": {
+                      "constant_value": "debian-cloud/debian-11"
+                    }
+                  }
+                ]
+              }
+            ],
+            "machine_type": {
+              "constant_value": "n2-standard-2"
+            },
+            "metadata_startup_script": {
+              "constant_value": "sudo apt-get update; sudo apt-get install -yq build-essential python3-pip rsync; pip install flask"
+            },
+            "min_cpu_platform": {
+              "constant_value": "Intel Cascade Lake"
+            },
+            "name": {
+              "constant_value": "cbf-test-other"
+            },
+            "network_interface": [
+              {
+                "access_config": [
+                  {}
+                ],
+                "subnetwork": {
+                  "references": [
+                    "google_compute_subnetwork.default.id",
+                    "google_compute_subnetwork.default"
+                  ]
+                }
+              }
+            ],
+            "tags": {
+              "constant_value": [
+                "ssh"
+              ]
+            },
+            "zone": {
+              "constant_value": "europe-west9-a"
+            }
+          },
+          "schema_version": 6,
+          "count_expression": {
+            "references": [
+              "var.instance_count"
+            ]
+          }
+        },
+        {
+          "address": "google_compute_instance_from_template.ifromtpl",
+          "mode": "managed",
+          "type": "google_compute_instance_from_template",
+          "name": "ifromtpl",
+          "provider_config_key": "google",
+          "expressions": {
+            "can_ip_forward": {
+              "constant_value": false
+            },
+            "labels": {
+              "constant_value": {
+                "my_key": "my_value"
+              }
+            },
+            "name": {
+              "constant_value": "instance-from-template"
+            },
+            "source_instance_template": {
+              "references": [
+                "google_compute_instance_template.my-instance-template.id",
+                "google_compute_instance_template.my-instance-template"
+              ]
+            },
+            "zone": {
+              "constant_value": "europe-west9-a"
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "google_compute_instance_template.my-instance-template",
+          "mode": "managed",
+          "type": "google_compute_instance_template",
+          "name": "my-instance-template",
+          "provider_config_key": "google",
+          "expressions": {
+            "disk": [
+              {
+                "boot": {
+                  "constant_value": true
+                },
+                "disk_size_gb": {
+                  "constant_value": 20
+                }
+              }
+            ],
+            "machine_type": {
+              "constant_value": "n2-standard-2"
+            },
+            "name": {
+              "constant_value": "my-instance-template"
+            },
+            "network_interface": [
+              {
+                "subnetwork": {
+                  "references": [
+                    "google_compute_subnetwork.default.id",
+                    "google_compute_subnetwork.default"
+                  ]
+                }
+              }
+            ]
+          },
+          "schema_version": 1
+        },
+        {
+          "address": "google_compute_network.vpc_network",
+          "mode": "managed",
+          "type": "google_compute_network",
+          "name": "vpc_network",
+          "provider_config_key": "google",
+          "expressions": {
+            "auto_create_subnetworks": {
+              "constant_value": false
+            },
+            "mtu": {
+              "constant_value": 1460
+            },
+            "name": {
+              "constant_value": "cbf-network"
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "google_compute_region_disk.second",
+          "mode": "managed",
+          "type": "google_compute_region_disk",
+          "name": "second",
+          "provider_config_key": "google",
+          "expressions": {
+            "name": {
+              "constant_value": "cbf-disk-second"
+            },
+            "replica_zones": {
+              "constant_value": [
+                "europe-west9-a",
+                "europe-west6-b"
+              ]
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "google_compute_region_instance_group_manager.my-group-manager",
+          "mode": "managed",
+          "type": "google_compute_region_instance_group_manager",
+          "name": "my-group-manager",
+          "provider_config_key": "google",
+          "expressions": {
+            "base_instance_name": {
+              "constant_value": "managed"
+            },
+            "distribution_policy_zones": {
+              "constant_value": [
+                "europe-west9-a",
+                "europe-west9-b"
+              ]
+            },
+            "name": {
+              "constant_value": "my-group-manager"
+            },
+            "target_size": {
+              "constant_value": 3
+            },
+            "version": [
+              {
+                "instance_template": {
+                  "references": [
+                    "google_compute_instance_template.my-instance-template.id",
+                    "google_compute_instance_template.my-instance-template"
+                  ]
+                }
+              }
+            ]
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "google_compute_subnetwork.default",
+          "mode": "managed",
+          "type": "google_compute_subnetwork",
+          "name": "default",
+          "provider_config_key": "google",
+          "expressions": {
+            "ip_cidr_range": {
+              "constant_value": "10.0.1.0/24"
+            },
+            "name": {
+              "constant_value": "cbf-subnet"
+            },
+            "network": {
+              "references": [
+                "google_compute_network.vpc_network.id",
+                "google_compute_network.vpc_network"
+              ]
+            },
+            "region": {
+              "constant_value": "europe-west9"
+            }
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "google_sql_database_instance.instance",
+          "mode": "managed",
+          "type": "google_sql_database_instance",
+          "name": "instance",
+          "provider_config_key": "google",
+          "expressions": {
+            "database_version": {
+              "constant_value": "POSTGRES_14"
+            },
+            "name": {
+              "constant_value": "my-database-instance"
+            },
+            "region": {
+              "constant_value": "europe-west9"
+            },
+            "settings": [
+              {
+                "availability_type": {
+                  "constant_value": "REGIONAL"
+                },
+                "tier": {
+                  "constant_value": "db-g1-small"
+                }
+              }
+            ]
+          },
+          "schema_version": 0
+        },
+        {
+          "address": "data.google_compute_image.debian",
+          "mode": "data",
+          "type": "google_compute_image",
+          "name": "debian",
+          "provider_config_key": "google",
+          "expressions": {
+            "family": {
+              "constant_value": "debian-11"
+            },
+            "project": {
+              "constant_value": "debian-cloud"
+            }
+          },
+          "schema_version": 0
+        }
+      ],
+      "variables": {
+        "instance_count": {
+          "default": 2
+        }
+      }
+    }
+  },
+  "relevant_attributes": [
+    {
+      "resource": "data.google_compute_image.debian",
+      "attribute": [
+        "self_link"
+      ]
+    },
+    {
+      "resource": "google_compute_disk.first",
+      "attribute": [
+        "self_link"
+      ]
+    },
+    {
+      "resource": "google_compute_network.vpc_network",
+      "attribute": [
+        "id"
+      ]
+    },
+    {
+      "resource": "google_compute_subnetwork.default",
+      "attribute": [
+        "id"
+      ]
+    },
+    {
+      "resource": "google_compute_instance_template.my-instance-template",
+      "attribute": [
+        "id"
+      ]
+    },
+    {
+      "resource": "google_compute_region_instance_group_manager.my-group-manager",
+      "attribute": [
+        "id"
+      ]
+    }
+  ]
+}
