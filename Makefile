@@ -6,7 +6,7 @@ dependencies:
 
 lint:
 	@echo "Linting..."
-	@docker run -t --rm -v $(shell pwd):/app -w /app golangci/golangci-lint:v1.51.2 golangci-lint run -v
+	@docker run -t --rm -v $(shell pwd):/app -w /app golangci/golangci-lint:v1.53.2 golangci-lint run -v
 
 test:
 	@echo "Testing..."
