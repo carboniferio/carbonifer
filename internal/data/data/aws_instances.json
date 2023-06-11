@@ -867,6 +867,13 @@
     "GPUs": [],
     "GPUMemoryMb": 0
   },
+  "c6in.metal": {
+    "InstanceType": "c6in.metal",
+    "VCPU": 128,
+    "MemoryMb": 262144,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
   "c6in.xlarge": {
     "InstanceType": "c6in.xlarge",
     "VCPU": 4,
@@ -1514,6 +1521,48 @@
     "GPUs": [],
     "GPUMemoryMb": 0
   },
+  "i4g.16xlarge": {
+    "InstanceType": "i4g.16xlarge",
+    "VCPU": 64,
+    "MemoryMb": 524288,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
+  "i4g.2xlarge": {
+    "InstanceType": "i4g.2xlarge",
+    "VCPU": 8,
+    "MemoryMb": 65536,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
+  "i4g.4xlarge": {
+    "InstanceType": "i4g.4xlarge",
+    "VCPU": 16,
+    "MemoryMb": 131072,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
+  "i4g.8xlarge": {
+    "InstanceType": "i4g.8xlarge",
+    "VCPU": 32,
+    "MemoryMb": 262144,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
+  "i4g.large": {
+    "InstanceType": "i4g.large",
+    "VCPU": 2,
+    "MemoryMb": 16384,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
+  "i4g.xlarge": {
+    "InstanceType": "i4g.xlarge",
+    "VCPU": 4,
+    "MemoryMb": 32768,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
   "i4i.16xlarge": {
     "InstanceType": "i4i.16xlarge",
     "VCPU": 64,
@@ -1637,6 +1686,34 @@
     "InstanceType": "inf1.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
+  "inf2.24xlarge": {
+    "InstanceType": "inf2.24xlarge",
+    "VCPU": 96,
+    "MemoryMb": 393216,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
+  "inf2.48xlarge": {
+    "InstanceType": "inf2.48xlarge",
+    "VCPU": 192,
+    "MemoryMb": 786432,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
+  "inf2.8xlarge": {
+    "InstanceType": "inf2.8xlarge",
+    "VCPU": 32,
+    "MemoryMb": 131072,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
+  "inf2.xlarge": {
+    "InstanceType": "inf2.xlarge",
+    "VCPU": 4,
+    "MemoryMb": 16384,
     "GPUs": [],
     "GPUMemoryMb": 0
   },
@@ -2613,6 +2690,13 @@
     "GPUs": [],
     "GPUMemoryMb": 0
   },
+  "m6idn.metal": {
+    "InstanceType": "m6idn.metal",
+    "VCPU": 128,
+    "MemoryMb": 524288,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
   "m6idn.xlarge": {
     "InstanceType": "m6idn.xlarge",
     "VCPU": 4,
@@ -2673,6 +2757,13 @@
     "InstanceType": "m6in.large",
     "VCPU": 2,
     "MemoryMb": 8192,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
+  "m6in.metal": {
+    "InstanceType": "m6in.metal",
+    "VCPU": 128,
+    "MemoryMb": 524288,
     "GPUs": [],
     "GPUMemoryMb": 0
   },
@@ -3735,6 +3826,13 @@
     "GPUs": [],
     "GPUMemoryMb": 0
   },
+  "r6idn.metal": {
+    "InstanceType": "r6idn.metal",
+    "VCPU": 128,
+    "MemoryMb": 1048576,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
   "r6idn.xlarge": {
     "InstanceType": "r6idn.xlarge",
     "VCPU": 4,
@@ -3795,6 +3893,13 @@
     "InstanceType": "r6in.large",
     "VCPU": 2,
     "MemoryMb": 16384,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
+  "r6in.metal": {
+    "InstanceType": "r6in.metal",
+    "VCPU": 128,
+    "MemoryMb": 1048576,
     "GPUs": [],
     "GPUMemoryMb": 0
   },
@@ -4080,6 +4185,13 @@
   },
   "trn1.32xlarge": {
     "InstanceType": "trn1.32xlarge",
+    "VCPU": 128,
+    "MemoryMb": 524288,
+    "GPUs": [],
+    "GPUMemoryMb": 0
+  },
+  "trn1n.32xlarge": {
+    "InstanceType": "trn1n.32xlarge",
     "VCPU": 128,
     "MemoryMb": 524288,
     "GPUs": [],
