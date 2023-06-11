@@ -89,6 +89,11 @@ func getGPUs(machineType *compute.MachineType) []string {
 }
 
 func main() {
+	if len(os.Args) < 2 {
+		generateGlobal()
+		return
+	}
+
 	command := os.Args[1]
 
 	switch command {

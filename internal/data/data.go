@@ -3,7 +3,6 @@ package data
 import (
 	"embed"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -22,7 +21,7 @@ func ReadDataFile(filename string) []byte {
 		filePath := filepath.Join(dataPath, filename)
 		if _, err := os.Stat(filePath); !os.IsNotExist(err) {
 			log.Debugf("  reading datafile '%v' from: %v", filename, filePath)
-			data, err := ioutil.ReadFile(filePath)
+			data, err := os.ReadFile(filePath)
 			if err != nil {
 				log.Fatal(err)
 			}
