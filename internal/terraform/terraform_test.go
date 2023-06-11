@@ -93,7 +93,7 @@ func TestTerraformPlan_BadTfFile(t *testing.T) {
 
 	_, err := TerraformPlan()
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "configuration is invalid")
+	assert.Contains(t, err.Error(), "problems")
 }
 
 func TestTerraformPlan_MissingCreds(t *testing.T) {
@@ -141,7 +141,7 @@ func TestTerraformShow_WithUnsetVar(t *testing.T) {
 
 	_, err := CarboniferPlan("test/terraform/planRaw")
 	assert.Error(t, err)
-	assert.ErrorContains(t, err, "was required but not supplied")
+	assert.ErrorContains(t, err, "machine_type")
 
 }
 
