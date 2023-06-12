@@ -5,6 +5,7 @@ import (
 
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
 	tfjson "github.com/hashicorp/terraform-json"
 )
 
@@ -31,13 +32,27 @@ func GetDataResource(tfResource tfjson.StateResource) resources.DataResource {
 					specs[i] = &diskSpecs
 				}
 			}
-			return resources.AmiDataResource{
+			return resources.EbsDataResource{
 				Identification: resourceId,
 				DataImageSpecs: specs,
-				AmiId:          tfResource.AttributeValues["id"].(string),
+				AwsId:          tfResource.AttributeValues["id"].(string),
 			}
 		}
 	}
+	if resourceId.ResourceType == "aws_ebs_snapshot" {
+		diskSize := tfResource.AttributeValues["volume_size"]
+		diskSizeGb := diskSize.(float64)
+		return resources.EbsDataResource{
+			Identification: resourceId,
+			DataImageSpecs: []*resources.DataImageSpecs{
+				{
+					DiskSizeGb: diskSizeGb,
+				},
+			},
+			AwsId: tfResource.AttributeValues["id"].(string),
+		}
+	}
+
 	return resources.DataImageResource{
 		Identification: resourceId,
 	}
@@ -50,4 +65,15 @@ func getDataResourceIdentification(resource tfjson.StateResource) *resources.Res
 		ResourceType: resource.Type,
 		Provider:     providers.AWS,
 	}
+}
+
+func getAwsImage(tfRefs *tfrefs.References, awsImageId string) *resources.EbsDataResource {
+	imageI := tfRefs.DataResources[awsImageId]
+
+	var image *resources.EbsDataResource
+	if imageI != nil {
+		i := imageI.(resources.EbsDataResource)
+		image = &i
+	}
+	return image
 }

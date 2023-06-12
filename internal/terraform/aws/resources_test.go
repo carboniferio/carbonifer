@@ -96,6 +96,24 @@ var machineWithEBSSizeAndEphemeral tfjson.StateResource = tfjson.StateResource{
 	},
 }
 
+var machineWithEbsFromSnapshotSizeSpecified tfjson.StateResource = tfjson.StateResource{
+	Address: "aws_instance.foo",
+	Type:    "aws_instance",
+	Name:    "machineWithEbsFromSnapshotSizeNotSpecified",
+	AttributeValues: map[string]interface{}{
+		"name":          "machineWithEbsFromSnapshotSizeNotSpecified",
+		"instance_type": "t2.micro",
+		"ebs_block_device": []interface{}{
+			map[string]interface{}{
+				"delete_on_termination": true,
+				"snapshot_id":           "snap-1234567890",
+				"volume_type":           "st1",
+				"volume_size":           float64(50),
+			},
+		},
+	},
+}
+
 var tfRefs *tfrefs.References = &tfrefs.References{
 	ProviderConfigs: map[string]string{
 		"region": "eu-west-3",
@@ -224,6 +242,29 @@ func TestGetResource(t *testing.T) {
 					ReplicationFactor: 1,
 					HddStorage:        decimal.NewFromInt(50),
 					SsdStorage:        decimal.NewFromInt(1808),
+				},
+			},
+		},
+		{
+			name: "aws_instance with ebs from snapshot size specified",
+			args: args{
+				tfResource: machineWithEbsFromSnapshotSizeSpecified,
+				tfRefs:     tfRefs,
+			},
+			want: resources.ComputeResource{
+				Identification: &resources.ResourceIdentification{
+					Name:         "machineWithEbsFromSnapshotSizeNotSpecified",
+					ResourceType: "aws_instance",
+					Provider:     providers.AWS,
+					Region:       "eu-west-3",
+					Count:        1,
+				},
+				Specs: &resources.ComputeResourceSpecs{
+					VCPUs:             int32(1),
+					MemoryMb:          int32(1024),
+					ReplicationFactor: 1,
+					HddStorage:        decimal.NewFromInt(50),
+					SsdStorage:        decimal.NewFromInt(8),
 				},
 			},
 		},

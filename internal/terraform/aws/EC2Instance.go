@@ -14,7 +14,7 @@ import (
 
 func getEC2Instance(
 	resource tfjson.StateResource,
-	tfRefs *tfrefs.References, groupZone interface{}) *resources.ComputeResourceSpecs {
+	tfRefs *tfrefs.References) *resources.ComputeResourceSpecs {
 
 	instanceType := resource.AttributeValues["instance_type"].(string)
 
@@ -22,25 +22,22 @@ func getEC2Instance(
 
 	var disks []disk
 
-	amiId := ""
+	awsImageId := ""
 	if resource.AttributeValues["ami"] != nil {
-		amiId = resource.AttributeValues["ami"].(string)
+		awsImageId = resource.AttributeValues["ami"].(string)
+	}
+	if resource.AttributeValues["snapshot_id"] != nil {
+		awsImageId = resource.AttributeValues["snapshot_id"].(string)
 	}
 
-	imageI := tfRefs.DataResources[amiId]
-
-	var image *resources.AmiDataResource
-	if imageI != nil {
-		i := imageI.(resources.AmiDataResource)
-		image = &i
-	}
+	image := getAwsImage(tfRefs, awsImageId)
 
 	// Root block device
 	bd, ok_rd := resource.AttributeValues["root_block_device"]
 	if ok_rd {
 		rootDevices := bd.([]interface{})
 		for _, rootDevice := range rootDevices {
-			rootDisk := getDisk(resource.Address, rootDevice.(map[string]interface{}), true, image)
+			rootDisk := getDisk(resource.Address, rootDevice.(map[string]interface{}), true, image, tfRefs)
 			disks = append(disks, rootDisk)
 		}
 	} else {
@@ -66,7 +63,7 @@ func getEC2Instance(
 	if ok_ebd {
 		ebds := bd.([]interface{})
 		for _, blockDevice := range ebds {
-			blockDisk := getDisk(resource.Address, blockDevice.(map[string]interface{}), false, image)
+			blockDisk := getDisk(resource.Address, blockDevice.(map[string]interface{}), false, image, tfRefs)
 			disks = append(disks, blockDisk)
 		}
 	}
