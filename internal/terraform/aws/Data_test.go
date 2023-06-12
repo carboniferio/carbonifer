@@ -40,7 +40,7 @@ func TestGetDataResource(t *testing.T) {
 					},
 				},
 			},
-			want: resources.AmiDataResource{
+			want: resources.EbsDataResource{
 				Identification: &resources.ResourceIdentification{
 					Name:         "foo",
 					ResourceType: "aws_ami",
@@ -53,7 +53,34 @@ func TestGetDataResource(t *testing.T) {
 						VolumeType: "gp2",
 					},
 				},
-				AmiId: "ami-1234567890",
+				AwsId: "ami-1234567890",
+			},
+		},
+		{
+			name: "Snapshot of size 60 Gb",
+			args: args{
+				tfResource: tfjson.StateResource{
+					Address: "data.aws_ebs_snapshot.test_snapshot",
+					Type:    "aws_ebs_snapshot",
+					Name:    "test_snapshot",
+					AttributeValues: map[string]interface{}{
+						"id":          "snap-1234567890",
+						"volume_size": float64(60),
+					},
+				},
+			},
+			want: resources.EbsDataResource{
+				Identification: &resources.ResourceIdentification{
+					Name:         "test_snapshot",
+					ResourceType: "aws_ebs_snapshot",
+					Provider:     providers.AWS,
+				},
+				DataImageSpecs: []*resources.DataImageSpecs{
+					{
+						DiskSizeGb: 60,
+					},
+				},
+				AwsId: "snap-1234567890",
 			},
 		},
 	}

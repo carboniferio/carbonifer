@@ -12,7 +12,14 @@ func GetResource(
 
 	resourceId := getResourceIdentification(tfResource, tfRefs)
 	if resourceId.ResourceType == "aws_instance" {
-		specs := getEC2Instance(tfResource, tfRefs, nil)
+		specs := getEC2Instance(tfResource, tfRefs)
+		return resources.ComputeResource{
+			Identification: resourceId,
+			Specs:          specs,
+		}
+	}
+	if resourceId.ResourceType == "aws_ebs_volume" {
+		specs := getEbsVolume(tfResource, tfRefs)
 		return resources.ComputeResource{
 			Identification: resourceId,
 			Specs:          specs,

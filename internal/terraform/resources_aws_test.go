@@ -37,7 +37,20 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 				MemoryMb:          int32(8192),
 				ReplicationFactor: 1,
 				HddStorage:        decimal.NewFromInt(20),
-				SsdStorage:        decimal.NewFromInt(30),
+				SsdStorage:        decimal.NewFromInt(90),
+			},
+		},
+		"aws_ebs_volume.ebs_volume": resources.ComputeResource{
+			Identification: &resources.ResourceIdentification{
+				Name:         "ebs_volume",
+				ResourceType: "aws_ebs_volume",
+				Provider:     providers.AWS,
+				Region:       "eu-west-3",
+				Count:        1,
+			},
+			Specs: &resources.ComputeResourceSpecs{
+				HddStorage: decimal.Zero,
+				SsdStorage: decimal.NewFromInt(100),
 			},
 		},
 	}
@@ -50,6 +63,9 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 	for _, res := range gotResources {
 		if res.GetIdentification().ResourceType == "aws_instance" {
 			assert.Equal(t, wantResources["aws_instance.foo"], res)
+		}
+		if res.GetIdentification().ResourceType == "aws_ebs_volume" {
+			assert.Equal(t, wantResources["aws_ebs_volume.ebs_volume"], res)
 		}
 	}
 }

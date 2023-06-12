@@ -4,20 +4,20 @@ import (
 	"fmt"
 )
 
-type AmiDataResource struct {
+type EbsDataResource struct {
 	Identification *ResourceIdentification
 	DataImageSpecs []*DataImageSpecs
-	AmiId          string
+	AwsId          string
 }
 
-func (r AmiDataResource) GetIdentification() *ResourceIdentification {
+func (r EbsDataResource) GetIdentification() *ResourceIdentification {
 	return r.Identification
 }
 
-func (r AmiDataResource) GetAddress() string {
+func (r EbsDataResource) GetAddress() string {
 	return fmt.Sprintf("data.%v.%v", r.GetIdentification().ResourceType, r.GetIdentification().Name)
 }
 
-func (r AmiDataResource) GetKey() string {
-	return r.AmiId
+func (r EbsDataResource) GetKey() string {
+	return r.AwsId
 }

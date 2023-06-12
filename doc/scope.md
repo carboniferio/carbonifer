@@ -41,13 +41,15 @@ Data resources:
 
 | Resource | Limitations  | Comment |
 |---|---|---|
-| `aws_instance`| Only inline EBS (not attached), no GPU | |
+| `aws_instance`| No GPU | |
+| `aws_ebs_volume`| if size set, or if snapshot declared as data resource | |
 
 Data resources:
 
 | Resource | Limitations  | Comment |
 |---|---|---|
-| `aws_ami`| `ebs.volume_size` can be set, otherwise get it from image only if GCP credentials are provided| |
+| `aws_ami`| `ebs.volume_size` can be set, otherwise get it from image only if AWS credentials are provided| |
+| `aws_ebs_snapshot`| `volume_size` can be set, otherwise get it from image only if AWS credentials are provided| |
 
 
 _more to be implemented_
