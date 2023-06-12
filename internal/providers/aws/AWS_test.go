@@ -14,15 +14,20 @@ func TestGetAWSInstanceType(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want MachineType
+		want InstanceType
 	}{
 		{
-			name: "t2.micro",
-			args: args{instanceTypeStr: "t2.micro"},
-			want: MachineType{
-				InstanceType: "t2.micro",
-				VCPU:         1,
-				MemoryMb:     1024,
+			name: "c5d.12xlarge",
+			args: args{instanceTypeStr: "c5d.12xlarge"},
+			want: InstanceType{
+				InstanceType: "c5d.12xlarge",
+				VCPU:         48,
+				MemoryMb:     96 * 1024,
+				InstanceStorage: InstanceStorage{
+					SizePerDiskGB: 900,
+					Count:         2,
+					Type:          "ssd",
+				},
 			},
 		},
 	}

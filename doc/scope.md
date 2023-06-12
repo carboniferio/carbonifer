@@ -35,13 +35,20 @@ Data resources:
 
 | Resource | Limitations  | Comment |
 |---|---|---|
-| `google_compute_image`| `disk_size_gb` needs can be set, otherwise get it from image only if GCP credentials are provided| |
+| `google_compute_image`| `disk_size_gb` can be set, otherwise get it from image only if GCP credentials are provided| |
 
 ### AWS
 
 | Resource | Limitations  | Comment |
 |---|---|---|
-| `aws_instance`| EBS not supported yet | |
+| `aws_instance`| Only inline EBS (not attached), no GPU | |
+
+Data resources:
+
+| Resource | Limitations  | Comment |
+|---|---|---|
+| `aws_ami`| `ebs.volume_size` can be set, otherwise get it from image only if GCP credentials are provided| |
+
 
 _more to be implemented_
 

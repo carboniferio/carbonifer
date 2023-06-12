@@ -4,1043 +4,1788 @@
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "a1.4xlarge": {
     "InstanceType": "a1.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "a1.large": {
     "InstanceType": "a1.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "a1.medium": {
     "InstanceType": "a1.medium",
     "VCPU": 1,
     "MemoryMb": 2048,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "a1.metal": {
     "InstanceType": "a1.metal",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "a1.xlarge": {
     "InstanceType": "a1.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c1.medium": {
     "InstanceType": "c1.medium",
     "VCPU": 2,
     "MemoryMb": 1740,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 350,
+      "Count": 1,
+      "Type": "hdd"
+    }
   },
   "c1.xlarge": {
     "InstanceType": "c1.xlarge",
     "VCPU": 8,
     "MemoryMb": 7168,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 420,
+      "Count": 4,
+      "Type": "hdd"
+    }
   },
   "c3.2xlarge": {
     "InstanceType": "c3.2xlarge",
     "VCPU": 8,
     "MemoryMb": 15360,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 80,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c3.4xlarge": {
     "InstanceType": "c3.4xlarge",
     "VCPU": 16,
     "MemoryMb": 30720,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 160,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c3.8xlarge": {
     "InstanceType": "c3.8xlarge",
     "VCPU": 32,
     "MemoryMb": 61440,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 320,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c3.large": {
     "InstanceType": "c3.large",
     "VCPU": 2,
     "MemoryMb": 3840,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 16,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c3.xlarge": {
     "InstanceType": "c3.xlarge",
     "VCPU": 4,
     "MemoryMb": 7680,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 40,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c4.2xlarge": {
     "InstanceType": "c4.2xlarge",
     "VCPU": 8,
     "MemoryMb": 15360,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c4.4xlarge": {
     "InstanceType": "c4.4xlarge",
     "VCPU": 16,
     "MemoryMb": 30720,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c4.8xlarge": {
     "InstanceType": "c4.8xlarge",
     "VCPU": 36,
     "MemoryMb": 61440,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c4.large": {
     "InstanceType": "c4.large",
     "VCPU": 2,
     "MemoryMb": 3840,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c4.xlarge": {
     "InstanceType": "c4.xlarge",
     "VCPU": 4,
     "MemoryMb": 7680,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5.12xlarge": {
     "InstanceType": "c5.12xlarge",
     "VCPU": 48,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5.18xlarge": {
     "InstanceType": "c5.18xlarge",
     "VCPU": 72,
     "MemoryMb": 147456,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5.24xlarge": {
     "InstanceType": "c5.24xlarge",
     "VCPU": 96,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5.2xlarge": {
     "InstanceType": "c5.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5.4xlarge": {
     "InstanceType": "c5.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5.9xlarge": {
     "InstanceType": "c5.9xlarge",
     "VCPU": 36,
     "MemoryMb": 73728,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5.large": {
     "InstanceType": "c5.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5.metal": {
     "InstanceType": "c5.metal",
     "VCPU": 96,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5.xlarge": {
     "InstanceType": "c5.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5a.12xlarge": {
     "InstanceType": "c5a.12xlarge",
     "VCPU": 48,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5a.16xlarge": {
     "InstanceType": "c5a.16xlarge",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5a.24xlarge": {
     "InstanceType": "c5a.24xlarge",
     "VCPU": 96,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5a.2xlarge": {
     "InstanceType": "c5a.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5a.4xlarge": {
     "InstanceType": "c5a.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5a.8xlarge": {
     "InstanceType": "c5a.8xlarge",
     "VCPU": 32,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5a.large": {
     "InstanceType": "c5a.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5a.xlarge": {
     "InstanceType": "c5a.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5ad.12xlarge": {
     "InstanceType": "c5ad.12xlarge",
     "VCPU": 48,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c5ad.16xlarge": {
     "InstanceType": "c5ad.16xlarge",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1200,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c5ad.24xlarge": {
     "InstanceType": "c5ad.24xlarge",
     "VCPU": 96,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c5ad.2xlarge": {
     "InstanceType": "c5ad.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c5ad.4xlarge": {
     "InstanceType": "c5ad.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c5ad.8xlarge": {
     "InstanceType": "c5ad.8xlarge",
     "VCPU": 32,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c5ad.large": {
     "InstanceType": "c5ad.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 75,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c5ad.xlarge": {
     "InstanceType": "c5ad.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 150,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c5d.12xlarge": {
     "InstanceType": "c5d.12xlarge",
     "VCPU": 48,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c5d.18xlarge": {
     "InstanceType": "c5d.18xlarge",
     "VCPU": 72,
     "MemoryMb": 147456,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c5d.24xlarge": {
     "InstanceType": "c5d.24xlarge",
     "VCPU": 96,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "c5d.2xlarge": {
     "InstanceType": "c5d.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 200,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c5d.4xlarge": {
     "InstanceType": "c5d.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 400,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c5d.9xlarge": {
     "InstanceType": "c5d.9xlarge",
     "VCPU": 36,
     "MemoryMb": 73728,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c5d.large": {
     "InstanceType": "c5d.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 50,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c5d.metal": {
     "InstanceType": "c5d.metal",
     "VCPU": 96,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "c5d.xlarge": {
     "InstanceType": "c5d.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 100,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c5n.18xlarge": {
     "InstanceType": "c5n.18xlarge",
     "VCPU": 72,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5n.2xlarge": {
     "InstanceType": "c5n.2xlarge",
     "VCPU": 8,
     "MemoryMb": 21504,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5n.4xlarge": {
     "InstanceType": "c5n.4xlarge",
     "VCPU": 16,
     "MemoryMb": 43008,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5n.9xlarge": {
     "InstanceType": "c5n.9xlarge",
     "VCPU": 36,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5n.large": {
     "InstanceType": "c5n.large",
     "VCPU": 2,
     "MemoryMb": 5376,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5n.metal": {
     "InstanceType": "c5n.metal",
     "VCPU": 72,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c5n.xlarge": {
     "InstanceType": "c5n.xlarge",
     "VCPU": 4,
     "MemoryMb": 10752,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6a.12xlarge": {
     "InstanceType": "c6a.12xlarge",
     "VCPU": 48,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6a.16xlarge": {
     "InstanceType": "c6a.16xlarge",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6a.24xlarge": {
     "InstanceType": "c6a.24xlarge",
     "VCPU": 96,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6a.2xlarge": {
     "InstanceType": "c6a.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6a.32xlarge": {
     "InstanceType": "c6a.32xlarge",
     "VCPU": 128,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6a.48xlarge": {
     "InstanceType": "c6a.48xlarge",
     "VCPU": 192,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6a.4xlarge": {
     "InstanceType": "c6a.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6a.8xlarge": {
     "InstanceType": "c6a.8xlarge",
     "VCPU": 32,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6a.large": {
     "InstanceType": "c6a.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6a.metal": {
     "InstanceType": "c6a.metal",
     "VCPU": 192,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6a.xlarge": {
     "InstanceType": "c6a.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6g.12xlarge": {
     "InstanceType": "c6g.12xlarge",
     "VCPU": 48,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6g.16xlarge": {
     "InstanceType": "c6g.16xlarge",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6g.2xlarge": {
     "InstanceType": "c6g.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6g.4xlarge": {
     "InstanceType": "c6g.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6g.8xlarge": {
     "InstanceType": "c6g.8xlarge",
     "VCPU": 32,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6g.large": {
     "InstanceType": "c6g.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6g.medium": {
     "InstanceType": "c6g.medium",
     "VCPU": 1,
     "MemoryMb": 2048,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6g.metal": {
     "InstanceType": "c6g.metal",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6g.xlarge": {
     "InstanceType": "c6g.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6gd.12xlarge": {
     "InstanceType": "c6gd.12xlarge",
     "VCPU": 48,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c6gd.16xlarge": {
     "InstanceType": "c6gd.16xlarge",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c6gd.2xlarge": {
     "InstanceType": "c6gd.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 474,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c6gd.4xlarge": {
     "InstanceType": "c6gd.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 950,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c6gd.8xlarge": {
     "InstanceType": "c6gd.8xlarge",
     "VCPU": 32,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c6gd.large": {
     "InstanceType": "c6gd.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 118,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c6gd.medium": {
     "InstanceType": "c6gd.medium",
     "VCPU": 1,
     "MemoryMb": 2048,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 59,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c6gd.metal": {
     "InstanceType": "c6gd.metal",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c6gd.xlarge": {
     "InstanceType": "c6gd.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 237,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c6gn.12xlarge": {
     "InstanceType": "c6gn.12xlarge",
     "VCPU": 48,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6gn.16xlarge": {
     "InstanceType": "c6gn.16xlarge",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6gn.2xlarge": {
     "InstanceType": "c6gn.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6gn.4xlarge": {
     "InstanceType": "c6gn.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6gn.8xlarge": {
     "InstanceType": "c6gn.8xlarge",
     "VCPU": 32,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6gn.large": {
     "InstanceType": "c6gn.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6gn.medium": {
     "InstanceType": "c6gn.medium",
     "VCPU": 1,
     "MemoryMb": 2048,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6gn.xlarge": {
     "InstanceType": "c6gn.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6i.12xlarge": {
     "InstanceType": "c6i.12xlarge",
     "VCPU": 48,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6i.16xlarge": {
     "InstanceType": "c6i.16xlarge",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6i.24xlarge": {
     "InstanceType": "c6i.24xlarge",
     "VCPU": 96,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6i.2xlarge": {
     "InstanceType": "c6i.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6i.32xlarge": {
     "InstanceType": "c6i.32xlarge",
     "VCPU": 128,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6i.4xlarge": {
     "InstanceType": "c6i.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6i.8xlarge": {
     "InstanceType": "c6i.8xlarge",
     "VCPU": 32,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6i.large": {
     "InstanceType": "c6i.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6i.metal": {
     "InstanceType": "c6i.metal",
     "VCPU": 128,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6i.xlarge": {
     "InstanceType": "c6i.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6id.12xlarge": {
     "InstanceType": "c6id.12xlarge",
     "VCPU": 48,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c6id.16xlarge": {
     "InstanceType": "c6id.16xlarge",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "c6id.24xlarge": {
     "InstanceType": "c6id.24xlarge",
     "VCPU": 96,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "c6id.2xlarge": {
     "InstanceType": "c6id.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 474,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c6id.32xlarge": {
     "InstanceType": "c6id.32xlarge",
     "VCPU": 128,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "c6id.4xlarge": {
     "InstanceType": "c6id.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 950,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c6id.8xlarge": {
     "InstanceType": "c6id.8xlarge",
     "VCPU": 32,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c6id.large": {
     "InstanceType": "c6id.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 118,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c6id.metal": {
     "InstanceType": "c6id.metal",
     "VCPU": 128,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "c6id.xlarge": {
     "InstanceType": "c6id.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 237,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "c6in.12xlarge": {
     "InstanceType": "c6in.12xlarge",
     "VCPU": 48,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6in.16xlarge": {
     "InstanceType": "c6in.16xlarge",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6in.24xlarge": {
     "InstanceType": "c6in.24xlarge",
     "VCPU": 96,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6in.2xlarge": {
     "InstanceType": "c6in.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6in.32xlarge": {
     "InstanceType": "c6in.32xlarge",
     "VCPU": 128,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6in.4xlarge": {
     "InstanceType": "c6in.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6in.8xlarge": {
     "InstanceType": "c6in.8xlarge",
     "VCPU": 32,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6in.large": {
     "InstanceType": "c6in.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6in.metal": {
     "InstanceType": "c6in.metal",
     "VCPU": 128,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c6in.xlarge": {
     "InstanceType": "c6in.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c7g.12xlarge": {
     "InstanceType": "c7g.12xlarge",
     "VCPU": 48,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c7g.16xlarge": {
     "InstanceType": "c7g.16xlarge",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c7g.2xlarge": {
     "InstanceType": "c7g.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c7g.4xlarge": {
     "InstanceType": "c7g.4xlarge",
     "VCPU": 16,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c7g.8xlarge": {
     "InstanceType": "c7g.8xlarge",
     "VCPU": 32,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c7g.large": {
     "InstanceType": "c7g.large",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c7g.medium": {
     "InstanceType": "c7g.medium",
     "VCPU": 1,
     "MemoryMb": 2048,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c7g.metal": {
     "InstanceType": "c7g.metal",
     "VCPU": 64,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "c7g.xlarge": {
     "InstanceType": "c7g.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "d2.2xlarge": {
     "InstanceType": "d2.2xlarge",
     "VCPU": 8,
     "MemoryMb": 62464,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 2048,
+      "Count": 6,
+      "Type": "hdd"
+    }
   },
   "d2.4xlarge": {
     "InstanceType": "d2.4xlarge",
     "VCPU": 16,
     "MemoryMb": 124928,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 2048,
+      "Count": 12,
+      "Type": "hdd"
+    }
   },
   "d2.8xlarge": {
     "InstanceType": "d2.8xlarge",
     "VCPU": 36,
     "MemoryMb": 249856,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 2048,
+      "Count": 24,
+      "Type": "hdd"
+    }
   },
   "d2.xlarge": {
     "InstanceType": "d2.xlarge",
     "VCPU": 4,
     "MemoryMb": 31232,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 2048,
+      "Count": 3,
+      "Type": "hdd"
+    }
   },
   "d3.2xlarge": {
     "InstanceType": "d3.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1980,
+      "Count": 6,
+      "Type": "hdd"
+    }
   },
   "d3.4xlarge": {
     "InstanceType": "d3.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1980,
+      "Count": 12,
+      "Type": "hdd"
+    }
   },
   "d3.8xlarge": {
     "InstanceType": "d3.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1980,
+      "Count": 24,
+      "Type": "hdd"
+    }
   },
   "d3.xlarge": {
     "InstanceType": "d3.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1980,
+      "Count": 3,
+      "Type": "hdd"
+    }
   },
   "d3en.12xlarge": {
     "InstanceType": "d3en.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 13980,
+      "Count": 24,
+      "Type": "hdd"
+    }
   },
   "d3en.2xlarge": {
     "InstanceType": "d3en.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 13980,
+      "Count": 4,
+      "Type": "hdd"
+    }
   },
   "d3en.4xlarge": {
     "InstanceType": "d3en.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 13980,
+      "Count": 8,
+      "Type": "hdd"
+    }
   },
   "d3en.6xlarge": {
     "InstanceType": "d3en.6xlarge",
     "VCPU": 24,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 13980,
+      "Count": 12,
+      "Type": "hdd"
+    }
   },
   "d3en.8xlarge": {
     "InstanceType": "d3en.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 13980,
+      "Count": 16,
+      "Type": "hdd"
+    }
   },
   "d3en.xlarge": {
     "InstanceType": "d3en.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 13980,
+      "Count": 2,
+      "Type": "hdd"
+    }
   },
   "dl1.24xlarge": {
     "InstanceType": "dl1.24xlarge",
@@ -1049,28 +1794,48 @@
     "GPUs": [
       "Gaudi HL-205"
     ],
-    "GPUMemoryMb": 262144
+    "GPUMemoryMb": 262144,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1000,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "f1.16xlarge": {
     "InstanceType": "f1.16xlarge",
     "VCPU": 64,
     "MemoryMb": 999424,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 940,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "f1.2xlarge": {
     "InstanceType": "f1.2xlarge",
     "VCPU": 8,
     "MemoryMb": 124928,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 470,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "f1.4xlarge": {
     "InstanceType": "f1.4xlarge",
     "VCPU": 16,
     "MemoryMb": 249856,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 940,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g2.2xlarge": {
     "InstanceType": "g2.2xlarge",
@@ -1079,7 +1844,12 @@
     "GPUs": [
       "K520"
     ],
-    "GPUMemoryMb": 4096
+    "GPUMemoryMb": 4096,
+    "InstanceStorage": {
+      "SizePerDiskGB": 60,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g2.8xlarge": {
     "InstanceType": "g2.8xlarge",
@@ -1088,7 +1858,12 @@
     "GPUs": [
       "K520"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 120,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "g3.16xlarge": {
     "InstanceType": "g3.16xlarge",
@@ -1097,7 +1872,12 @@
     "GPUs": [
       "M60"
     ],
-    "GPUMemoryMb": 32768
+    "GPUMemoryMb": 32768,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "g3.4xlarge": {
     "InstanceType": "g3.4xlarge",
@@ -1106,7 +1886,12 @@
     "GPUs": [
       "M60"
     ],
-    "GPUMemoryMb": 8192
+    "GPUMemoryMb": 8192,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "g3.8xlarge": {
     "InstanceType": "g3.8xlarge",
@@ -1115,7 +1900,12 @@
     "GPUs": [
       "M60"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "g3s.xlarge": {
     "InstanceType": "g3s.xlarge",
@@ -1124,7 +1914,12 @@
     "GPUs": [
       "M60"
     ],
-    "GPUMemoryMb": 8192
+    "GPUMemoryMb": 8192,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "g4ad.16xlarge": {
     "InstanceType": "g4ad.16xlarge",
@@ -1133,7 +1928,12 @@
     "GPUs": [
       "Radeon Pro V520"
     ],
-    "GPUMemoryMb": 32768
+    "GPUMemoryMb": 32768,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1200,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "g4ad.2xlarge": {
     "InstanceType": "g4ad.2xlarge",
@@ -1142,7 +1942,12 @@
     "GPUs": [
       "Radeon Pro V520"
     ],
-    "GPUMemoryMb": 8192
+    "GPUMemoryMb": 8192,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g4ad.4xlarge": {
     "InstanceType": "g4ad.4xlarge",
@@ -1151,7 +1956,12 @@
     "GPUs": [
       "Radeon Pro V520"
     ],
-    "GPUMemoryMb": 8192
+    "GPUMemoryMb": 8192,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g4ad.8xlarge": {
     "InstanceType": "g4ad.8xlarge",
@@ -1160,7 +1970,12 @@
     "GPUs": [
       "Radeon Pro V520"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1200,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g4ad.xlarge": {
     "InstanceType": "g4ad.xlarge",
@@ -1169,7 +1984,12 @@
     "GPUs": [
       "Radeon Pro V520"
     ],
-    "GPUMemoryMb": 8192
+    "GPUMemoryMb": 8192,
+    "InstanceStorage": {
+      "SizePerDiskGB": 150,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g4dn.12xlarge": {
     "InstanceType": "g4dn.12xlarge",
@@ -1178,7 +1998,12 @@
     "GPUs": [
       "T4"
     ],
-    "GPUMemoryMb": 65536
+    "GPUMemoryMb": 65536,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g4dn.16xlarge": {
     "InstanceType": "g4dn.16xlarge",
@@ -1187,7 +2012,12 @@
     "GPUs": [
       "T4"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g4dn.2xlarge": {
     "InstanceType": "g4dn.2xlarge",
@@ -1196,7 +2026,12 @@
     "GPUs": [
       "T4"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 225,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g4dn.4xlarge": {
     "InstanceType": "g4dn.4xlarge",
@@ -1205,7 +2040,12 @@
     "GPUs": [
       "T4"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 225,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g4dn.8xlarge": {
     "InstanceType": "g4dn.8xlarge",
@@ -1214,7 +2054,12 @@
     "GPUs": [
       "T4"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g4dn.metal": {
     "InstanceType": "g4dn.metal",
@@ -1223,7 +2068,12 @@
     "GPUs": [
       "T4"
     ],
-    "GPUMemoryMb": 131072
+    "GPUMemoryMb": 131072,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "g4dn.xlarge": {
     "InstanceType": "g4dn.xlarge",
@@ -1232,7 +2082,12 @@
     "GPUs": [
       "T4"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 125,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g5.12xlarge": {
     "InstanceType": "g5.12xlarge",
@@ -1241,7 +2096,12 @@
     "GPUs": [
       "A10G"
     ],
-    "GPUMemoryMb": 98304
+    "GPUMemoryMb": 98304,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3800,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g5.16xlarge": {
     "InstanceType": "g5.16xlarge",
@@ -1250,7 +2110,12 @@
     "GPUs": [
       "A10G"
     ],
-    "GPUMemoryMb": 24576
+    "GPUMemoryMb": 24576,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g5.24xlarge": {
     "InstanceType": "g5.24xlarge",
@@ -1259,7 +2124,12 @@
     "GPUs": [
       "A10G"
     ],
-    "GPUMemoryMb": 98304
+    "GPUMemoryMb": 98304,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3800,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g5.2xlarge": {
     "InstanceType": "g5.2xlarge",
@@ -1268,7 +2138,12 @@
     "GPUs": [
       "A10G"
     ],
-    "GPUMemoryMb": 24576
+    "GPUMemoryMb": 24576,
+    "InstanceStorage": {
+      "SizePerDiskGB": 450,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g5.48xlarge": {
     "InstanceType": "g5.48xlarge",
@@ -1277,7 +2152,12 @@
     "GPUs": [
       "A10G"
     ],
-    "GPUMemoryMb": 196608
+    "GPUMemoryMb": 196608,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3800,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "g5.4xlarge": {
     "InstanceType": "g5.4xlarge",
@@ -1286,7 +2166,12 @@
     "GPUs": [
       "A10G"
     ],
-    "GPUMemoryMb": 24576
+    "GPUMemoryMb": 24576,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g5.8xlarge": {
     "InstanceType": "g5.8xlarge",
@@ -1295,7 +2180,12 @@
     "GPUs": [
       "A10G"
     ],
-    "GPUMemoryMb": 24576
+    "GPUMemoryMb": 24576,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g5.xlarge": {
     "InstanceType": "g5.xlarge",
@@ -1304,7 +2194,12 @@
     "GPUs": [
       "A10G"
     ],
-    "GPUMemoryMb": 24576
+    "GPUMemoryMb": 24576,
+    "InstanceStorage": {
+      "SizePerDiskGB": 250,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "g5g.16xlarge": {
     "InstanceType": "g5g.16xlarge",
@@ -1313,7 +2208,12 @@
     "GPUs": [
       "T4g"
     ],
-    "GPUMemoryMb": 32768
+    "GPUMemoryMb": 32768,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "g5g.2xlarge": {
     "InstanceType": "g5g.2xlarge",
@@ -1322,7 +2222,12 @@
     "GPUs": [
       "T4g"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "g5g.4xlarge": {
     "InstanceType": "g5g.4xlarge",
@@ -1331,7 +2236,12 @@
     "GPUs": [
       "T4g"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "g5g.8xlarge": {
     "InstanceType": "g5g.8xlarge",
@@ -1340,7 +2250,12 @@
     "GPUs": [
       "T4g"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "g5g.metal": {
     "InstanceType": "g5g.metal",
@@ -1349,7 +2264,12 @@
     "GPUs": [
       "T4g"
     ],
-    "GPUMemoryMb": 32768
+    "GPUMemoryMb": 32768,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "g5g.xlarge": {
     "InstanceType": "g5g.xlarge",
@@ -1358,1498 +2278,2568 @@
     "GPUs": [
       "T4g"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "h1.16xlarge": {
     "InstanceType": "h1.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 2000,
+      "Count": 8,
+      "Type": "hdd"
+    }
   },
   "h1.2xlarge": {
     "InstanceType": "h1.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 2000,
+      "Count": 1,
+      "Type": "hdd"
+    }
   },
   "h1.4xlarge": {
     "InstanceType": "h1.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 2000,
+      "Count": 2,
+      "Type": "hdd"
+    }
   },
   "h1.8xlarge": {
     "InstanceType": "h1.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 2000,
+      "Count": 4,
+      "Type": "hdd"
+    }
   },
   "i2.2xlarge": {
     "InstanceType": "i2.2xlarge",
     "VCPU": 8,
     "MemoryMb": 62464,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 800,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "i2.4xlarge": {
     "InstanceType": "i2.4xlarge",
     "VCPU": 16,
     "MemoryMb": 124928,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 800,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "i2.8xlarge": {
     "InstanceType": "i2.8xlarge",
     "VCPU": 32,
     "MemoryMb": 249856,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 800,
+      "Count": 8,
+      "Type": "ssd"
+    }
   },
   "i2.xlarge": {
     "InstanceType": "i2.xlarge",
     "VCPU": 4,
     "MemoryMb": 31232,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 800,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i3.16xlarge": {
     "InstanceType": "i3.16xlarge",
     "VCPU": 64,
     "MemoryMb": 499712,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 8,
+      "Type": "ssd"
+    }
   },
   "i3.2xlarge": {
     "InstanceType": "i3.2xlarge",
     "VCPU": 8,
     "MemoryMb": 62464,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i3.4xlarge": {
     "InstanceType": "i3.4xlarge",
     "VCPU": 16,
     "MemoryMb": 124928,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "i3.8xlarge": {
     "InstanceType": "i3.8xlarge",
     "VCPU": 32,
     "MemoryMb": 249856,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "i3.large": {
     "InstanceType": "i3.large",
     "VCPU": 2,
     "MemoryMb": 15616,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 475,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i3.metal": {
     "InstanceType": "i3.metal",
     "VCPU": 72,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 8,
+      "Type": "ssd"
+    }
   },
   "i3.xlarge": {
     "InstanceType": "i3.xlarge",
     "VCPU": 4,
     "MemoryMb": 31232,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 950,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i3en.12xlarge": {
     "InstanceType": "i3en.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 7500,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "i3en.24xlarge": {
     "InstanceType": "i3en.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 7500,
+      "Count": 8,
+      "Type": "ssd"
+    }
   },
   "i3en.2xlarge": {
     "InstanceType": "i3en.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 2500,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "i3en.3xlarge": {
     "InstanceType": "i3en.3xlarge",
     "VCPU": 12,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 7500,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i3en.6xlarge": {
     "InstanceType": "i3en.6xlarge",
     "VCPU": 24,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 7500,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "i3en.large": {
     "InstanceType": "i3en.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1250,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i3en.metal": {
     "InstanceType": "i3en.metal",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 7500,
+      "Count": 8,
+      "Type": "ssd"
+    }
   },
   "i3en.xlarge": {
     "InstanceType": "i3en.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 2500,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i4g.16xlarge": {
     "InstanceType": "i4g.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3750,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "i4g.2xlarge": {
     "InstanceType": "i4g.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1875,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i4g.4xlarge": {
     "InstanceType": "i4g.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3750,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i4g.8xlarge": {
     "InstanceType": "i4g.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3750,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "i4g.large": {
     "InstanceType": "i4g.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 468,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i4g.xlarge": {
     "InstanceType": "i4g.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 937,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i4i.16xlarge": {
     "InstanceType": "i4i.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3750,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "i4i.2xlarge": {
     "InstanceType": "i4i.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1875,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i4i.32xlarge": {
     "InstanceType": "i4i.32xlarge",
     "VCPU": 128,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3750,
+      "Count": 8,
+      "Type": "ssd"
+    }
   },
   "i4i.4xlarge": {
     "InstanceType": "i4i.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3750,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i4i.8xlarge": {
     "InstanceType": "i4i.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3750,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "i4i.large": {
     "InstanceType": "i4i.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 468,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "i4i.metal": {
     "InstanceType": "i4i.metal",
     "VCPU": 128,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3750,
+      "Count": 8,
+      "Type": "ssd"
+    }
   },
   "i4i.xlarge": {
     "InstanceType": "i4i.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 937,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "im4gn.16xlarge": {
     "InstanceType": "im4gn.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 7500,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "im4gn.2xlarge": {
     "InstanceType": "im4gn.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3750,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "im4gn.4xlarge": {
     "InstanceType": "im4gn.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 7500,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "im4gn.8xlarge": {
     "InstanceType": "im4gn.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 7500,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "im4gn.large": {
     "InstanceType": "im4gn.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 937,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "im4gn.xlarge": {
     "InstanceType": "im4gn.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1875,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "inf1.24xlarge": {
     "InstanceType": "inf1.24xlarge",
     "VCPU": 96,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "inf1.2xlarge": {
     "InstanceType": "inf1.2xlarge",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "inf1.6xlarge": {
     "InstanceType": "inf1.6xlarge",
     "VCPU": 24,
     "MemoryMb": 49152,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "inf1.xlarge": {
     "InstanceType": "inf1.xlarge",
     "VCPU": 4,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "inf2.24xlarge": {
     "InstanceType": "inf2.24xlarge",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "inf2.48xlarge": {
     "InstanceType": "inf2.48xlarge",
     "VCPU": 192,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "inf2.8xlarge": {
     "InstanceType": "inf2.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "inf2.xlarge": {
     "InstanceType": "inf2.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "is4gen.2xlarge": {
     "InstanceType": "is4gen.2xlarge",
     "VCPU": 8,
     "MemoryMb": 49152,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 7500,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "is4gen.4xlarge": {
     "InstanceType": "is4gen.4xlarge",
     "VCPU": 16,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 7500,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "is4gen.8xlarge": {
     "InstanceType": "is4gen.8xlarge",
     "VCPU": 32,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 7500,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "is4gen.large": {
     "InstanceType": "is4gen.large",
     "VCPU": 2,
     "MemoryMb": 12288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1875,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "is4gen.medium": {
     "InstanceType": "is4gen.medium",
     "VCPU": 1,
     "MemoryMb": 6144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 937,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "is4gen.xlarge": {
     "InstanceType": "is4gen.xlarge",
     "VCPU": 4,
     "MemoryMb": 24576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 3750,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m1.large": {
     "InstanceType": "m1.large",
     "VCPU": 2,
     "MemoryMb": 7680,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 420,
+      "Count": 2,
+      "Type": "hdd"
+    }
   },
   "m1.medium": {
     "InstanceType": "m1.medium",
     "VCPU": 1,
     "MemoryMb": 3788,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 410,
+      "Count": 1,
+      "Type": "hdd"
+    }
   },
   "m1.small": {
     "InstanceType": "m1.small",
     "VCPU": 1,
     "MemoryMb": 1740,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 160,
+      "Count": 1,
+      "Type": "hdd"
+    }
   },
   "m1.xlarge": {
     "InstanceType": "m1.xlarge",
     "VCPU": 4,
     "MemoryMb": 15360,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 420,
+      "Count": 4,
+      "Type": "hdd"
+    }
   },
   "m2.2xlarge": {
     "InstanceType": "m2.2xlarge",
     "VCPU": 4,
     "MemoryMb": 35020,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 850,
+      "Count": 1,
+      "Type": "hdd"
+    }
   },
   "m2.4xlarge": {
     "InstanceType": "m2.4xlarge",
     "VCPU": 8,
     "MemoryMb": 70041,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 840,
+      "Count": 2,
+      "Type": "hdd"
+    }
   },
   "m2.xlarge": {
     "InstanceType": "m2.xlarge",
     "VCPU": 2,
     "MemoryMb": 17510,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 420,
+      "Count": 1,
+      "Type": "hdd"
+    }
   },
   "m3.2xlarge": {
     "InstanceType": "m3.2xlarge",
     "VCPU": 8,
     "MemoryMb": 30720,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 80,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m3.large": {
     "InstanceType": "m3.large",
     "VCPU": 2,
     "MemoryMb": 7680,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 32,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m3.medium": {
     "InstanceType": "m3.medium",
     "VCPU": 1,
     "MemoryMb": 3840,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 4,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m3.xlarge": {
     "InstanceType": "m3.xlarge",
     "VCPU": 4,
     "MemoryMb": 15360,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 40,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m4.10xlarge": {
     "InstanceType": "m4.10xlarge",
     "VCPU": 40,
     "MemoryMb": 163840,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m4.16xlarge": {
     "InstanceType": "m4.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m4.2xlarge": {
     "InstanceType": "m4.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m4.4xlarge": {
     "InstanceType": "m4.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m4.large": {
     "InstanceType": "m4.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m4.xlarge": {
     "InstanceType": "m4.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5.12xlarge": {
     "InstanceType": "m5.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5.16xlarge": {
     "InstanceType": "m5.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5.24xlarge": {
     "InstanceType": "m5.24xlarge",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5.2xlarge": {
     "InstanceType": "m5.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5.4xlarge": {
     "InstanceType": "m5.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5.8xlarge": {
     "InstanceType": "m5.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5.large": {
     "InstanceType": "m5.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5.metal": {
     "InstanceType": "m5.metal",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5.xlarge": {
     "InstanceType": "m5.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5a.12xlarge": {
     "InstanceType": "m5a.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5a.16xlarge": {
     "InstanceType": "m5a.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5a.24xlarge": {
     "InstanceType": "m5a.24xlarge",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5a.2xlarge": {
     "InstanceType": "m5a.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5a.4xlarge": {
     "InstanceType": "m5a.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5a.8xlarge": {
     "InstanceType": "m5a.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5a.large": {
     "InstanceType": "m5a.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5a.xlarge": {
     "InstanceType": "m5a.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5ad.12xlarge": {
     "InstanceType": "m5ad.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m5ad.16xlarge": {
     "InstanceType": "m5ad.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m5ad.24xlarge": {
     "InstanceType": "m5ad.24xlarge",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m5ad.2xlarge": {
     "InstanceType": "m5ad.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m5ad.4xlarge": {
     "InstanceType": "m5ad.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m5ad.8xlarge": {
     "InstanceType": "m5ad.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m5ad.large": {
     "InstanceType": "m5ad.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 75,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m5ad.xlarge": {
     "InstanceType": "m5ad.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 150,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m5d.12xlarge": {
     "InstanceType": "m5d.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m5d.16xlarge": {
     "InstanceType": "m5d.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m5d.24xlarge": {
     "InstanceType": "m5d.24xlarge",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m5d.2xlarge": {
     "InstanceType": "m5d.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m5d.4xlarge": {
     "InstanceType": "m5d.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m5d.8xlarge": {
     "InstanceType": "m5d.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m5d.large": {
     "InstanceType": "m5d.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 75,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m5d.metal": {
     "InstanceType": "m5d.metal",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m5d.xlarge": {
     "InstanceType": "m5d.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 150,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m5dn.12xlarge": {
     "InstanceType": "m5dn.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m5dn.16xlarge": {
     "InstanceType": "m5dn.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m5dn.24xlarge": {
     "InstanceType": "m5dn.24xlarge",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m5dn.2xlarge": {
     "InstanceType": "m5dn.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m5dn.4xlarge": {
     "InstanceType": "m5dn.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m5dn.8xlarge": {
     "InstanceType": "m5dn.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m5dn.large": {
     "InstanceType": "m5dn.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 75,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m5dn.metal": {
     "InstanceType": "m5dn.metal",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m5dn.xlarge": {
     "InstanceType": "m5dn.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 150,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m5n.12xlarge": {
     "InstanceType": "m5n.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5n.16xlarge": {
     "InstanceType": "m5n.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5n.24xlarge": {
     "InstanceType": "m5n.24xlarge",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5n.2xlarge": {
     "InstanceType": "m5n.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5n.4xlarge": {
     "InstanceType": "m5n.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5n.8xlarge": {
     "InstanceType": "m5n.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5n.large": {
     "InstanceType": "m5n.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5n.metal": {
     "InstanceType": "m5n.metal",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5n.xlarge": {
     "InstanceType": "m5n.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5zn.12xlarge": {
     "InstanceType": "m5zn.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5zn.2xlarge": {
     "InstanceType": "m5zn.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5zn.3xlarge": {
     "InstanceType": "m5zn.3xlarge",
     "VCPU": 12,
     "MemoryMb": 49152,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5zn.6xlarge": {
     "InstanceType": "m5zn.6xlarge",
     "VCPU": 24,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5zn.large": {
     "InstanceType": "m5zn.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5zn.metal": {
     "InstanceType": "m5zn.metal",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m5zn.xlarge": {
     "InstanceType": "m5zn.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6a.12xlarge": {
     "InstanceType": "m6a.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6a.16xlarge": {
     "InstanceType": "m6a.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6a.24xlarge": {
     "InstanceType": "m6a.24xlarge",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6a.2xlarge": {
     "InstanceType": "m6a.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6a.32xlarge": {
     "InstanceType": "m6a.32xlarge",
     "VCPU": 128,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6a.48xlarge": {
     "InstanceType": "m6a.48xlarge",
     "VCPU": 192,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6a.4xlarge": {
     "InstanceType": "m6a.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6a.8xlarge": {
     "InstanceType": "m6a.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6a.large": {
     "InstanceType": "m6a.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6a.metal": {
     "InstanceType": "m6a.metal",
     "VCPU": 192,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6a.xlarge": {
     "InstanceType": "m6a.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6g.12xlarge": {
     "InstanceType": "m6g.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6g.16xlarge": {
     "InstanceType": "m6g.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6g.2xlarge": {
     "InstanceType": "m6g.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6g.4xlarge": {
     "InstanceType": "m6g.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6g.8xlarge": {
     "InstanceType": "m6g.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6g.large": {
     "InstanceType": "m6g.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6g.medium": {
     "InstanceType": "m6g.medium",
     "VCPU": 1,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6g.metal": {
     "InstanceType": "m6g.metal",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6g.xlarge": {
     "InstanceType": "m6g.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6gd.12xlarge": {
     "InstanceType": "m6gd.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m6gd.16xlarge": {
     "InstanceType": "m6gd.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m6gd.2xlarge": {
     "InstanceType": "m6gd.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 474,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6gd.4xlarge": {
     "InstanceType": "m6gd.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 950,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6gd.8xlarge": {
     "InstanceType": "m6gd.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6gd.large": {
     "InstanceType": "m6gd.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 118,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6gd.medium": {
     "InstanceType": "m6gd.medium",
     "VCPU": 1,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 59,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6gd.metal": {
     "InstanceType": "m6gd.metal",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m6gd.xlarge": {
     "InstanceType": "m6gd.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 237,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6i.12xlarge": {
     "InstanceType": "m6i.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6i.16xlarge": {
     "InstanceType": "m6i.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6i.24xlarge": {
     "InstanceType": "m6i.24xlarge",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6i.2xlarge": {
     "InstanceType": "m6i.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6i.32xlarge": {
     "InstanceType": "m6i.32xlarge",
     "VCPU": 128,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6i.4xlarge": {
     "InstanceType": "m6i.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6i.8xlarge": {
     "InstanceType": "m6i.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6i.large": {
     "InstanceType": "m6i.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6i.metal": {
     "InstanceType": "m6i.metal",
     "VCPU": 128,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6i.xlarge": {
     "InstanceType": "m6i.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6id.12xlarge": {
     "InstanceType": "m6id.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m6id.16xlarge": {
     "InstanceType": "m6id.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m6id.24xlarge": {
     "InstanceType": "m6id.24xlarge",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m6id.2xlarge": {
     "InstanceType": "m6id.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 474,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6id.32xlarge": {
     "InstanceType": "m6id.32xlarge",
     "VCPU": 128,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m6id.4xlarge": {
     "InstanceType": "m6id.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 950,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6id.8xlarge": {
     "InstanceType": "m6id.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6id.large": {
     "InstanceType": "m6id.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 118,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6id.metal": {
     "InstanceType": "m6id.metal",
     "VCPU": 128,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m6id.xlarge": {
     "InstanceType": "m6id.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 237,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6idn.12xlarge": {
     "InstanceType": "m6idn.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m6idn.16xlarge": {
     "InstanceType": "m6idn.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "m6idn.24xlarge": {
     "InstanceType": "m6idn.24xlarge",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m6idn.2xlarge": {
     "InstanceType": "m6idn.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 474,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6idn.32xlarge": {
     "InstanceType": "m6idn.32xlarge",
     "VCPU": 128,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m6idn.4xlarge": {
     "InstanceType": "m6idn.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 950,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6idn.8xlarge": {
     "InstanceType": "m6idn.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6idn.large": {
     "InstanceType": "m6idn.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 118,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6idn.metal": {
     "InstanceType": "m6idn.metal",
     "VCPU": 128,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "m6idn.xlarge": {
     "InstanceType": "m6idn.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 237,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "m6in.12xlarge": {
     "InstanceType": "m6in.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6in.16xlarge": {
     "InstanceType": "m6in.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6in.24xlarge": {
     "InstanceType": "m6in.24xlarge",
     "VCPU": 96,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6in.2xlarge": {
     "InstanceType": "m6in.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6in.32xlarge": {
     "InstanceType": "m6in.32xlarge",
     "VCPU": 128,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6in.4xlarge": {
     "InstanceType": "m6in.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6in.8xlarge": {
     "InstanceType": "m6in.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6in.large": {
     "InstanceType": "m6in.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6in.metal": {
     "InstanceType": "m6in.metal",
     "VCPU": 128,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m6in.xlarge": {
     "InstanceType": "m6in.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m7g.12xlarge": {
     "InstanceType": "m7g.12xlarge",
     "VCPU": 48,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m7g.16xlarge": {
     "InstanceType": "m7g.16xlarge",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m7g.2xlarge": {
     "InstanceType": "m7g.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m7g.4xlarge": {
     "InstanceType": "m7g.4xlarge",
     "VCPU": 16,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m7g.8xlarge": {
     "InstanceType": "m7g.8xlarge",
     "VCPU": 32,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m7g.large": {
     "InstanceType": "m7g.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m7g.medium": {
     "InstanceType": "m7g.medium",
     "VCPU": 1,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m7g.metal": {
     "InstanceType": "m7g.metal",
     "VCPU": 64,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "m7g.xlarge": {
     "InstanceType": "m7g.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "mac1.metal": {
     "InstanceType": "mac1.metal",
     "VCPU": 12,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "mac2.metal": {
     "InstanceType": "mac2.metal",
     "VCPU": 8,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "p2.16xlarge": {
     "InstanceType": "p2.16xlarge",
@@ -2858,7 +4848,12 @@
     "GPUs": [
       "K80"
     ],
-    "GPUMemoryMb": 196608
+    "GPUMemoryMb": 196608,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "p2.8xlarge": {
     "InstanceType": "p2.8xlarge",
@@ -2867,7 +4862,12 @@
     "GPUs": [
       "K80"
     ],
-    "GPUMemoryMb": 98304
+    "GPUMemoryMb": 98304,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "p2.xlarge": {
     "InstanceType": "p2.xlarge",
@@ -2876,7 +4876,12 @@
     "GPUs": [
       "K80"
     ],
-    "GPUMemoryMb": 12288
+    "GPUMemoryMb": 12288,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "p3.16xlarge": {
     "InstanceType": "p3.16xlarge",
@@ -2885,7 +4890,12 @@
     "GPUs": [
       "V100"
     ],
-    "GPUMemoryMb": 131072
+    "GPUMemoryMb": 131072,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "p3.2xlarge": {
     "InstanceType": "p3.2xlarge",
@@ -2894,7 +4904,12 @@
     "GPUs": [
       "V100"
     ],
-    "GPUMemoryMb": 16384
+    "GPUMemoryMb": 16384,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "p3.8xlarge": {
     "InstanceType": "p3.8xlarge",
@@ -2903,7 +4918,12 @@
     "GPUs": [
       "V100"
     ],
-    "GPUMemoryMb": 65536
+    "GPUMemoryMb": 65536,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "p3dn.24xlarge": {
     "InstanceType": "p3dn.24xlarge",
@@ -2912,7 +4932,12 @@
     "GPUs": [
       "V100"
     ],
-    "GPUMemoryMb": 262144
+    "GPUMemoryMb": 262144,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "p4d.24xlarge": {
     "InstanceType": "p4d.24xlarge",
@@ -2921,1644 +4946,2819 @@
     "GPUs": [
       "A100"
     ],
-    "GPUMemoryMb": 327680
+    "GPUMemoryMb": 327680,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1000,
+      "Count": 8,
+      "Type": "ssd"
+    }
   },
   "r3.2xlarge": {
     "InstanceType": "r3.2xlarge",
     "VCPU": 8,
     "MemoryMb": 62464,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 160,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r3.4xlarge": {
     "InstanceType": "r3.4xlarge",
     "VCPU": 16,
     "MemoryMb": 124928,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 320,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r3.8xlarge": {
     "InstanceType": "r3.8xlarge",
     "VCPU": 32,
     "MemoryMb": 249856,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 320,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r3.large": {
     "InstanceType": "r3.large",
     "VCPU": 2,
     "MemoryMb": 15360,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 32,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r3.xlarge": {
     "InstanceType": "r3.xlarge",
     "VCPU": 4,
     "MemoryMb": 31232,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 80,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r4.16xlarge": {
     "InstanceType": "r4.16xlarge",
     "VCPU": 64,
     "MemoryMb": 499712,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r4.2xlarge": {
     "InstanceType": "r4.2xlarge",
     "VCPU": 8,
     "MemoryMb": 62464,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r4.4xlarge": {
     "InstanceType": "r4.4xlarge",
     "VCPU": 16,
     "MemoryMb": 124928,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r4.8xlarge": {
     "InstanceType": "r4.8xlarge",
     "VCPU": 32,
     "MemoryMb": 249856,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r4.large": {
     "InstanceType": "r4.large",
     "VCPU": 2,
     "MemoryMb": 15616,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r4.xlarge": {
     "InstanceType": "r4.xlarge",
     "VCPU": 4,
     "MemoryMb": 31232,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5.12xlarge": {
     "InstanceType": "r5.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5.16xlarge": {
     "InstanceType": "r5.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5.24xlarge": {
     "InstanceType": "r5.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5.2xlarge": {
     "InstanceType": "r5.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5.4xlarge": {
     "InstanceType": "r5.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5.8xlarge": {
     "InstanceType": "r5.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5.large": {
     "InstanceType": "r5.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5.metal": {
     "InstanceType": "r5.metal",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5.xlarge": {
     "InstanceType": "r5.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5a.12xlarge": {
     "InstanceType": "r5a.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5a.16xlarge": {
     "InstanceType": "r5a.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5a.24xlarge": {
     "InstanceType": "r5a.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5a.2xlarge": {
     "InstanceType": "r5a.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5a.4xlarge": {
     "InstanceType": "r5a.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5a.8xlarge": {
     "InstanceType": "r5a.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5a.large": {
     "InstanceType": "r5a.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5a.xlarge": {
     "InstanceType": "r5a.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5ad.12xlarge": {
     "InstanceType": "r5ad.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r5ad.16xlarge": {
     "InstanceType": "r5ad.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r5ad.24xlarge": {
     "InstanceType": "r5ad.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r5ad.2xlarge": {
     "InstanceType": "r5ad.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r5ad.4xlarge": {
     "InstanceType": "r5ad.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r5ad.8xlarge": {
     "InstanceType": "r5ad.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r5ad.large": {
     "InstanceType": "r5ad.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 75,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r5ad.xlarge": {
     "InstanceType": "r5ad.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 150,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r5b.12xlarge": {
     "InstanceType": "r5b.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5b.16xlarge": {
     "InstanceType": "r5b.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5b.24xlarge": {
     "InstanceType": "r5b.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5b.2xlarge": {
     "InstanceType": "r5b.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5b.4xlarge": {
     "InstanceType": "r5b.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5b.8xlarge": {
     "InstanceType": "r5b.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5b.large": {
     "InstanceType": "r5b.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5b.metal": {
     "InstanceType": "r5b.metal",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5b.xlarge": {
     "InstanceType": "r5b.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5d.12xlarge": {
     "InstanceType": "r5d.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r5d.16xlarge": {
     "InstanceType": "r5d.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r5d.24xlarge": {
     "InstanceType": "r5d.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r5d.2xlarge": {
     "InstanceType": "r5d.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r5d.4xlarge": {
     "InstanceType": "r5d.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r5d.8xlarge": {
     "InstanceType": "r5d.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r5d.large": {
     "InstanceType": "r5d.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 75,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r5d.metal": {
     "InstanceType": "r5d.metal",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r5d.xlarge": {
     "InstanceType": "r5d.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 150,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r5dn.12xlarge": {
     "InstanceType": "r5dn.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r5dn.16xlarge": {
     "InstanceType": "r5dn.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r5dn.24xlarge": {
     "InstanceType": "r5dn.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r5dn.2xlarge": {
     "InstanceType": "r5dn.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r5dn.4xlarge": {
     "InstanceType": "r5dn.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r5dn.8xlarge": {
     "InstanceType": "r5dn.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 600,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r5dn.large": {
     "InstanceType": "r5dn.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 75,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r5dn.metal": {
     "InstanceType": "r5dn.metal",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r5dn.xlarge": {
     "InstanceType": "r5dn.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 150,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r5n.12xlarge": {
     "InstanceType": "r5n.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5n.16xlarge": {
     "InstanceType": "r5n.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5n.24xlarge": {
     "InstanceType": "r5n.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5n.2xlarge": {
     "InstanceType": "r5n.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5n.4xlarge": {
     "InstanceType": "r5n.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5n.8xlarge": {
     "InstanceType": "r5n.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5n.large": {
     "InstanceType": "r5n.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5n.metal": {
     "InstanceType": "r5n.metal",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r5n.xlarge": {
     "InstanceType": "r5n.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6a.12xlarge": {
     "InstanceType": "r6a.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6a.16xlarge": {
     "InstanceType": "r6a.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6a.24xlarge": {
     "InstanceType": "r6a.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6a.2xlarge": {
     "InstanceType": "r6a.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6a.32xlarge": {
     "InstanceType": "r6a.32xlarge",
     "VCPU": 128,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6a.48xlarge": {
     "InstanceType": "r6a.48xlarge",
     "VCPU": 192,
     "MemoryMb": 1572864,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6a.4xlarge": {
     "InstanceType": "r6a.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6a.8xlarge": {
     "InstanceType": "r6a.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6a.large": {
     "InstanceType": "r6a.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6a.metal": {
     "InstanceType": "r6a.metal",
     "VCPU": 192,
     "MemoryMb": 1572864,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6a.xlarge": {
     "InstanceType": "r6a.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6g.12xlarge": {
     "InstanceType": "r6g.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6g.16xlarge": {
     "InstanceType": "r6g.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6g.2xlarge": {
     "InstanceType": "r6g.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6g.4xlarge": {
     "InstanceType": "r6g.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6g.8xlarge": {
     "InstanceType": "r6g.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6g.large": {
     "InstanceType": "r6g.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6g.medium": {
     "InstanceType": "r6g.medium",
     "VCPU": 1,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6g.metal": {
     "InstanceType": "r6g.metal",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6g.xlarge": {
     "InstanceType": "r6g.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6gd.12xlarge": {
     "InstanceType": "r6gd.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r6gd.16xlarge": {
     "InstanceType": "r6gd.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r6gd.2xlarge": {
     "InstanceType": "r6gd.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 474,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6gd.4xlarge": {
     "InstanceType": "r6gd.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 950,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6gd.8xlarge": {
     "InstanceType": "r6gd.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6gd.large": {
     "InstanceType": "r6gd.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 118,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6gd.medium": {
     "InstanceType": "r6gd.medium",
     "VCPU": 1,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 59,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6gd.metal": {
     "InstanceType": "r6gd.metal",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r6gd.xlarge": {
     "InstanceType": "r6gd.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 237,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6i.12xlarge": {
     "InstanceType": "r6i.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6i.16xlarge": {
     "InstanceType": "r6i.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6i.24xlarge": {
     "InstanceType": "r6i.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6i.2xlarge": {
     "InstanceType": "r6i.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6i.32xlarge": {
     "InstanceType": "r6i.32xlarge",
     "VCPU": 128,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6i.4xlarge": {
     "InstanceType": "r6i.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6i.8xlarge": {
     "InstanceType": "r6i.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6i.large": {
     "InstanceType": "r6i.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6i.metal": {
     "InstanceType": "r6i.metal",
     "VCPU": 128,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6i.xlarge": {
     "InstanceType": "r6i.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6id.12xlarge": {
     "InstanceType": "r6id.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r6id.16xlarge": {
     "InstanceType": "r6id.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r6id.24xlarge": {
     "InstanceType": "r6id.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r6id.2xlarge": {
     "InstanceType": "r6id.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 474,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6id.32xlarge": {
     "InstanceType": "r6id.32xlarge",
     "VCPU": 128,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r6id.4xlarge": {
     "InstanceType": "r6id.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 950,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6id.8xlarge": {
     "InstanceType": "r6id.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6id.large": {
     "InstanceType": "r6id.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 118,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6id.metal": {
     "InstanceType": "r6id.metal",
     "VCPU": 128,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r6id.xlarge": {
     "InstanceType": "r6id.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 237,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6idn.12xlarge": {
     "InstanceType": "r6idn.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r6idn.16xlarge": {
     "InstanceType": "r6idn.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "r6idn.24xlarge": {
     "InstanceType": "r6idn.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r6idn.2xlarge": {
     "InstanceType": "r6idn.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 474,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6idn.32xlarge": {
     "InstanceType": "r6idn.32xlarge",
     "VCPU": 128,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r6idn.4xlarge": {
     "InstanceType": "r6idn.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 950,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6idn.8xlarge": {
     "InstanceType": "r6idn.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6idn.large": {
     "InstanceType": "r6idn.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 118,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6idn.metal": {
     "InstanceType": "r6idn.metal",
     "VCPU": 128,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "r6idn.xlarge": {
     "InstanceType": "r6idn.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 237,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "r6in.12xlarge": {
     "InstanceType": "r6in.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6in.16xlarge": {
     "InstanceType": "r6in.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6in.24xlarge": {
     "InstanceType": "r6in.24xlarge",
     "VCPU": 96,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6in.2xlarge": {
     "InstanceType": "r6in.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6in.32xlarge": {
     "InstanceType": "r6in.32xlarge",
     "VCPU": 128,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6in.4xlarge": {
     "InstanceType": "r6in.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6in.8xlarge": {
     "InstanceType": "r6in.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6in.large": {
     "InstanceType": "r6in.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6in.metal": {
     "InstanceType": "r6in.metal",
     "VCPU": 128,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r6in.xlarge": {
     "InstanceType": "r6in.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r7g.12xlarge": {
     "InstanceType": "r7g.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r7g.16xlarge": {
     "InstanceType": "r7g.16xlarge",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r7g.2xlarge": {
     "InstanceType": "r7g.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r7g.4xlarge": {
     "InstanceType": "r7g.4xlarge",
     "VCPU": 16,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r7g.8xlarge": {
     "InstanceType": "r7g.8xlarge",
     "VCPU": 32,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r7g.large": {
     "InstanceType": "r7g.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r7g.medium": {
     "InstanceType": "r7g.medium",
     "VCPU": 1,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r7g.metal": {
     "InstanceType": "r7g.metal",
     "VCPU": 64,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "r7g.xlarge": {
     "InstanceType": "r7g.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t1.micro": {
     "InstanceType": "t1.micro",
     "VCPU": 1,
     "MemoryMb": 627,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t2.2xlarge": {
     "InstanceType": "t2.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t2.large": {
     "InstanceType": "t2.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t2.medium": {
     "InstanceType": "t2.medium",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t2.micro": {
     "InstanceType": "t2.micro",
     "VCPU": 1,
     "MemoryMb": 1024,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t2.nano": {
     "InstanceType": "t2.nano",
     "VCPU": 1,
     "MemoryMb": 512,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t2.small": {
     "InstanceType": "t2.small",
     "VCPU": 1,
     "MemoryMb": 2048,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t2.xlarge": {
     "InstanceType": "t2.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3.2xlarge": {
     "InstanceType": "t3.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3.large": {
     "InstanceType": "t3.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3.medium": {
     "InstanceType": "t3.medium",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3.micro": {
     "InstanceType": "t3.micro",
     "VCPU": 2,
     "MemoryMb": 1024,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3.nano": {
     "InstanceType": "t3.nano",
     "VCPU": 2,
     "MemoryMb": 512,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3.small": {
     "InstanceType": "t3.small",
     "VCPU": 2,
     "MemoryMb": 2048,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3.xlarge": {
     "InstanceType": "t3.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3a.2xlarge": {
     "InstanceType": "t3a.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3a.large": {
     "InstanceType": "t3a.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3a.medium": {
     "InstanceType": "t3a.medium",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3a.micro": {
     "InstanceType": "t3a.micro",
     "VCPU": 2,
     "MemoryMb": 1024,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3a.nano": {
     "InstanceType": "t3a.nano",
     "VCPU": 2,
     "MemoryMb": 512,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3a.small": {
     "InstanceType": "t3a.small",
     "VCPU": 2,
     "MemoryMb": 2048,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t3a.xlarge": {
     "InstanceType": "t3a.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t4g.2xlarge": {
     "InstanceType": "t4g.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t4g.large": {
     "InstanceType": "t4g.large",
     "VCPU": 2,
     "MemoryMb": 8192,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t4g.medium": {
     "InstanceType": "t4g.medium",
     "VCPU": 2,
     "MemoryMb": 4096,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t4g.micro": {
     "InstanceType": "t4g.micro",
     "VCPU": 2,
     "MemoryMb": 1024,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t4g.nano": {
     "InstanceType": "t4g.nano",
     "VCPU": 2,
     "MemoryMb": 512,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t4g.small": {
     "InstanceType": "t4g.small",
     "VCPU": 2,
     "MemoryMb": 2048,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "t4g.xlarge": {
     "InstanceType": "t4g.xlarge",
     "VCPU": 4,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "trn1.2xlarge": {
     "InstanceType": "trn1.2xlarge",
     "VCPU": 8,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 474,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "trn1.32xlarge": {
     "InstanceType": "trn1.32xlarge",
     "VCPU": 128,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "trn1n.32xlarge": {
     "InstanceType": "trn1n.32xlarge",
     "VCPU": 128,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 4,
+      "Type": "ssd"
+    }
   },
   "u-12tb1.112xlarge": {
     "InstanceType": "u-12tb1.112xlarge",
     "VCPU": 448,
     "MemoryMb": 12582912,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "u-18tb1.112xlarge": {
     "InstanceType": "u-18tb1.112xlarge",
     "VCPU": 448,
     "MemoryMb": 18874368,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "u-24tb1.112xlarge": {
     "InstanceType": "u-24tb1.112xlarge",
     "VCPU": 448,
     "MemoryMb": 25165824,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "u-3tb1.56xlarge": {
     "InstanceType": "u-3tb1.56xlarge",
     "VCPU": 224,
     "MemoryMb": 3145728,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "u-6tb1.112xlarge": {
     "InstanceType": "u-6tb1.112xlarge",
     "VCPU": 448,
     "MemoryMb": 6291456,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "u-6tb1.56xlarge": {
     "InstanceType": "u-6tb1.56xlarge",
     "VCPU": 224,
     "MemoryMb": 6291456,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "u-9tb1.112xlarge": {
     "InstanceType": "u-9tb1.112xlarge",
     "VCPU": 448,
     "MemoryMb": 9437184,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "vt1.24xlarge": {
     "InstanceType": "vt1.24xlarge",
     "VCPU": 96,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "vt1.3xlarge": {
     "InstanceType": "vt1.3xlarge",
     "VCPU": 12,
     "MemoryMb": 24576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "vt1.6xlarge": {
     "InstanceType": "vt1.6xlarge",
     "VCPU": 24,
     "MemoryMb": 49152,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "x1.16xlarge": {
     "InstanceType": "x1.16xlarge",
     "VCPU": 64,
     "MemoryMb": 999424,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1920,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x1.32xlarge": {
     "InstanceType": "x1.32xlarge",
     "VCPU": 128,
     "MemoryMb": 1998848,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1920,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "x1e.16xlarge": {
     "InstanceType": "x1e.16xlarge",
     "VCPU": 64,
     "MemoryMb": 1998848,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1920,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x1e.2xlarge": {
     "InstanceType": "x1e.2xlarge",
     "VCPU": 8,
     "MemoryMb": 249856,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 240,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x1e.32xlarge": {
     "InstanceType": "x1e.32xlarge",
     "VCPU": 128,
     "MemoryMb": 3997696,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1920,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "x1e.4xlarge": {
     "InstanceType": "x1e.4xlarge",
     "VCPU": 16,
     "MemoryMb": 499712,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 480,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x1e.8xlarge": {
     "InstanceType": "x1e.8xlarge",
     "VCPU": 32,
     "MemoryMb": 999424,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 960,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x1e.xlarge": {
     "InstanceType": "x1e.xlarge",
     "VCPU": 4,
     "MemoryMb": 124928,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 120,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2gd.12xlarge": {
     "InstanceType": "x2gd.12xlarge",
     "VCPU": 48,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "x2gd.16xlarge": {
     "InstanceType": "x2gd.16xlarge",
     "VCPU": 64,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "x2gd.2xlarge": {
     "InstanceType": "x2gd.2xlarge",
     "VCPU": 8,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 475,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2gd.4xlarge": {
     "InstanceType": "x2gd.4xlarge",
     "VCPU": 16,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 950,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2gd.8xlarge": {
     "InstanceType": "x2gd.8xlarge",
     "VCPU": 32,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2gd.large": {
     "InstanceType": "x2gd.large",
     "VCPU": 2,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 118,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2gd.medium": {
     "InstanceType": "x2gd.medium",
     "VCPU": 1,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 59,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2gd.metal": {
     "InstanceType": "x2gd.metal",
     "VCPU": 64,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "x2gd.xlarge": {
     "InstanceType": "x2gd.xlarge",
     "VCPU": 4,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 237,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2idn.16xlarge": {
     "InstanceType": "x2idn.16xlarge",
     "VCPU": 64,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2idn.24xlarge": {
     "InstanceType": "x2idn.24xlarge",
     "VCPU": 96,
     "MemoryMb": 1572864,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "x2idn.32xlarge": {
     "InstanceType": "x2idn.32xlarge",
     "VCPU": 128,
     "MemoryMb": 2097152,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "x2idn.metal": {
     "InstanceType": "x2idn.metal",
     "VCPU": 128,
     "MemoryMb": 2097152,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "x2iedn.16xlarge": {
     "InstanceType": "x2iedn.16xlarge",
     "VCPU": 64,
     "MemoryMb": 2097152,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2iedn.24xlarge": {
     "InstanceType": "x2iedn.24xlarge",
     "VCPU": 96,
     "MemoryMb": 3145728,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1425,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "x2iedn.2xlarge": {
     "InstanceType": "x2iedn.2xlarge",
     "VCPU": 8,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 237,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2iedn.32xlarge": {
     "InstanceType": "x2iedn.32xlarge",
     "VCPU": 128,
     "MemoryMb": 4194304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "x2iedn.4xlarge": {
     "InstanceType": "x2iedn.4xlarge",
     "VCPU": 16,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 475,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2iedn.8xlarge": {
     "InstanceType": "x2iedn.8xlarge",
     "VCPU": 32,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 950,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2iedn.metal": {
     "InstanceType": "x2iedn.metal",
     "VCPU": 128,
     "MemoryMb": 4194304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 1900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "x2iedn.xlarge": {
     "InstanceType": "x2iedn.xlarge",
     "VCPU": 4,
     "MemoryMb": 131072,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 118,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "x2iezn.12xlarge": {
     "InstanceType": "x2iezn.12xlarge",
     "VCPU": 48,
     "MemoryMb": 1572864,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "x2iezn.2xlarge": {
     "InstanceType": "x2iezn.2xlarge",
     "VCPU": 8,
     "MemoryMb": 262144,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "x2iezn.4xlarge": {
     "InstanceType": "x2iezn.4xlarge",
     "VCPU": 16,
     "MemoryMb": 524288,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "x2iezn.6xlarge": {
     "InstanceType": "x2iezn.6xlarge",
     "VCPU": 24,
     "MemoryMb": 786432,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "x2iezn.8xlarge": {
     "InstanceType": "x2iezn.8xlarge",
     "VCPU": 32,
     "MemoryMb": 1048576,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "x2iezn.metal": {
     "InstanceType": "x2iezn.metal",
     "VCPU": 48,
     "MemoryMb": 1572864,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 0,
+      "Count": 0,
+      "Type": ""
+    }
   },
   "z1d.12xlarge": {
     "InstanceType": "z1d.12xlarge",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "z1d.2xlarge": {
     "InstanceType": "z1d.2xlarge",
     "VCPU": 8,
     "MemoryMb": 65536,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 300,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "z1d.3xlarge": {
     "InstanceType": "z1d.3xlarge",
     "VCPU": 12,
     "MemoryMb": 98304,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 450,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "z1d.6xlarge": {
     "InstanceType": "z1d.6xlarge",
     "VCPU": 24,
     "MemoryMb": 196608,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "z1d.large": {
     "InstanceType": "z1d.large",
     "VCPU": 2,
     "MemoryMb": 16384,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 75,
+      "Count": 1,
+      "Type": "ssd"
+    }
   },
   "z1d.metal": {
     "InstanceType": "z1d.metal",
     "VCPU": 48,
     "MemoryMb": 393216,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 900,
+      "Count": 2,
+      "Type": "ssd"
+    }
   },
   "z1d.xlarge": {
     "InstanceType": "z1d.xlarge",
     "VCPU": 4,
     "MemoryMb": 32768,
     "GPUs": [],
-    "GPUMemoryMb": 0
+    "GPUMemoryMb": 0,
+    "InstanceStorage": {
+      "SizePerDiskGB": 150,
+      "Count": 1,
+      "Type": "ssd"
+    }
   }
 }

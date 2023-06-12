@@ -23,9 +23,9 @@ It can estimate Carbon Emissions of:
     - [x] Disks (boot, persistent and region-persistent, HDD or SSD)
     - [X] Machines with GPUs
     - [x] Cloud SQL
-    - [x] Instance Group (including regional and with Autoscaler)
+    - [x] Instance Group (including regional and Autoscaler)
 - Amazon Web Services
-  - [x] EC2
+  - [x] EC2 (including inline root, elastic, and ephemeral block storages)
 
 The following will also be supported soon:
 
