@@ -41,8 +41,10 @@ func TestGetDataResource(t *testing.T) {
 					Name:         "debian",
 					ResourceType: "google_compute_image",
 					Provider:     providers.GCP},
-				DataImageSpecs: &resources.DataImageSpecs{
-					DiskSizeGb: float64(10),
+				DataImageSpecs: []*resources.DataImageSpecs{
+					{
+						DiskSizeGb: float64(10),
+					},
 				},
 			},
 		},

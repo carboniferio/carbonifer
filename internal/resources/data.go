@@ -4,11 +4,13 @@ import "fmt"
 
 type DataImageSpecs struct {
 	DiskSizeGb float64
+	DeviceName string
+	VolumeType string
 }
 
 type DataImageResource struct {
 	Identification *ResourceIdentification
-	DataImageSpecs *DataImageSpecs
+	DataImageSpecs []*DataImageSpecs
 }
 
 func (r DataImageResource) GetIdentification() *ResourceIdentification {

@@ -13,11 +13,18 @@ import (
 
 // InstanceType is the struct that will be exported in the json
 type InstanceType struct {
-	InstanceType string
-	VCPU         int64
-	MemoryMb     int64
-	GPUs         []string
-	GPUMemoryMb  int64
+	InstanceType    string
+	VCPU            int64
+	MemoryMb        int64
+	GPUs            []string
+	GPUMemoryMb     int64
+	InstanceStorage *InstanceStorage
+}
+
+type InstanceStorage struct {
+	SizePerDiskGB int64
+	Count         int64
+	Type          string
 }
 
 // Generate writes the list of instances types in a json to stdout
@@ -63,13 +70,22 @@ func describeInstanceTypesPaginated(svc *ec2.EC2, instances *map[string]Instance
 			}
 			totalGPUMemoryMb = *gpuInfos.TotalGpuMemoryInMiB
 		}
+		var instanceStorage InstanceStorage
+		if instanceType.InstanceStorageSupported != nil && *instanceType.InstanceStorageSupported {
+			instanceStorage = InstanceStorage{
+				SizePerDiskGB: *instanceType.InstanceStorageInfo.Disks[0].SizeInGB,
+				Count:         *instanceType.InstanceStorageInfo.Disks[0].Count,
+				Type:          *instanceType.InstanceStorageInfo.Disks[0].Type,
+			}
+		}
 		name := *instanceType.InstanceType
 		instance := InstanceType{
-			InstanceType: name,
-			VCPU:         *instanceType.VCpuInfo.DefaultVCpus,
-			MemoryMb:     *instanceType.MemoryInfo.SizeInMiB,
-			GPUs:         gpus,
-			GPUMemoryMb:  int64(totalGPUMemoryMb),
+			InstanceType:    name,
+			VCPU:            *instanceType.VCpuInfo.DefaultVCpus,
+			MemoryMb:        *instanceType.MemoryInfo.SizeInMiB,
+			GPUs:            gpus,
+			GPUMemoryMb:     int64(totalGPUMemoryMb),
+			InstanceStorage: &instanceStorage,
 		}
 		instanceMap := *instances
 		instanceMap[name] = instance

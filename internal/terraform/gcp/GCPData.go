@@ -14,12 +14,13 @@ func GetDataResource(tfResource tfjson.StateResource) resources.DataResource {
 	if resourceId.ResourceType == "google_compute_image" {
 		diskSize := tfResource.AttributeValues["disk_size_gb"]
 		diskSizeGb, ok := diskSize.(float64)
+		specs := resources.DataImageSpecs{
+			DiskSizeGb: diskSizeGb,
+		}
 		if ok {
 			return resources.DataImageResource{
 				Identification: resourceId,
-				DataImageSpecs: &resources.DataImageSpecs{
-					DiskSizeGb: diskSizeGb,
-				},
+				DataImageSpecs: []*resources.DataImageSpecs{&specs},
 			}
 		}
 	}

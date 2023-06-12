@@ -94,7 +94,7 @@ func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDis
 		if diskImageLink != nil {
 			image, ok := (tfRefs.DataResources)[diskImageLink.(string)]
 			if ok {
-				disk.sizeGb = (image.(resources.DataImageResource)).DataImageSpecs.DiskSizeGb
+				disk.sizeGb = (image.(resources.DataImageResource)).DataImageSpecs[0].DiskSizeGb
 			} else {
 				log.Warningf("%v : Disk image does not have a size declared, considering it default to be 10Gb ", resourceAddress)
 			}

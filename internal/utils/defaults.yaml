@@ -21,5 +21,8 @@ provider:
   aws:
     avg_cpu_use: 0.5
     avg_gpu_use: 0.5
+    disk:
+      size: 8
+      type: gp2
 log:
   level : "warn"
