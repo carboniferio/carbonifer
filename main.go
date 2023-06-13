@@ -17,6 +17,9 @@ package main
 
 import "github.com/carboniferio/carbonifer/cmd"
 
+var version = "dev"
+
 func main() {
+	cmd.RootCmd.Version = version
 	cmd.Execute()
 }
