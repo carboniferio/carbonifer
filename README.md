@@ -43,6 +43,27 @@ A list of supported resource types is available in the [Scope](doc/scope.md) doc
 
 ## Install Carbonifer CLI
 
+### Magic one-liner bash script
+
+Using bash and curl. By default, it will install the latest version to `/usr/local/bin`:
+
+```bash
+curl -sfL https://raw.githubusercontent.com/carboniferio/carbonifer/main/install.sh | sudo bash
+```
+
+if you need more flexibility
+
+```bash
+export DEST_DIR=/path/to/dest/dir
+export VERSION=v1.2.3
+curl -sSL https://github.com/username/repo/install.sh | bash
+```
+
+### Go install
+
+If you have go installed, you can use:
+
+
 ```bash
 go install github.com/carboniferio/carbonifer@latest
 ```
@@ -59,6 +80,10 @@ cd carbonifer
 docker build -t carbonifer .
 docker run -it --rm -v <your_tf_folder_with_config>:/tmp/ carbonifer ./carbonifer --config=/tmp/config.yaml plan /tmp/
 ```
+
+### Manual install
+
+Download the latest release from [releases page](https://github.com/carboniferio/carbonifer/releases/)
 
 ## Plan
 
@@ -338,6 +363,6 @@ See the [Scope](doc/scope.md) document for more details.
 | `unit.carbon` |   | `g` | Carbon emission in `g` (gram) or `kg`
 | `out.format` | `-f <format>` `--format=<format>` | `text` | `text` or `json`
 | `out.file` | `-o <filename>` `--output=<filename>`|  | file to write report to. Default is standard output.
-| `data.path` | `<arg>` |  | path of carbonifer data files (coefficents...). Default uses embedded files
+| `data.path` | `<arg>` |  | path of carbonifer data files (coefficents...). Default uses embedded [files](./internal/data/data/) in binary 
 | `avg_cpu_use` |  | `0.5` | planned [average percentage of CPU used](doc/methodology.md#cpu)
 | `log` |  | `warn` | level of logs `info`, `debug`, `warn`, `error`
