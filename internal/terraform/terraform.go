@@ -12,7 +12,6 @@ import (
 	"github.com/hashicorp/hc-install/product"
 	"github.com/hashicorp/hc-install/releases"
 	"github.com/hashicorp/terraform-exec/tfexec"
-	tfjson "github.com/hashicorp/terraform-json"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
@@ -109,7 +108,7 @@ func TerraformInit() (*tfexec.Terraform, *context.Context, error) {
 	return tf, &ctx, err
 }
 
-func CarboniferPlan(input string) (*tfjson.Plan, error) {
+func CarboniferPlan(input string) (*string, error) {
 	fileInfo, err := os.Stat(input)
 	if err != nil {
 		return nil, err
@@ -137,7 +136,7 @@ func CarboniferPlan(input string) (*tfjson.Plan, error) {
 	}
 }
 
-func TerraformPlan() (*tfjson.Plan, error) {
+func TerraformPlan() (*string, error) {
 	tf, ctx, err := TerraformInit()
 	if err != nil {
 		return nil, err
@@ -184,7 +183,14 @@ func TerraformPlan() (*tfjson.Plan, error) {
 		log.Infof("error running  Terraform Show: %s", err)
 		return nil, err
 	}
-	return tfplan, nil
+	var bytes []byte
+	bytes, err = json.MarshalIndent(tfplan, "", "  ")
+	if err != nil {
+		return nil, err
+	}
+
+	tfplanJson := string(bytes)
+	return &tfplanJson, nil
 }
 
 func terraformPlanExec(tf *tfexec.Terraform, ctx context.Context, tfPlanFile *os.File) error {
@@ -206,7 +212,7 @@ func terraformPlanExec(tf *tfexec.Terraform, ctx context.Context, tfPlanFile *os
 	return nil
 }
 
-func TerraformShow(fileName string) (*tfjson.Plan, error) {
+func TerraformShow(fileName string) (*string, error) {
 	if strings.HasSuffix(fileName, ".json") {
 		planFilePath := filepath.Join(viper.GetString("workdir"), fileName)
 		log.Debugf("Reading Terraform plan from %v", planFilePath)
@@ -216,11 +222,8 @@ func TerraformShow(fileName string) (*tfjson.Plan, error) {
 		}
 		defer jsonFile.Close()
 		byteValue, _ := os.ReadFile(planFilePath)
-		var tfplan tfjson.Plan
-		err = json.Unmarshal(byteValue, &tfplan)
-		if err != nil {
-			return nil, err
-		}
+
+		tfplan := string(byteValue)
 		return &tfplan, nil
 	}
 
@@ -230,9 +233,16 @@ func TerraformShow(fileName string) (*tfjson.Plan, error) {
 	}
 
 	// Run Terraform Show
-	tfstate, err := tf.ShowPlanFile(*ctx, fileName)
+	tfPlan, err := tf.ShowPlanFile(*ctx, fileName)
 	if err != nil {
 		return nil, err
 	}
-	return tfstate, nil
+	tfPlanJsonBytes, err := json.MarshalIndent(tfPlan, "", "  ")
+	if err != nil {
+		log.Fatalf("Failed to marshal plan: %v", err)
+	}
+
+	tfPlanJson := string(tfPlanJsonBytes)
+
+	return &tfPlanJson, nil
 }

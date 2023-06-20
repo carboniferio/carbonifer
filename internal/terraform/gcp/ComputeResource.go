@@ -4,55 +4,36 @@ import (
 	"github.com/carboniferio/carbonifer/internal/providers/gcp"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
-	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/shopspring/decimal"
+	"github.com/tidwall/gjson"
 )
 
 func getComputeResourceSpecs(
-	resource tfjson.StateResource,
-	tfRefs *tfrefs.References, groupZone interface{}) *resources.ComputeResourceSpecs {
+	resource *gjson.Result,
+	tfRefs *tfrefs.References, zoneParam *string) *resources.ComputeResourceSpecs {
 
-	machine_type := resource.AttributeValues["machine_type"].(string)
-	var zone string
-	if groupZone != nil {
-		zone = groupZone.(string)
-	} else {
-		zone = resource.AttributeValues["zone"].(string)
-	}
+	machine_type := resource.Get("values.machine_type").String()
+
+	zone := GetZones(resource)[0]
 
 	machineType := gcp.GetGCPMachineType(machine_type, zone)
-	CPUType, ok := resource.AttributeValues["cpu_platform"].(string)
-	if !ok {
-		CPUType = ""
-	}
+	CPUType := resource.Get("values.cpu_platform").String()
 
 	var disks []disk
-	bd, ok_bd := resource.AttributeValues["boot_disk"]
-	if ok_bd {
-		bootDisks := bd.([]interface{})
-		for _, bootDiskBlock := range bootDisks {
-			bootDisk := getBootDisk(resource.Address, bootDiskBlock.(map[string]interface{}), tfRefs)
-			disks = append(disks, bootDisk)
-		}
+
+	bootDisks := resource.Get("values.boot_disk.#.initialize_params").Array()
+	for _, bootDiskBlock := range bootDisks {
+		disks = append(disks, getDisk(resource.Get("address").String(), &bootDiskBlock, true, tfRefs))
 	}
 
-	diskListI, ok_disks := resource.AttributeValues["disk"]
-	if ok_disks {
-		diskList := diskListI.([]interface{})
-		for _, diskBlock := range diskList {
-			disk := getDisk(resource.Address, diskBlock.(map[string]interface{}), false, tfRefs)
-			disks = append(disks, disk)
-		}
+	diskList := resource.Get("values.disk").Array()
+	for _, diskBlock := range diskList {
+		disks = append(disks, getDisk(resource.Get("address").String(), &diskBlock, false, tfRefs))
 	}
 
-	sd, ok_sd := resource.AttributeValues["scratch_disk"]
-	if ok_sd {
-		scratchDisks := sd.([]interface{})
-		for range scratchDisks {
-			// Each scratch disk is 375GB
-			//  source: https://cloud.google.com/compute/docs/disks#localssds
-			disks = append(disks, disk{isSSD: true, sizeGb: 375})
-		}
+	scratchDisks := resource.Get("values.scratch_disk").Array()
+	for range scratchDisks {
+		disks = append(disks, disk{isSSD: true, sizeGb: 375})
 	}
 
 	hddSize := decimal.Zero
@@ -66,16 +47,13 @@ func getComputeResourceSpecs(
 	}
 
 	gpus := machineType.GPUTypes
-	gasI, ok := resource.AttributeValues["guest_accelerator"]
-	if ok {
-		guestAccelerators := gasI.([]interface{})
-		for _, gaI := range guestAccelerators {
-			ga := gaI.(map[string]interface{})
-			gpuCount := ga["count"].(float64)
-			gpuType := ga["type"].(string)
-			for i := float64(0); i < gpuCount; i++ {
-				gpus = append(gpus, gpuType)
-			}
+
+	gas := resource.Get("values.guest_accelerator").Array()
+	for _, ga := range gas {
+		gpuCount := ga.Get("count").Int()
+		gpuType := ga.Get("type").String()
+		for i := int64(0); i < gpuCount; i++ {
+			gpus = append(gpus, gpuType)
 		}
 	}
 

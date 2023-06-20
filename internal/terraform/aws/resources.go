@@ -3,11 +3,11 @@ package aws
 import (
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
-	tfjson "github.com/hashicorp/terraform-json"
+	"github.com/tidwall/gjson"
 )
 
 func GetResource(
-	tfResource tfjson.StateResource,
+	tfResource *gjson.Result,
 	tfRefs *tfrefs.References) resources.Resource {
 
 	resourceId := getResourceIdentification(tfResource, tfRefs)

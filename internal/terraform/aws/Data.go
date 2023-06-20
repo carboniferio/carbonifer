@@ -7,9 +7,10 @@ import (
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
 	tfjson "github.com/hashicorp/terraform-json"
+	"github.com/tidwall/gjson"
 )
 
-func GetDataResource(tfResource tfjson.StateResource) resources.DataResource {
+func GetDataResource(tfResource *gjson.Result) resources.DataResource {
 	resourceId := getDataResourceIdentification(tfResource)
 	if resourceId.ResourceType == "aws_ami" {
 		diskMappingI := tfResource.AttributeValues["block_device_mappings"]

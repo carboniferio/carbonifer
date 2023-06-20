@@ -3,17 +3,19 @@ package gcp
 import (
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
-	tfjson "github.com/hashicorp/terraform-json"
+	"github.com/carboniferio/carbonifer/internal/utils"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"github.com/tidwall/gjson"
 )
 
 func getComputeDiskResourceSpecs(
-	resource tfjson.StateResource,
+	resource *gjson.Result,
 	tfRefs *tfrefs.References) *resources.ComputeResourceSpecs {
 
-	disk := getDisk(resource.Address, resource.AttributeValues, false, tfRefs)
+	diskBlock := resource.Get("values")
+	disk := getDisk(resource.Get("address").String(), &diskBlock, false, tfRefs)
 	hddSize := decimal.Zero
 	ssdSize := decimal.Zero
 	if disk.isSSD {
@@ -34,45 +36,27 @@ type disk struct {
 	replicationFactor int32
 }
 
-func getBootDisk(resourceAddress string, bootDiskBlock map[string]interface{}, tfRefs *tfrefs.References) disk {
-	var disk disk
-	initParams := bootDiskBlock["initialize_params"]
-	for _, iP := range initParams.([]interface{}) {
-		initParam := iP.(map[string]interface{})
-		disk = getDisk(resourceAddress, initParam, true, tfRefs)
-
-	}
-	return disk
-}
-
-func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDiskParam bool, tfRefs *tfrefs.References) disk {
+func getDisk(resourceAddress string, diskBlock *gjson.Result, isBootDiskParam bool, tfRefs *tfrefs.References) disk {
 	disk := disk{
-		sizeGb:            viper.GetFloat64("provider.gcp.boot_disk.size"),
+		sizeGb:            0,
 		isSSD:             true,
 		replicationFactor: 1,
 	}
 
 	// Is Boot disk
 	isBootDisk := isBootDiskParam
-	isBootDiskI := diskBlock["boot"]
-	if isBootDiskI != nil {
-		isBootDisk = isBootDiskI.(bool)
+	if diskBlock.Get("boot").Bool() {
+		isBootDisk = true
 	}
 
 	// Get disk type
-	var diskType string
-	diskTypeExpr := diskBlock["type"]
-	if diskTypeExpr == nil {
-		diskTypeExpr = diskBlock["disk_type"]
-	}
-	if diskTypeExpr == nil {
+	diskType := utils.GetOr(diskBlock, []string{"disk_type", "type"}).String()
+	if diskType == "" {
 		if isBootDisk {
 			diskType = viper.GetString("provider.gcp.boot_disk.type")
 		} else {
 			diskType = viper.GetString("provider.gcp.disk.type")
 		}
-	} else {
-		diskType = diskTypeExpr.(string)
 	}
 
 	if diskType == "pd-standard" {
@@ -80,37 +64,26 @@ func getDisk(resourceAddress string, diskBlock map[string]interface{}, isBootDis
 	}
 
 	// Get Disk size
-	declaredSize := diskBlock["size"]
-	if declaredSize == nil {
-		declaredSize = diskBlock["disk_size_gb"]
+	imageRes := diskBlock.Get("image")
+	if imageRes.Exists() {
+		image := (tfRefs.DataResources)[diskBlock.Get("image").String()]
+		disk.sizeGb = (image.(resources.DataImageResource)).DataImageSpecs[0].DiskSizeGb
 	}
-	if declaredSize == nil {
+	declaredSizeRes := utils.GetOr(diskBlock, []string{"size", "disk_size_gb"})
+	if declaredSizeRes.Exists() {
+		disk.sizeGb = declaredSizeRes.Float()
+	}
+	if disk.sizeGb == 0 {
 		if isBootDisk {
 			disk.sizeGb = viper.GetFloat64("provider.gcp.boot_disk.size")
 		} else {
 			disk.sizeGb = viper.GetFloat64("provider.gcp.disk.size")
 		}
-		diskImageLink := diskBlock["image"]
-		if diskImageLink != nil {
-			image, ok := (tfRefs.DataResources)[diskImageLink.(string)]
-			if ok {
-				disk.sizeGb = (image.(resources.DataImageResource)).DataImageSpecs[0].DiskSizeGb
-			} else {
-				log.Warningf("%v : Disk image does not have a size declared, considering it default to be 10Gb ", resourceAddress)
-			}
-		} else {
-			log.Warningf("%v : Boot disk size not declared. Please set it! (otherwise we assume 10gb) ", resourceAddress)
-
-		}
-	} else {
-		disk.sizeGb = declaredSize.(float64)
+		log.Warningf("%v : Disk does not have a size declared, considering it default to be %vGb ", resourceAddress, disk.sizeGb)
 	}
 
-	replicaZones := diskBlock["replica_zones"]
-	if replicaZones != nil {
-		rz := replicaZones.([]interface{})
-		disk.replicationFactor = int32(len(rz))
-	}
+	// Get replication factor
+	disk.replicationFactor = int32(len(GetZones(diskBlock)))
 
 	return disk
 }

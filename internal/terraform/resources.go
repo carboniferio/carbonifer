@@ -9,91 +9,96 @@ import (
 	"github.com/carboniferio/carbonifer/internal/terraform/aws"
 	"github.com/carboniferio/carbonifer/internal/terraform/gcp"
 	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
-	tfjson "github.com/hashicorp/terraform-json"
+	"github.com/tidwall/gjson"
 
 	log "github.com/sirupsen/logrus"
 )
 
-func GetResources(tfPlan *tfjson.Plan) (map[string]resources.Resource, error) {
+func GetResources(tfPlan *string) (map[string]resources.Resource, error) {
 
-	log.Debugf("Reading resources from Terraform plan: %d resources", len(tfPlan.PlannedValues.RootModule.Resources))
+	tfPlanJson := gjson.Parse(*tfPlan)
+	plannedResources := tfPlanJson.Get("planned_values.root_module.resources").Array()
+
+	log.Debugf("Reading resources from Terraform plan: %d resources", len(plannedResources))
 	resourcesMap := make(map[string]resources.Resource)
 	terraformRefs := tfrefs.References{
-		ResourceConfigs:    map[string]*tfjson.ConfigResource{},
-		ResourceReferences: map[string]*tfjson.StateResource{},
+		ResourceConfigs:    map[string]*gjson.Result{},
+		ResourceReferences: map[string]*gjson.Result{},
 		DataResources:      map[string]resources.DataResource{},
 		ProviderConfigs:    map[string]string{},
 	}
-	var planDataRes = tfPlan.PlannedValues.RootModule.Resources
-	if tfPlan.PriorState != nil {
-		planDataRes = tfPlan.PriorState.Values.RootModule.Resources
+	planDataRes := plannedResources
+	if tfPlanJson.Get("prior_state").Exists() {
+		planDataRes = append(planDataRes, tfPlanJson.Get("prior_state.root_module.resources").Array()...)
 	}
 	for _, priorRes := range planDataRes {
-		log.Debugf("Reading prior state resources %v", priorRes.Address)
-		if priorRes.Mode == "data" {
-			if strings.HasPrefix(priorRes.Type, "google") {
-				dataResource := gcp.GetDataResource(*priorRes)
+		log.Debugf("Reading prior state resources %v", priorRes.Get("address").String())
+		if priorRes.Get("mode").String() == "data" {
+			resType := priorRes.Get("type").String()
+			if strings.HasPrefix(resType, "google") {
+				dataResource := gcp.GetDataResource(&priorRes)
 				terraformRefs.DataResources[dataResource.GetKey()] = dataResource
 			}
-			if strings.HasPrefix(priorRes.Type, "aws") {
-				dataResource := aws.GetDataResource(*priorRes)
+			if strings.HasPrefix(resType, "aws") {
+				dataResource := aws.GetDataResource(&priorRes)
 				terraformRefs.DataResources[dataResource.GetKey()] = dataResource
 			}
 		}
 	}
 
 	// Find template first
-	for _, res := range tfPlan.PlannedValues.RootModule.Resources {
-		log.Debugf("Reading resource %v", res.Address)
-		if strings.HasPrefix(res.Type, "google") && (strings.HasSuffix(res.Type, "_template") ||
-			strings.HasSuffix(res.Type, "_autoscaler")) {
-			if res.Mode == "managed" {
-				terraformRefs.ResourceReferences[res.Address] = res
+	for _, res := range plannedResources {
+		resAddress := res.Get("address").String()
+		log.Debugf("Reading resource %v", resAddress)
+		resType := res.Get("type").String()
+		if strings.HasPrefix(resType, "google") && (strings.HasSuffix(resType, "_template") ||
+			strings.HasSuffix(resType, "_autoscaler")) {
+			if res.Get("mode").String() == "managed" {
+				terraformRefs.ResourceReferences[resAddress] = &res
 			}
 		}
 	}
 
 	// Index configurations in order to find relationships
-	for _, resConfig := range tfPlan.Config.RootModule.Resources {
-		log.Debugf("Reading resource config %v", resConfig.Address)
-		if strings.HasPrefix(resConfig.Type, "google") {
-			if resConfig.Mode == "managed" {
-				terraformRefs.ResourceConfigs[resConfig.Address] = resConfig
+	for _, resConfig := range tfPlanJson.Get("configuration.root_module.resources").Array() {
+		resAddress := resConfig.Get("address").String()
+		resType := resConfig.Get("type").String()
+		log.Debugf("Reading resource config %v", resAddress)
+		if strings.HasPrefix(resType, "google") {
+			if resConfig.Get("mode").String() == "managed" {
+				terraformRefs.ResourceConfigs[resAddress] = &resConfig
 			}
 		}
 	}
 
 	// Get default values
-	for provider, resConfig := range tfPlan.Config.ProviderConfigs {
+	for provider, resConfig := range tfPlanJson.Get("configuration.provider_config").Map() {
 		if provider == "aws" {
-			log.Debugf("Reading provider config %v", resConfig.Name)
+			log.Debugf("Reading provider config %v", resConfig.Get("name").String())
 			// TODO #58 Improve way we get default regions (env var, profile...)
-			var region interface{}
-			regionExpr := resConfig.Expressions["region"]
-			if regionExpr != nil {
-				region = regionExpr.ConstantValue
-			} else {
+			region := resConfig.Get("aws.expressions.region.constant_value").String()
+			if region == "" {
 				if os.Getenv("AWS_REGION") != "" {
 					region = os.Getenv("AWS_REGION")
 				}
 			}
-			if region != nil {
-				terraformRefs.ProviderConfigs["region"] = region.(string)
+			if region != "" {
+				terraformRefs.ProviderConfigs["region"] = region
 			}
 		}
 	}
 
 	// Get All resources
-	for _, res := range tfPlan.PlannedValues.RootModule.Resources {
-		log.Debugf("Reading resource %v", res.Address)
+	for _, res := range plannedResources {
+		log.Debugf("Reading resource %v", res.Get("address").String())
 
-		if res.Mode == "managed" {
+		if res.Get("mode").String() == "managed" {
 			var resource resources.Resource
-			prefix := strings.Split(res.Type, "_")[0]
+			prefix := strings.Split(res.Get("type").String(), "_")[0]
 			if prefix == "google" {
-				resource = gcp.GetResource(*res, &terraformRefs)
+				resource = gcp.GetResource(&res, &terraformRefs)
 			} else if prefix == "aws" {
-				resource = aws.GetResource(*res, &terraformRefs)
+				resource = aws.GetResource(&res, &terraformRefs)
 			} else {
 				log.Warnf("Skipping resource %s. Provider not supported : %s", res.Type, prefix)
 			}

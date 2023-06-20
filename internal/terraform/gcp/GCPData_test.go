@@ -5,6 +5,7 @@ import (
 
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/carboniferio/carbonifer/internal/testutils"
 	_ "github.com/carboniferio/carbonifer/internal/testutils"
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/stretchr/testify/assert"
@@ -51,7 +52,7 @@ func TestGetDataResource(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := GetDataResource(tt.args.tfResource)
+			got := GetDataResource(testutils.TfResourceToJson(tt.args.tfResource))
 			assert.Equal(t, tt.want, got)
 		})
 	}

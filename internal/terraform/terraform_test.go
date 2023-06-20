@@ -11,6 +11,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
+	"github.com/tidwall/gjson"
 )
 
 func TestGetTerraformExec(t *testing.T) {
@@ -113,7 +114,8 @@ func TestTerraformShow_JSON(t *testing.T) {
 
 	tfPlan, err := CarboniferPlan("test/terraform/planJson/plan.json")
 	assert.NoError(t, err)
-	assert.Equal(t, tfPlan.TerraformVersion, "1.3.7")
+	tfVersion := gjson.Get(*tfPlan, "terraform_version").String()
+	assert.Equal(t, "1.3.7", tfVersion)
 
 }
 
@@ -131,7 +133,8 @@ func TestTerraformShow_RawPlan(t *testing.T) {
 
 	tfPlan, err := CarboniferPlan("test/terraform/planRaw/plan.tfplan")
 	assert.NoError(t, err)
-	assert.Equal(t, tfPlan.TerraformVersion, "1.4.6")
+	tfVersion := gjson.Get(*tfPlan, "terraform_version").String()
+	assert.Equal(t, tfVersion, "1.4.6")
 
 }
 
@@ -154,10 +157,13 @@ func TestTerraformShow_SetVarDifferentFromPlanFile(t *testing.T) {
 	wd := path.Join(testutils.RootDir, "test/terraform/planRaw")
 	plan, err := CarboniferPlan(wd)
 	assert.NoError(t, err)
-	assert.Equal(t, plan.Variables["machine_type"].Value, "f1-medium")
+	log.Info(plan)
+	machineTypeVar := gjson.Get(*plan, "variables.machine_type.value").String()
+	assert.Equal(t, "f1-medium", machineTypeVar)
 
 	wd2 := path.Join(testutils.RootDir, "test/terraform/planRaw/plan.tfplan")
 	plan2, err2 := CarboniferPlan(wd2)
 	assert.NoError(t, err2)
-	assert.Equal(t, plan2.Variables["machine_type"].Value, "f1-micro")
+	machineTypeVar2 := gjson.Get(*plan2, "variables.machine_type.value").String()
+	assert.Equal(t, "f1-micro", machineTypeVar2)
 }

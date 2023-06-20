@@ -2,38 +2,23 @@ package gcp
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
-	tfjson "github.com/hashicorp/terraform-json"
+	"github.com/tidwall/gjson"
 )
 
-func getResourceIdentification(resource tfjson.StateResource) *resources.ResourceIdentification {
-	region := resource.AttributeValues["region"]
-	if region == nil {
-		zone := resource.AttributeValues["zone"]
-		zones := resource.AttributeValues["replica_zones"]
-		if zones == nil {
-			zones = resource.AttributeValues["distribution_policy_zones"]
-		}
-		if zone != nil {
-			region = strings.Join(strings.Split(zone.(string), "-")[:2], "-")
-		} else if zones != nil {
-			region = strings.Join(strings.Split(zones.([]interface{})[0].(string), "-")[:2], "-")
-		} else {
-			region = ""
-		}
-	}
+func getResourceIdentification(resource *gjson.Result) *resources.ResourceIdentification {
+	region := GetRegion(resource)
 
-	name := resource.Name
-	if resource.Index != nil {
-		name = fmt.Sprintf("%v[%v]", resource.Name, resource.Index)
+	name := resource.Get("name").String()
+	if resource.Get("index").Exists() {
+		name = fmt.Sprintf("%v[%v]", resource.Get("name").String(), resource.Get("index").Int())
 	}
 
 	return &resources.ResourceIdentification{
 		Name:         name,
-		ResourceType: resource.Type,
+		ResourceType: resource.Get("type").String(),
 		Provider:     providers.GCP,
 		Region:       fmt.Sprint(region),
 		Count:        1,
