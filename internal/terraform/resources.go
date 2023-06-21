@@ -2,14 +2,12 @@ package terraform
 
 import (
 	"encoding/json"
-	"os"
 	"strings"
 
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/carboniferio/carbonifer/internal/terraform/aws"
 	"github.com/carboniferio/carbonifer/internal/terraform/gcp"
 	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
-	"github.com/carboniferio/carbonifer/internal/utils"
 	tfjson "github.com/hashicorp/terraform-json"
 
 	log "github.com/sirupsen/logrus"
@@ -67,24 +65,7 @@ func GetResources(tfPlan *tfjson.Plan) (map[string]resources.Resource, error) {
 	// Get default values
 	for provider, resConfig := range tfPlan.Config.ProviderConfigs {
 		if provider == "aws" {
-			log.Debugf("Reading provider config %v", resConfig.Name)
-			// TODO #58 Improve way we get default regions (env var, profile...)
-			var region interface{}
-			regionExpr := resConfig.Expressions["region"]
-			if regionExpr != nil {
-				var err error
-				region, err = utils.GetValueOfExpression(regionExpr, tfPlan)
-				if err != nil {
-					log.Fatalf("Error getting region from provider config %v", err)
-				}
-			} else {
-				if os.Getenv("AWS_REGION") != "" {
-					region = os.Getenv("AWS_REGION")
-				}
-			}
-			if region != nil {
-				terraformRefs.ProviderConfigs["region"] = region.(string)
-			}
+			aws.GetDefaults(resConfig, tfPlan, &terraformRefs)
 		}
 	}
 
