@@ -9,6 +9,7 @@ import (
 	"github.com/carboniferio/carbonifer/internal/terraform/aws"
 	"github.com/carboniferio/carbonifer/internal/terraform/gcp"
 	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
+	"github.com/carboniferio/carbonifer/internal/utils"
 	tfjson "github.com/hashicorp/terraform-json"
 
 	log "github.com/sirupsen/logrus"
@@ -71,7 +72,11 @@ func GetResources(tfPlan *tfjson.Plan) (map[string]resources.Resource, error) {
 			var region interface{}
 			regionExpr := resConfig.Expressions["region"]
 			if regionExpr != nil {
-				region = regionExpr.ConstantValue
+				var err error
+				region, err = utils.GetValueOfExpression(regionExpr, tfPlan)
+				if err != nil {
+					log.Fatalf("Error getting region from provider config %v", err)
+				}
 			} else {
 				if os.Getenv("AWS_REGION") != "" {
 					region = os.Getenv("AWS_REGION")
