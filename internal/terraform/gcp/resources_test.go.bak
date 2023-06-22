@@ -198,7 +198,7 @@ func TestGetResource(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			resource := testutils.TfResourceToJson(tt.args.tfResource)
+			resource, _ := testutils.TfResourceToJson(tt.args.tfResource)
 			got := GetResource(resource, nil)
 			assert.Equal(t, tt.want, got)
 		})

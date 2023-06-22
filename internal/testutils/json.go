@@ -2,18 +2,19 @@ package testutils
 
 import (
 	"encoding/json"
-	"log"
 
 	tfjson "github.com/hashicorp/terraform-json"
-	"github.com/tidwall/gjson"
 )
 
-func TfResourceToJson(stateResource tfjson.StateResource) *gjson.Result {
-	bytes, err := json.MarshalIndent(stateResource, "", "  ")
+func TfResourceToJson(resource *tfjson.StateResource) (*map[string]interface{}, error) {
+	var result map[string]interface{}
+	bytes, err := json.Marshal(resource)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	res := gjson.ParseBytes(bytes)
-
-	return &res
+	err = json.Unmarshal(bytes, &result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
 }

@@ -108,7 +108,7 @@ func TerraformInit() (*tfexec.Terraform, *context.Context, error) {
 	return tf, &ctx, err
 }
 
-func CarboniferPlan(input string) (*string, error) {
+func CarboniferPlan(input string) (*map[string]interface{}, error) {
 	fileInfo, err := os.Stat(input)
 	if err != nil {
 		return nil, err
@@ -136,7 +136,7 @@ func CarboniferPlan(input string) (*string, error) {
 	}
 }
 
-func TerraformPlan() (*string, error) {
+func TerraformPlan() (*map[string]interface{}, error) {
 	tf, ctx, err := TerraformInit()
 	if err != nil {
 		return nil, err
@@ -189,7 +189,11 @@ func TerraformPlan() (*string, error) {
 		return nil, err
 	}
 
-	tfplanJson := string(bytes)
+	var tfplanJson map[string]interface{}
+	err = json.Unmarshal(bytes, &tfplanJson)
+	if err != nil {
+		return nil, err
+	}
 	return &tfplanJson, nil
 }
 
@@ -212,7 +216,7 @@ func terraformPlanExec(tf *tfexec.Terraform, ctx context.Context, tfPlanFile *os
 	return nil
 }
 
-func TerraformShow(fileName string) (*string, error) {
+func TerraformShow(fileName string) (*map[string]interface{}, error) {
 	if strings.HasSuffix(fileName, ".json") {
 		planFilePath := filepath.Join(viper.GetString("workdir"), fileName)
 		log.Debugf("Reading Terraform plan from %v", planFilePath)
@@ -223,7 +227,11 @@ func TerraformShow(fileName string) (*string, error) {
 		defer jsonFile.Close()
 		byteValue, _ := os.ReadFile(planFilePath)
 
-		tfplan := string(byteValue)
+		var tfplan map[string]interface{}
+		err = json.Unmarshal(byteValue, &tfplan)
+		if err != nil {
+			return nil, err
+		}
 		return &tfplan, nil
 	}
 
@@ -242,7 +250,11 @@ func TerraformShow(fileName string) (*string, error) {
 		log.Fatalf("Failed to marshal plan: %v", err)
 	}
 
-	tfPlanJson := string(tfPlanJsonBytes)
+	var tfPlanJson map[string]interface{}
+	err = json.Unmarshal(tfPlanJsonBytes, &tfPlanJson)
+	if err != nil {
+		return nil, err
+	}
 
 	return &tfPlanJson, nil
 }

@@ -1,0 +1,5 @@
+general:
+  disk_types:
+    default: ssd
+    types:
+      pd-standard: hdd

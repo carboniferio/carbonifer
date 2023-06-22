@@ -62,7 +62,7 @@ Example usages:
 		// Read resources from terraform plan
 		resources, err := terraform.GetResources(tfPlan)
 		if err != nil {
-			log.Fatal(err)
+			log.Panic(err)
 		}
 
 		// Estimate CO2 emissions

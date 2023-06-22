@@ -1,120 +1,223 @@
 package terraform
 
 import (
-	"encoding/json"
-	"os"
 	"strings"
 
+	"github.com/PaesslerAG/jsonpath"
+	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
-	"github.com/carboniferio/carbonifer/internal/terraform/aws"
-	"github.com/carboniferio/carbonifer/internal/terraform/gcp"
-	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
-	"github.com/tidwall/gjson"
 
 	log "github.com/sirupsen/logrus"
 )
 
-func GetResources(tfPlan *string) (map[string]resources.Resource, error) {
+type DiskTypes struct {
+	Default string                 `json:"default"`
+	Types   map[string]interface{} `json:"types"`
+}
 
-	tfPlanJson := gjson.Parse(*tfPlan)
-	plannedResources := tfPlanJson.Get("planned_values.root_module.resources").Array()
+type GeneralConfig struct {
+	JsonData map[string]interface{} `json:"json_data"`
+	DiskType DiskTypes              `json:"disk_types"`
+}
+
+var GeneralMappingConfig *GeneralConfig
+var TfPlan *map[string]interface{}
+
+func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource, error) {
+	TfPlan = tfplan
+
+	// Get resources from Terraform plan
+	plannedResourcesRaw, err := jsonpath.Get("$.planned_values.root_module.resources", *TfPlan)
+	if err != nil {
+		return nil, err
+	}
+	plannedResources := plannedResourcesRaw.([]interface{})
 
 	log.Debugf("Reading resources from Terraform plan: %d resources", len(plannedResources))
 	resourcesMap := make(map[string]resources.Resource)
-	terraformRefs := tfrefs.References{
-		ResourceConfigs:    map[string]*gjson.Result{},
-		ResourceReferences: map[string]*gjson.Result{},
-		DataResources:      map[string]resources.DataResource{},
-		ProviderConfigs:    map[string]string{},
+
+	mappings, err := LoadMapping("internal/terraform/gcp/mappings")
+	if err != nil {
+		return nil, err
 	}
-	planDataRes := plannedResources
-	if tfPlanJson.Get("prior_state").Exists() {
-		planDataRes = append(planDataRes, tfPlanJson.Get("prior_state.root_module.resources").Array()...)
-	}
-	for _, priorRes := range planDataRes {
-		log.Debugf("Reading prior state resources %v", priorRes.Get("address").String())
-		if priorRes.Get("mode").String() == "data" {
-			resType := priorRes.Get("type").String()
-			if strings.HasPrefix(resType, "google") {
-				dataResource := gcp.GetDataResource(&priorRes)
-				terraformRefs.DataResources[dataResource.GetKey()] = dataResource
-			}
-			if strings.HasPrefix(resType, "aws") {
-				dataResource := aws.GetDataResource(&priorRes)
-				terraformRefs.DataResources[dataResource.GetKey()] = dataResource
-			}
+	// Get general config
+	GeneralMappingConfig = GetGeneralConfig(mappings)
+
+	// Get compute resources
+	for resourceType, mapping := range mappings.ComputeResource {
+		resources, err := GetResourcesOfType(resourceType, mapping.(map[string]interface{}), mappings)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, resource := range resources {
+			resourcesMap[resource.GetAddress()] = resource
 		}
 	}
 
-	// Find template first
-	for _, res := range plannedResources {
-		resAddress := res.Get("address").String()
-		log.Debugf("Reading resource %v", resAddress)
-		resType := res.Get("type").String()
-		if strings.HasPrefix(resType, "google") && (strings.HasSuffix(resType, "_template") ||
-			strings.HasSuffix(resType, "_autoscaler")) {
-			if res.Get("mode").String() == "managed" {
-				terraformRefs.ResourceReferences[resAddress] = &res
-			}
-		}
-	}
-
-	// Index configurations in order to find relationships
-	for _, resConfig := range tfPlanJson.Get("configuration.root_module.resources").Array() {
-		resAddress := resConfig.Get("address").String()
-		resType := resConfig.Get("type").String()
-		log.Debugf("Reading resource config %v", resAddress)
-		if strings.HasPrefix(resType, "google") {
-			if resConfig.Get("mode").String() == "managed" {
-				terraformRefs.ResourceConfigs[resAddress] = &resConfig
-			}
-		}
-	}
-
-	// Get default values
-	for provider, resConfig := range tfPlanJson.Get("configuration.provider_config").Map() {
-		if provider == "aws" {
-			log.Debugf("Reading provider config %v", resConfig.Get("name").String())
-			// TODO #58 Improve way we get default regions (env var, profile...)
-			region := resConfig.Get("aws.expressions.region.constant_value").String()
-			if region == "" {
-				if os.Getenv("AWS_REGION") != "" {
-					region = os.Getenv("AWS_REGION")
-				}
-			}
-			if region != "" {
-				terraformRefs.ProviderConfigs["region"] = region
-			}
-		}
-	}
-
-	// Get All resources
-	for _, res := range plannedResources {
-		log.Debugf("Reading resource %v", res.Get("address").String())
-
-		if res.Get("mode").String() == "managed" {
-			var resource resources.Resource
-			prefix := strings.Split(res.Get("type").String(), "_")[0]
-			if prefix == "google" {
-				resource = gcp.GetResource(&res, &terraformRefs)
-			} else if prefix == "aws" {
-				resource = aws.GetResource(&res, &terraformRefs)
-			} else {
-				log.Warnf("Skipping resource %s. Provider not supported : %s", res.Type, prefix)
-			}
-			if resource != nil {
-				resourcesMap[resource.GetAddress()] = resource
-				if log.IsLevelEnabled(log.DebugLevel) {
-					computeJsonStr := "<RESOURCE TYPE CURRENTLY NOT SUPPORTED>"
-					if resource.IsSupported() {
-						computeJson, _ := json.Marshal(resource)
-						computeJsonStr = string(computeJson)
-					}
-					log.Debugf("  Compute resource : %v", string(computeJsonStr))
-				}
-			}
-		}
-
-	}
 	return resourcesMap, nil
+}
+
+func GetGeneralConfig(mappings *Mappings) *GeneralConfig {
+	generalConfig := &GeneralConfig{}
+	if mappings.General != nil {
+		generalConfigJsonData, ok := mappings.General["json_data"]
+		if ok {
+			generalConfig.JsonData = generalConfigJsonData.(map[string]interface{})
+		}
+		generalConfigDiskTypesI, ok := mappings.General["disk_types"]
+		if ok {
+			generalConfigDiskTypes, err := ConvertInterfaceToMap(generalConfigDiskTypesI)
+			if err != nil {
+				log.Fatalf("Cannot convert general.disk_types to map: %v", err)
+			}
+
+			types, err := convertMapKeysToStrings(generalConfigDiskTypes["types"].(map[interface{}]interface{}))
+			if err != nil {
+				log.Fatalf("Cannot convert general.disk_types.types to map: %v", err)
+			}
+			generalConfig.DiskType = DiskTypes{
+				Default: generalConfigDiskTypes["default"].(string),
+				Types:   types,
+			}
+		}
+	}
+	return generalConfig
+}
+
+func GetResourcesOfType(resourceType string, mapping map[string]interface{}, mappings *Mappings) ([]resources.Resource, error) {
+	pathsProperty := mapping["paths"]
+	paths, err := ReadPaths(resourceType, pathsProperty)
+	if err != nil {
+		return nil, err
+	}
+
+	resourcesResult := []resources.Resource{}
+	for _, path := range paths {
+		log.Debugf("  Reading resources of type '%s' from path '%s'", resourceType, path)
+		resourcesRaw, err := jsonpath.Get(path.(string), *TfPlan)
+		if err != nil {
+			return nil, err
+		}
+		resourcesFound := resourcesRaw.([]interface{})
+		log.Debugf("  Found %d resources of type '%s'", len(resourcesFound), resourceType)
+		for _, resourceI := range resourcesFound {
+			resourcesResult, err = GetComputeResource(resourceI, resourceType, mapping, resourcesResult)
+			if err != nil {
+				return nil, err
+			}
+
+		}
+	}
+	return resourcesResult, nil
+
+}
+
+func GetComputeResource(resourceI interface{}, resourceType string, mapping map[string]interface{}, resourcesResult []resources.Resource) ([]resources.Resource, error) {
+	resourceAdress := resourceI.(map[string]interface{})["address"].(string)
+	resource := resourceI.(map[string]interface{})
+	name, err := GetString("name", resourceAdress, resource, mapping)
+	if err != nil {
+		return nil, err
+	}
+	region, err := GetString("region", resourceAdress, resource, mapping)
+	if err != nil {
+		return nil, err
+	}
+
+	computeResource := resources.ComputeResource{
+		Identification: &resources.ResourceIdentification{
+			Name:         *name,
+			ResourceType: resourceAdress,
+			Provider:     providers.GCP,
+			Region:       *region,
+		},
+		Specs: &resources.ComputeResourceSpecs{},
+	}
+	vcpus, err := GetValue("vCPUs", resourceAdress, resource, mapping)
+	if err != nil {
+		return nil, err
+	}
+	if vcpus != nil && vcpus.Value != nil {
+		computeResource.Specs.VCPUs = int32(vcpus.Value.(float64))
+	}
+	memory, err := GetValue("memory", resourceAdress, resource, mapping)
+	if err != nil {
+		return nil, err
+	}
+	if memory != nil && memory.Value != nil {
+		computeResource.Specs.MemoryMb = int32(memory.Value.(float64))
+		unit := strings.ToLower(*memory.Unit)
+		switch unit {
+		case "gb":
+			computeResource.Specs.MemoryMb *= 1024
+		case "tb":
+			computeResource.Specs.MemoryMb *= 1024 * 1024
+		case "pb":
+			computeResource.Specs.MemoryMb *= 1024 * 1024 * 1024
+		case "mb":
+			// nothing to do
+		case "kb":
+			computeResource.Specs.MemoryMb /= 1024
+		case "b":
+			computeResource.Specs.MemoryMb /= 1024 * 1024
+		default:
+			log.Fatalf("Unknown unit for memory: %v", unit)
+		}
+	}
+	// TODO: add GPU
+	// TODO: add CPU type
+	// TODO: add replication factor
+
+	storages, err := GetSlice("storage", resourceAdress, resource, mapping)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, storageI := range storages {
+		storage := storageI.(Storage)
+		size := storage.SizeGb
+		if storage.IsSSD {
+			computeResource.Specs.SsdStorage = computeResource.Specs.SsdStorage.Add(size)
+		} else {
+			computeResource.Specs.SsdStorage = computeResource.Specs.HddStorage.Add(size)
+		}
+	}
+
+	resourcesResult = append(resourcesResult, computeResource)
+	log.Debugf("    Reading resource '%s'", computeResource.GetAddress())
+	return resourcesResult, nil
+}
+
+func GetPropertyMappings(mapping map[string]interface{}, key string, resourceType string) []map[string]interface{} {
+	resourcePropertiesMapping := GetMappingProperties(mapping)
+	mappingPropertyI, ok := resourcePropertiesMapping[key]
+	if !ok {
+		log.Debugf("Cannot find resource properties mapping %v of resource type %v", key, resourceType)
+		return nil
+	}
+	var propertyMappings []map[string]interface{}
+	propertyMappingsI, ok := mappingPropertyI.([]interface{})
+	if !ok {
+		mappingPropertyUnique, ok := mappingPropertyI.(map[string]interface{})
+		if !ok {
+			mappingPropertyUniqueI, ok := mappingPropertyI.(map[interface{}]interface{})
+			if !ok {
+				log.Fatalf("Cannot find property mapping %v of resource type %v", key, resourceType)
+			}
+			var errConv error
+			mappingPropertyUnique, errConv = convertMapKeysToStrings(mappingPropertyUniqueI)
+			if errConv != nil {
+				log.Fatalf("Cannot convert property mapping %v of resource type %v: %v", key, resourceType, errConv)
+			}
+		}
+		propertyMappings = []map[string]interface{}{mappingPropertyUnique}
+	} else {
+		var errMapping error
+		propertyMappings, errMapping = ConvertInterfaceSlicesToMapSlice(propertyMappingsI)
+		if errMapping != nil {
+			log.Fatalf("Cannot convert property mapping %v of resource type %v: %v", key, resourceType, errMapping)
+		}
+	}
+	return propertyMappings
 }

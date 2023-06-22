@@ -55,7 +55,7 @@ func loadEmissionsPerRegion(dataFile string) map[string]Emissions {
 	// Read the CSV records
 	var records []EmissionsCSV
 	regionEmissionFile := data.ReadDataFile(dataFile)
-	log.Debugf("reading GCP region/grid emissions from: %v", regionEmissionFile)
+	log.Debugf("reading GCP region/grid emissions from: %v", dataFile)
 	if err := easycsv.NewReader(strings.NewReader(string(regionEmissionFile))).ReadAll(&records); err != nil {
 		log.Fatal(err)
 	}
