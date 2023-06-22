@@ -6,6 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
+	_ "github.com/carboniferio/carbonifer/internal/testutils"
+
+	"github.com/carboniferio/carbonifer/internal/utils"
 	tfjson "github.com/hashicorp/terraform-json"
 	"github.com/stretchr/testify/assert"
 )
@@ -115,4 +118,108 @@ func Test_getDefaultRegion_AWSConfigFile(t *testing.T) {
 	region := getDefaultRegion(awsConfigs, tfPlan)
 	assert.Equal(t, "region_from_config_file", region)
 
+}
+
+func Test_getDefaultRegion_ModuleOutput(t *testing.T) {
+	awsConfigs := &tfjson.ProviderConfig{
+		Name: "aws",
+		Expressions: map[string]*tfjson.Expression{
+			"region": {
+				ExpressionData: &tfjson.ExpressionData{
+					References: []string{
+						"module.module1.region_output",
+						"module.globals"},
+				},
+			},
+		},
+	}
+
+	tfPlan := &tfjson.Plan{
+		Config: &tfjson.Config{
+			RootModule: &tfjson.ConfigModule{
+				ModuleCalls: map[string]*tfjson.ModuleCall{
+					"module1": {
+						Module: &tfjson.ConfigModule{
+							Outputs: map[string]*tfjson.ConfigOutput{
+								"region_output": {
+									Expression: &tfjson.Expression{
+										ExpressionData: &tfjson.ExpressionData{
+											References: []string{"var.region"},
+										},
+									},
+									Description: "The AWS region to use for resources.",
+									Sensitive:   false,
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Variables: map[string]*tfjson.PlanVariable{
+			"region": {
+				Value: "region_from_module_output",
+			},
+		},
+	}
+
+	region := getDefaultRegion(awsConfigs, tfPlan)
+	assert.Equal(t, "region_from_module_output", region)
+}
+
+func Test_getDefaultRegion_ModuleVariable(t *testing.T) {
+	awsConfigs := &tfjson.ProviderConfig{
+		Name: "aws",
+		Expressions: map[string]*tfjson.Expression{
+			"region": {
+				ExpressionData: &tfjson.ExpressionData{
+					References: []string{"module.globals.common_region"},
+				},
+			},
+		},
+	}
+
+	tfPlan := &tfjson.Plan{
+		Config: &tfjson.Config{
+			RootModule: &tfjson.ConfigModule{
+				ModuleCalls: map[string]*tfjson.ModuleCall{
+					"globals": {
+						Module: &tfjson.ConfigModule{
+							Outputs: map[string]*tfjson.ConfigOutput{
+								"common_region": {
+									Expression: &tfjson.Expression{
+										ExpressionData: &tfjson.ExpressionData{
+											References: []string{"var.region"},
+										},
+									},
+									Description: "The AWS region to use for resources.",
+								},
+							},
+							Variables: map[string]*tfjson.ConfigVariable{
+								"region": {
+									Default: "region_module_variable",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	region := getDefaultRegion(awsConfigs, tfPlan)
+	assert.Equal(t, "region_module_variable", region)
+}
+
+func TestGetValueOfExpression_ModuleCalls(t *testing.T) {
+	plan := utils.LoadPlan("test/terraform/planJson/plan_with_module_calls.json") // Replace with the path to your plan JSON
+	expr := &tfjson.Expression{
+		ExpressionData: &tfjson.ExpressionData{
+			References: []string{"module.module2.module1_region"},
+		},
+	}
+
+	value, err := utils.GetValueOfExpression(expr, plan)
+	assert.NoError(t, err)
+	assert.Equal(t, "region_from_module_calls", value)
 }
