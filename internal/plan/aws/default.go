@@ -17,11 +17,11 @@ func GetDefaults(awsConfig *tfjson.ProviderConfig, tfPlan *tfjson.Plan, terrafor
 
 	region := getDefaultRegion(awsConfig, tfPlan)
 	if region != nil {
-		terraformRefs.ProviderConfigs["region"] = region.(string)
+		terraformRefs.ProviderConfigs["region"] = *region
 	}
 }
 
-func getDefaultRegion(awsConfig *tfjson.ProviderConfig, tfPlan *tfjson.Plan) interface{} {
+func getDefaultRegion(awsConfig *tfjson.ProviderConfig, tfPlan *tfjson.Plan) *string {
 	var region interface{}
 	regionExpr := awsConfig.Expressions["region"]
 	if regionExpr != nil {
@@ -61,5 +61,10 @@ func getDefaultRegion(awsConfig *tfjson.ProviderConfig, tfPlan *tfjson.Plan) int
 			region, _ = svc.Region()
 		}
 	}
-	return region
+	regionPtr, ok := region.(*string)
+	if ok {
+		return regionPtr
+	}
+	regionString := region.(string)
+	return &regionString
 }

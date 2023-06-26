@@ -1,12 +1,12 @@
-package terraform
+package plan
 
 import (
 	"encoding/json"
 	"strings"
 
+	"github.com/carboniferio/carbonifer/internal/plan/aws"
+	"github.com/carboniferio/carbonifer/internal/plan/gcp"
 	"github.com/carboniferio/carbonifer/internal/resources"
-	"github.com/carboniferio/carbonifer/internal/terraform/aws"
-	"github.com/carboniferio/carbonifer/internal/terraform/gcp"
 	"github.com/carboniferio/carbonifer/internal/terraform/tfrefs"
 	tfjson "github.com/hashicorp/terraform-json"
 

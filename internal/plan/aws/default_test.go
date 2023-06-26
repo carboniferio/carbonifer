@@ -28,7 +28,7 @@ func Test_getDefaultRegion_providerConstant(t *testing.T) {
 	tfPlan := &tfjson.Plan{}
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "test1", region)
+	assert.Equal(t, "test1", *region)
 
 }
 
@@ -53,7 +53,7 @@ func Test_getDefaultRegion_providerVariable(t *testing.T) {
 	}
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "test2", region)
+	assert.Equal(t, "test2", *region)
 
 }
 
@@ -68,7 +68,7 @@ func Test_getDefaultRegion_EnvVar(t *testing.T) {
 	t.Setenv("AWS_REGION", "test3")
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "test3", region)
+	assert.Equal(t, "test3", *region)
 
 }
 
@@ -83,7 +83,7 @@ func Test_getDefaultRegion_EnvDefaultVar(t *testing.T) {
 	t.Setenv("AWS_DEFAULT_REGION", "test4")
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "test4", region)
+	assert.Equal(t, "test4", *region)
 
 }
 
@@ -116,7 +116,7 @@ func Test_getDefaultRegion_AWSConfigFile(t *testing.T) {
 	tfPlan := &tfjson.Plan{}
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "region_from_config_file", region)
+	assert.Equal(t, "region_from_config_file", *region)
 
 }
 
@@ -164,7 +164,7 @@ func Test_getDefaultRegion_ModuleOutput(t *testing.T) {
 	}
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "region_from_module_output", region)
+	assert.Equal(t, "region_from_module_output", *region)
 }
 
 func Test_getDefaultRegion_ModuleVariable(t *testing.T) {
@@ -208,7 +208,7 @@ func Test_getDefaultRegion_ModuleVariable(t *testing.T) {
 	}
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "region_module_variable", region)
+	assert.Equal(t, "region_module_variable", *region)
 }
 
 func TestGetValueOfExpression_ModuleCalls(t *testing.T) {
