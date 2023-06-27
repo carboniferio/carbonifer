@@ -3,9 +3,12 @@ package aws
 import (
 	"io"
 	"os"
+	"path"
 	"path/filepath"
 	"testing"
 
+	"github.com/carboniferio/carbonifer/internal/terraform"
+	"github.com/carboniferio/carbonifer/internal/testutils"
 	_ "github.com/carboniferio/carbonifer/internal/testutils"
 
 	"github.com/carboniferio/carbonifer/internal/utils"
@@ -28,7 +31,7 @@ func Test_getDefaultRegion_providerConstant(t *testing.T) {
 	tfPlan := &tfjson.Plan{}
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "test1", region)
+	assert.Equal(t, "test1", *region)
 
 }
 
@@ -53,7 +56,7 @@ func Test_getDefaultRegion_providerVariable(t *testing.T) {
 	}
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "test2", region)
+	assert.Equal(t, "test2", *region)
 
 }
 
@@ -68,7 +71,7 @@ func Test_getDefaultRegion_EnvVar(t *testing.T) {
 	t.Setenv("AWS_REGION", "test3")
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "test3", region)
+	assert.Equal(t, "test3", *region)
 
 }
 
@@ -83,7 +86,7 @@ func Test_getDefaultRegion_EnvDefaultVar(t *testing.T) {
 	t.Setenv("AWS_DEFAULT_REGION", "test4")
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "test4", region)
+	assert.Equal(t, "test4", *region)
 
 }
 
@@ -116,7 +119,7 @@ func Test_getDefaultRegion_AWSConfigFile(t *testing.T) {
 	tfPlan := &tfjson.Plan{}
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "region_from_config_file", region)
+	assert.Equal(t, "region_from_config_file", *region)
 
 }
 
@@ -164,7 +167,7 @@ func Test_getDefaultRegion_ModuleOutput(t *testing.T) {
 	}
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "region_from_module_output", region)
+	assert.Equal(t, "region_from_module_output", *region)
 }
 
 func Test_getDefaultRegion_ModuleVariable(t *testing.T) {
@@ -208,7 +211,7 @@ func Test_getDefaultRegion_ModuleVariable(t *testing.T) {
 	}
 
 	region := getDefaultRegion(awsConfigs, tfPlan)
-	assert.Equal(t, "region_module_variable", region)
+	assert.Equal(t, "region_module_variable", *region)
 }
 
 func TestGetValueOfExpression_ModuleCalls(t *testing.T) {
@@ -222,4 +225,21 @@ func TestGetValueOfExpression_ModuleCalls(t *testing.T) {
 	value, err := utils.GetValueOfExpression(expr, plan)
 	assert.NoError(t, err)
 	assert.Equal(t, "region_from_module_calls", value)
+}
+
+func TestGetValueOfExpression_ModuleLocalVar(t *testing.T) {
+	terraform.ResetTerraformExec()
+	wd := path.Join(testutils.RootDir, "test/terraform/gcp_calling_module")
+
+	plan, err := terraform.CarboniferPlan(wd) // Replace with the path to your plan JSON
+	assert.NoError(t, err)
+	expr := &tfjson.Expression{
+		ExpressionData: &tfjson.ExpressionData{
+			References: []string{"module.globals.common_region"},
+		},
+	}
+
+	value, err := utils.GetValueOfExpression(expr, plan)
+	assert.NoError(t, err)
+	assert.Equal(t, "local_module_region", value)
 }

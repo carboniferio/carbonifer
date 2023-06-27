@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/carboniferio/carbonifer/internal/terraform"
 	tfjson "github.com/hashicorp/terraform-json"
 )
 
@@ -25,24 +26,27 @@ func GetValueOfExpression(expression *tfjson.Expression, tfPlan *tfjson.Plan, co
 
 	for _, reference := range expression.References {
 		refType, ref := splitModuleReference(reference)
+		var valueInterpolated interface{}
 		switch refType {
+		case "local":
+			return nil, nil
 		case "var":
 			// First, check in the plan variables
 			if val, ok := tfPlan.Variables[ref]; ok {
-				return val.Value, nil
+				valueInterpolated = val.Value
 			}
 
 			// If rootModule is not nil, check in the root module and the called module variables
 			if rootModule != nil {
 				// If not found in plan variables, check in the root module variables
 				if moduleVariable, ok := rootModule.Variables[ref]; ok {
-					return moduleVariable.Default, nil
+					valueInterpolated = moduleVariable.Default
 				}
 
 				// If not found in root module variables, check in the called module variables
 				for _, moduleCall := range rootModule.ModuleCalls {
-					if moduleVariable, ok := moduleCall.Module.Variables[ref]; ok {
-						return moduleVariable.Default, nil
+					if moduleVariable, ok := moduleCall.Module.Variables[ref]; ok && valueInterpolated == nil {
+						valueInterpolated = moduleVariable.Default
 					}
 				}
 			}
@@ -56,12 +60,29 @@ func GetValueOfExpression(expression *tfjson.Expression, tfPlan *tfjson.Plan, co
 						output, ok := moduleCall.Module.Outputs[outputKey]
 						if ok {
 							// Recursive call with the new module config
-							return GetValueOfExpression(output.Expression, tfPlan, moduleCall.Module)
+							value, err := GetValueOfExpression(output.Expression, tfPlan, moduleCall.Module)
+							if err != nil {
+								continue
+							}
+							if value != nil {
+								valueInterpolated = value
+							}
 						}
 					}
 				}
 			}
 		}
+
+		// Try to get it from terraform console
+		if valueInterpolated == nil {
+
+			valueFromConsole, err := terraform.RunTerraformConsole(reference)
+			if err != nil {
+				continue
+			}
+			valueInterpolated = *valueFromConsole
+		}
+		return valueInterpolated, nil
 	}
 	return nil, errors.New("no value found for expression")
 }

@@ -1,12 +1,14 @@
-package terraform
+package plan_test
 
 import (
 	"log"
 	"path"
 	"testing"
 
+	"github.com/carboniferio/carbonifer/internal/plan"
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/carboniferio/carbonifer/internal/terraform"
 	"github.com/carboniferio/carbonifer/internal/testutils"
 	"github.com/shopspring/decimal"
 	"github.com/spf13/viper"
@@ -18,7 +20,7 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 	testutils.SkipWithCreds(t)
 
 	// reset
-	ResetTerraformExec()
+	terraform.ResetTerraformExec()
 
 	wd := path.Join(testutils.RootDir, "test/terraform/aws_ec2")
 	viper.Set("workdir", wd)
@@ -56,9 +58,9 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 	}
 	log.Default().Println(wantResources)
 
-	tfPlan, err := TerraformPlan()
+	tfPlan, err := terraform.TerraformPlan()
 	assert.NoError(t, err)
-	gotResources, err := GetResources(tfPlan)
+	gotResources, err := plan.GetResources(tfPlan)
 	assert.NoError(t, err)
 	for _, res := range gotResources {
 		if res.GetIdentification().ResourceType == "aws_instance" {

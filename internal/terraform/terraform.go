@@ -1,8 +1,10 @@
 package terraform
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -135,6 +137,45 @@ func CarboniferPlan(input string) (*tfjson.Plan, error) {
 		}
 		return tfPlan, err
 	}
+}
+
+func RunTerraformConsole(command string) (*string, error) {
+	tfExec, err := GetTerraformExec()
+	if err != nil {
+		return nil, err
+	}
+	cmd := exec.Command(tfExec.ExecPath(), "console")
+
+	cmd.Dir = terraformExec.WorkingDir() // set the working directory
+
+	var stdin bytes.Buffer
+	stdin.Write([]byte(command + "\n"))
+	cmd.Stdin = &stdin
+
+	var stdout, stderr bytes.Buffer
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+
+	err = cmd.Run()
+	if err != nil {
+		return nil, fmt.Errorf("error running terraform console: %w\nstderr: %s", err, stderr.String())
+	}
+
+	output := strings.TrimSpace(stdout.String())
+
+	// Parse the output as JSON
+	var result map[string]string
+	if err := json.Unmarshal([]byte(output), &result); err == nil {
+		// If the output is valid JSON, extract the value of the command key
+		var ok bool
+		output, ok = result[command]
+		if !ok {
+			return nil, fmt.Errorf("output does not contain key %q", command)
+		}
+	}
+	// remove quotes surrounding the value
+	output = strings.Trim(output, "\"")
+	return &output, nil
 }
 
 func TerraformPlan() (*tfjson.Plan, error) {

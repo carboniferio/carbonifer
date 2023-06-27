@@ -1,10 +1,11 @@
-package terraform_test
+package plan_test
 
 import (
 	"log"
 	"path"
 	"testing"
 
+	"github.com/carboniferio/carbonifer/internal/plan"
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/carboniferio/carbonifer/internal/terraform"
@@ -136,7 +137,7 @@ func TestGetResources(t *testing.T) {
 		},
 	}
 	tfPlan, _ := terraform.TerraformPlan()
-	resources, _ := terraform.GetResources(tfPlan)
+	resources, _ := plan.GetResources(tfPlan)
 	assert.Equal(t, len(resources), len(wantResources))
 	for i, resource := range resources {
 		wantResource := wantResources[i]
@@ -176,7 +177,7 @@ func TestGetResources_DiskImage(t *testing.T) {
 	}
 
 	tfPlan, _ := terraform.TerraformPlan()
-	resourceList, err := terraform.GetResources(tfPlan)
+	resourceList, err := plan.GetResources(tfPlan)
 	if assert.NoError(t, err) {
 		assert.Equal(t, len(wantResources), len(resourceList))
 		for i, resource := range resourceList {
@@ -235,7 +236,7 @@ func TestGetResources_GroupInstance(t *testing.T) {
 	}
 
 	tfPlan, _ := terraform.TerraformPlan()
-	resources, err := terraform.GetResources(tfPlan)
+	resources, err := plan.GetResources(tfPlan)
 	if assert.NoError(t, err) {
 		for i, resource := range resources {
 			wantResource := wantResources[i]
@@ -292,7 +293,7 @@ func TestGetResources_InstanceFromTemplate(t *testing.T) {
 	}
 
 	tfPlan, _ := terraform.TerraformPlan()
-	resources, err := terraform.GetResources(tfPlan)
+	resources, err := plan.GetResources(tfPlan)
 	if assert.NoError(t, err) {
 		for i, resource := range resources {
 			wantResource := wantResources[i]

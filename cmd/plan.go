@@ -12,6 +12,7 @@ import (
 
 	"github.com/carboniferio/carbonifer/internal/estimate"
 	"github.com/carboniferio/carbonifer/internal/output"
+	"github.com/carboniferio/carbonifer/internal/plan"
 	"github.com/carboniferio/carbonifer/internal/terraform"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -60,7 +61,7 @@ Example usages:
 		}
 
 		// Read resources from terraform plan
-		resources, err := terraform.GetResources(tfPlan)
+		resources, err := plan.GetResources(tfPlan)
 		if err != nil {
 			log.Fatal(err)
 		}
