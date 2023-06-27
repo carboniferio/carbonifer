@@ -80,7 +80,7 @@ func GetValueOfExpression(expression *tfjson.Expression, tfPlan *tfjson.Plan, co
 			if err != nil {
 				continue
 			}
-			valueInterpolated = valueFromConsole
+			valueInterpolated = *valueFromConsole
 		}
 		return valueInterpolated, nil
 	}

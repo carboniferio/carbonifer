@@ -3,9 +3,12 @@ package aws
 import (
 	"io"
 	"os"
+	"path"
 	"path/filepath"
 	"testing"
 
+	"github.com/carboniferio/carbonifer/internal/terraform"
+	"github.com/carboniferio/carbonifer/internal/testutils"
 	_ "github.com/carboniferio/carbonifer/internal/testutils"
 
 	"github.com/carboniferio/carbonifer/internal/utils"
@@ -222,4 +225,21 @@ func TestGetValueOfExpression_ModuleCalls(t *testing.T) {
 	value, err := utils.GetValueOfExpression(expr, plan)
 	assert.NoError(t, err)
 	assert.Equal(t, "region_from_module_calls", value)
+}
+
+func TestGetValueOfExpression_ModuleLocalVar(t *testing.T) {
+	terraform.ResetTerraformExec()
+	wd := path.Join(testutils.RootDir, "test/terraform/gcp_calling_module")
+
+	plan, err := terraform.CarboniferPlan(wd) // Replace with the path to your plan JSON
+	assert.NoError(t, err)
+	expr := &tfjson.Expression{
+		ExpressionData: &tfjson.ExpressionData{
+			References: []string{"module.globals.common_region"},
+		},
+	}
+
+	value, err := utils.GetValueOfExpression(expr, plan)
+	assert.NoError(t, err)
+	assert.Equal(t, "local_module_region", value)
 }
