@@ -32,11 +32,15 @@ func GetResources(tfPlan *tfjson.Plan) (map[string]resources.Resource, error) {
 		if priorRes.Mode == "data" {
 			if strings.HasPrefix(priorRes.Type, "google") {
 				dataResource := gcp.GetDataResource(*priorRes)
-				terraformRefs.DataResources[dataResource.GetKey()] = dataResource
+				if dataResource != nil {
+					terraformRefs.DataResources[dataResource.GetKey()] = dataResource
+				}
 			}
 			if strings.HasPrefix(priorRes.Type, "aws") {
 				dataResource := aws.GetDataResource(*priorRes)
-				terraformRefs.DataResources[dataResource.GetKey()] = dataResource
+				if dataResource != nil {
+					terraformRefs.DataResources[dataResource.GetKey()] = dataResource
+				}
 			}
 		}
 	}
