@@ -14,8 +14,14 @@ import (
 )
 
 func GetResources(tfPlan *tfjson.Plan) (map[string]resources.Resource, error) {
-
-	log.Debugf("Reading resources from Terraform plan: %d resources", len(tfPlan.PlannedValues.RootModule.Resources))
+	nbPlannedValues := 0
+	if tfPlan != nil &&
+		tfPlan.PlannedValues != nil &&
+		tfPlan.PlannedValues.RootModule != nil &&
+		tfPlan.PlannedValues.RootModule.Resources != nil {
+		nbPlannedValues = len(tfPlan.PlannedValues.RootModule.Resources)
+	}
+	log.Debugf("Reading resources from Terraform plan: %d resources", nbPlannedValues)
 	resourcesMap := make(map[string]resources.Resource)
 	terraformRefs := tfrefs.References{
 		ResourceConfigs:    map[string]*tfjson.ConfigResource{},
@@ -32,11 +38,15 @@ func GetResources(tfPlan *tfjson.Plan) (map[string]resources.Resource, error) {
 		if priorRes.Mode == "data" {
 			if strings.HasPrefix(priorRes.Type, "google") {
 				dataResource := gcp.GetDataResource(*priorRes)
-				terraformRefs.DataResources[dataResource.GetKey()] = dataResource
+				if dataResource != nil {
+					terraformRefs.DataResources[dataResource.GetKey()] = dataResource
+				}
 			}
 			if strings.HasPrefix(priorRes.Type, "aws") {
 				dataResource := aws.GetDataResource(*priorRes)
-				terraformRefs.DataResources[dataResource.GetKey()] = dataResource
+				if dataResource != nil {
+					terraformRefs.DataResources[dataResource.GetKey()] = dataResource
+				}
 			}
 		}
 	}

@@ -24,7 +24,9 @@ func GetDataResource(tfResource tfjson.StateResource) resources.DataResource {
 			}
 		}
 	}
-	return nil
+	return resources.DataImageResource{
+		Identification: resourceId,
+	}
 }
 
 func getDataResourceIdentification(resource tfjson.StateResource) *resources.ResourceIdentification {
