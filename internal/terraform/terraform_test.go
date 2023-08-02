@@ -131,6 +131,7 @@ func TestTerraformShow_RawPlan(t *testing.T) {
 	terraform.ResetTerraformExec()
 
 	tfPlan, err := terraform.CarboniferPlan("test/terraform/planRaw/plan.tfplan")
+
 	assert.NoError(t, err)
 	assert.Equal(t, tfPlan.TerraformVersion, "1.4.6")
 
