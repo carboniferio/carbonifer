@@ -1,11 +1,12 @@
 package terraform
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
 
-	"gopkg.in/yaml.v2"
+	"github.com/ghodss/yaml"
 )
 
 type Mappings struct {
@@ -52,26 +53,44 @@ func LoadMapping(mappingFolder string) (*Mappings, error) {
 		if err != nil {
 			return nil, err
 		}
-		var currentMapping Mappings
+		var currentMapping map[string]interface{}
 		err = yaml.Unmarshal(yamlFile, &currentMapping)
 		if err != nil {
 			return nil, err
 		}
 
-		convertedGeneral, err := convertInnerMaps(currentMapping.General)
 		if err != nil {
 			return nil, err
-		}
-		for k, v := range convertedGeneral {
-			mergedMappings.General[k] = v
 		}
 
-		convertedComputeResource, err := convertInnerMaps(currentMapping.ComputeResource)
+		generalI := currentMapping["general"]
+		if generalI != nil {
+			generalMapping, ok := generalI.(map[string]interface{})
+			if !ok {
+				return nil, fmt.Errorf("general mapping is not a map[string]interface{}")
+			}
+			for k, v := range generalMapping {
+				mergedMappings.General[k] = v
+			}
+
+		}
+
+		// TODO remove
+		generalString, err := json.Marshal(mergedMappings.General)
 		if err != nil {
 			return nil, err
 		}
-		for k, v := range convertedComputeResource {
-			mergedMappings.ComputeResource[k] = v
+		fmt.Println(string(generalString))
+
+		computeMappingI := currentMapping["compute_resource"]
+		if computeMappingI != nil {
+			computeResourceMapping, ok := computeMappingI.(map[string]interface{})
+			if !ok {
+				return nil, fmt.Errorf("compute_resource mapping is not a map[string]interface{}")
+			}
+			for k, v := range computeResourceMapping {
+				mergedMappings.ComputeResource[k] = v
+			}
 		}
 	}
 

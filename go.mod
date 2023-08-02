@@ -46,6 +46,7 @@ require (
 	github.com/aws/aws-sdk-go v1.44.280
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/ghodss/yaml v1.0.0
 	github.com/gogap/env_json v0.0.0-20150503135429-86150085ddbe // indirect
 	github.com/gogap/env_strings v0.0.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect

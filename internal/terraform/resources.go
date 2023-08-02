@@ -1,6 +1,7 @@
 package terraform
 
 import (
+	"encoding/json"
 	"strings"
 
 	"github.com/PaesslerAG/jsonpath"
@@ -10,14 +11,12 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type DiskTypes struct {
-	Default string                 `json:"default"`
-	Types   map[string]interface{} `json:"types"`
-}
-
 type GeneralConfig struct {
-	JsonData map[string]interface{} `json:"json_data"`
-	DiskType DiskTypes              `json:"disk_types"`
+	JSONData  map[string]string `json:"json_data"`
+	DiskTypes struct {
+		Default string            `json:"default"`
+		Types   map[string]string `json:"types"`
+	} `json:"disk_types"`
 }
 
 var GeneralMappingConfig *GeneralConfig
@@ -41,11 +40,15 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 		return nil, err
 	}
 	// Get general config
-	GeneralMappingConfig = GetGeneralConfig(mappings)
+	generalMapping := mappings.General
+	GeneralMappingConfig, err = convertToGeneralConfig(generalMapping)
+	if err != nil {
+		return nil, err
+	}
 
 	// Get compute resources
 	for resourceType, mapping := range mappings.ComputeResource {
-		resources, err := GetResourcesOfType(resourceType, mapping.(map[string]interface{}), mappings)
+		resources, err := GetResourcesOfType(resourceType, mapping.(map[string]interface{}))
 		if err != nil {
 			return nil, err
 		}
@@ -58,34 +61,25 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 	return resourcesMap, nil
 }
 
-func GetGeneralConfig(mappings *Mappings) *GeneralConfig {
-	generalConfig := &GeneralConfig{}
-	if mappings.General != nil {
-		generalConfigJsonData, ok := mappings.General["json_data"]
-		if ok {
-			generalConfig.JsonData = generalConfigJsonData.(map[string]interface{})
-		}
-		generalConfigDiskTypesI, ok := mappings.General["disk_types"]
-		if ok {
-			generalConfigDiskTypes, err := ConvertInterfaceToMap(generalConfigDiskTypesI)
-			if err != nil {
-				log.Fatalf("Cannot convert general.disk_types to map: %v", err)
-			}
+func convertToGeneralConfig(generalMapping map[string]interface{}) (*GeneralConfig, error) {
+	var generalConfig GeneralConfig
 
-			types, err := convertMapKeysToStrings(generalConfigDiskTypes["types"].(map[interface{}]interface{}))
-			if err != nil {
-				log.Fatalf("Cannot convert general.disk_types.types to map: %v", err)
-			}
-			generalConfig.DiskType = DiskTypes{
-				Default: generalConfigDiskTypes["default"].(string),
-				Types:   types,
-			}
-		}
+	// Convert map to JSON
+	jsonData, err := json.Marshal(generalMapping)
+	if err != nil {
+		return nil, err
 	}
-	return generalConfig
+
+	// Convert JSON to GeneralConfig struct
+	err = json.Unmarshal(jsonData, &generalConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return &generalConfig, nil
 }
 
-func GetResourcesOfType(resourceType string, mapping map[string]interface{}, mappings *Mappings) ([]resources.Resource, error) {
+func GetResourcesOfType(resourceType string, mapping map[string]interface{}) ([]resources.Resource, error) {
 	pathsProperty := mapping["paths"]
 	paths, err := ReadPaths(resourceType, pathsProperty)
 	if err != nil {

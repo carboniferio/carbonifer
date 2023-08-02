@@ -64,11 +64,7 @@ func GetSlice(key string, resourceType string, resource map[string]interface{}, 
 }
 
 func GetStorage(item interface{}, resource map[string]interface{}) ([]Storage, error) {
-	itemI := item.(map[interface{}]interface{})
-	itemMap, err := convertMapKeysToStrings(itemI)
-	if err != nil {
-		return nil, fmt.Errorf("Cannot convert item to map: %v", err)
-	}
+	itemMap := item.(map[string]interface{})
 	pathsProperty := itemMap["paths"]
 	paths, err := ReadPaths("storage", pathsProperty)
 	if err != nil {

@@ -56,7 +56,7 @@ func ApplyReference(valueFound interface{}, propertyMapping map[string]interface
 
 func ResolveReference(key string, reference Reference, resourceAddress string) (interface{}, error) {
 	if reference.JsonFile != "" {
-		filename := GeneralMappingConfig.JsonData[reference.JsonFile].(string)
+		filename := GeneralMappingConfig.JSONData[reference.JsonFile]
 		byteValue := data.ReadDataFile(filename)
 		var fileMap map[string]interface{}
 		err := json.Unmarshal([]byte(byteValue), &fileMap)
@@ -78,13 +78,13 @@ func ResolveReference(key string, reference Reference, resourceAddress string) (
 		return value, nil
 	}
 	if reference.General != "" {
-		for providerDiskType, diskType := range GeneralMappingConfig.DiskType.Types {
+		for providerDiskType, diskType := range GeneralMappingConfig.DiskTypes.Types {
 			if providerDiskType == key {
 				return diskType, nil
 			}
 		}
-		if GeneralMappingConfig.DiskType.Default != "" {
-			return GeneralMappingConfig.DiskType.Default, nil
+		if GeneralMappingConfig.DiskTypes.Default != "" {
+			return GeneralMappingConfig.DiskTypes.Default, nil
 		}
 		return "ssd", nil
 	}
@@ -134,7 +134,7 @@ func ApplyRegex(valueFound interface{}, propertyMapping map[string]interface{}, 
 
 	regex := Regex{
 		Pattern: regexMap["pattern"].(string),
-		Group:   regexMap["group"].(int),
+		Group:   int(regexMap["group"].(float64)),
 	}
 	valueTransformed := ResolveRegex(valueFound.(string), regex)
 	return valueTransformed, nil
