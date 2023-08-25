@@ -1,12 +1,12 @@
 package terraform
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/ghodss/yaml"
+	"github.com/pkg/errors"
 )
 
 type Mappings struct {
@@ -75,13 +75,6 @@ func LoadMapping(mappingFolder string) (*Mappings, error) {
 
 		}
 
-		// TODO remove
-		generalString, err := json.Marshal(mergedMappings.General)
-		if err != nil {
-			return nil, err
-		}
-		fmt.Println(string(generalString))
-
 		computeMappingI := currentMapping["compute_resource"]
 		if computeMappingI != nil {
 			computeResourceMapping, ok := computeMappingI.(map[string]interface{})
@@ -145,7 +138,7 @@ func ConvertInterfaceSlicesToMapSlice(input []interface{}) ([]map[string]interfa
 			}
 			output = append(output, convertedMap)
 		default:
-			return nil, fmt.Errorf("input is neither map[string]interface{} nor map[interface{}]interface{}")
+			return nil, errors.Errorf("input is neither map[string]interface{} nor map[interface{}]interface{} : %T", element)
 		}
 	}
 	return output, nil

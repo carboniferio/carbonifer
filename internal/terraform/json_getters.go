@@ -2,21 +2,30 @@ package terraform
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
-	"github.com/PaesslerAG/jsonpath"
-	"github.com/shopspring/decimal"
+	"github.com/carboniferio/carbonifer/internal/utils"
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
 
-func GetString(key string, resourceAdress string, resource map[string]interface{}, mapping map[string]interface{}) (*string, error) {
-	value, err := GetValue(key, resourceAdress, resource, mapping)
+// Context object
+type TFContext struct {
+	Resource        map[string]interface{} // Json of the terraform plan resource
+	Mapping         map[string]interface{} // Mapping of the resource type
+	ResourceAddress string                 // Address of the resource in tf plan
+	ParentContext   *TFContext             // Parent context
+}
+
+func GetString(key string, context TFContext) (*string, error) {
+	value, err := GetValue(key, context)
 	if err != nil {
 		return nil, err
 	}
 
 	if value == nil {
-		log.Debugf("No value found for key %v of resource type %v", key, resourceAdress)
+		log.Debugf("No value found for key %v of resource type %v", key, context.ResourceAddress)
 		return nil, nil
 	}
 	stringValue, ok := value.Value.(string)
@@ -26,88 +35,130 @@ func GetString(key string, resourceAdress string, resource map[string]interface{
 	return &stringValue, nil
 }
 
-func GetSlice(key string, resourceType string, resource map[string]interface{}, mapping map[string]interface{}) ([]interface{}, error) {
+func GetSlice(key string, context TFContext) ([]interface{}, error) {
 	results := []interface{}{}
-	sliceMappingI := GetMappingProperties(mapping)[key]
+
+	sliceMappingI := GetMappingProperties(context.Mapping)[key]
 	if sliceMappingI == nil {
 		return nil, nil
 	}
 	sliceMapping, ok := sliceMappingI.(map[string]interface{})
 	if !ok {
-		return nil, fmt.Errorf("Cannot get mapping for %v of resource type %v", key, resourceType)
+		return nil, fmt.Errorf("Cannot get mapping for %v of resource type %v", key, context.ResourceAddress)
 	}
 
-	// if type exists in mapping and is "list"
+	// Check we are well working on a list
 	t, ok := sliceMapping["type"]
-	if ok && t == "list" {
-		// get items property of mapping
-		items, ok := sliceMapping["item"]
-		if !ok {
-			return nil, fmt.Errorf("Cannot get items property of mapping for %v of resource type %v", key, resourceType)
+	if !ok || t != "list" {
+		return nil, fmt.Errorf("Cannot get slice for %v if resource '.type' is not 'list'", key)
+	}
+
+	// get mapping of items of the list
+	mappingItemsI, ok := sliceMapping["item"]
+	if !ok {
+		return nil, fmt.Errorf("Cannot get items property of mapping for %v of resource type %v", key, context.ResourceAddress)
+	}
+	mappingItems, ok := mappingItemsI.([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("Items is not a list for %v of resource type %v", key, context.ResourceAddress)
+	}
+	for _, itemMappingI := range mappingItems {
+		itemMapping := itemMappingI.(map[string]interface{})
+		context := TFContext{
+			Resource:        context.Resource,
+			Mapping:         itemMapping,
+			ResourceAddress: context.ResourceAddress + "." + key,
+			ParentContext:   &context,
 		}
-		itemsList, ok := items.([]interface{})
-		if !ok {
-			return nil, fmt.Errorf("Items is not a list for %v of resource type %v", key, resourceType)
+		itemResults, err := GetSliceItems(context)
+		if err != nil {
+			return nil, err
 		}
-		for _, item := range itemsList {
-			result, err := GetStorage(item, resource)
+		results = append(results, itemResults...)
+	}
+
+	return results, nil
+}
+
+func GetSliceItems(context TFContext) ([]interface{}, error) {
+	itemMapping := context.Mapping
+	results := []interface{}{}
+	pathsProperty := itemMapping["paths"]
+	paths, err := ReadPaths(pathsProperty)
+	if err != nil {
+		return nil, fmt.Errorf("Cannot get paths for %v: %v", context.ResourceAddress, err)
+	}
+
+	itemMappingProperties := GetMappingProperties(itemMapping)
+
+	for _, pathRaw := range paths {
+		path := pathRaw
+		if strings.Contains(pathRaw, "${") {
+			path, err = resolvePlaceholders(path, *context.ParentContext)
 			if err != nil {
 				return nil, err
 			}
-
-			for _, r := range result {
-				results = append(results, r)
+		}
+		fmt.Println(path)
+		jsonResults, err := utils.JsonGet(path, context.Resource)
+		if err != nil {
+			return nil, errors.Wrapf(err, "Cannot get item: %v", path)
+		}
+		// if no result, try to get it from the whole plan
+		if len(jsonResults) == 0 {
+			fmt.Println("No result for path", path)
+			jsonResults, err = utils.JsonGet(path, *TfPlan)
+			if err != nil {
+				return nil, errors.Wrapf(err, "Cannot get item: %v", path)
+			}
+		}
+		for _, jsonResultsI := range jsonResults {
+			switch jsonResults := jsonResultsI.(type) {
+			case map[string]interface{}:
+				result, err := getItem(context, itemMappingProperties, jsonResults)
+				if err != nil {
+					return nil, err
+				}
+				results = append(results, result)
+			case []interface{}:
+				for _, jsonResultI := range jsonResults {
+					jsonResultI, ok := jsonResultI.(map[string]interface{})
+					if !ok {
+						return nil, errors.Errorf("Cannot convert jsonResultI to map[string]interface{}: %v", jsonResultI)
+					}
+					result, err := getItem(context, itemMappingProperties, jsonResultI)
+					if err != nil {
+						return nil, err
+					}
+					results = append(results, result)
+				}
+			default:
+				return nil, errors.Errorf("Not an map or an array of maps: %T", jsonResultsI)
 			}
 		}
 	}
 	return results, nil
 }
 
-func GetStorage(item interface{}, resource map[string]interface{}) ([]Storage, error) {
-	itemMap := item.(map[string]interface{})
-	pathsProperty := itemMap["paths"]
-	paths, err := ReadPaths("storage", pathsProperty)
-	if err != nil {
-		return nil, fmt.Errorf("Cannot get paths for storage: %v", err)
-	}
-	for _, path := range paths {
-		if strings.Contains(path.(string), "${") {
-			// TODO ${template_config}
+func getItem(context TFContext, itemMappingProperties map[string]interface{}, jsonResultI map[string]interface{}) (interface{}, error) {
+	result := map[string]interface{}{}
+	for key, _ := range itemMappingProperties {
+		if key == "paths" {
 			continue
 		}
-		storageRaw, err := jsonpath.Get(path.(string), resource)
+		itemContext := TFContext{
+			Resource:        jsonResultI,
+			Mapping:         itemMappingProperties,
+			ResourceAddress: context.ResourceAddress,
+			ParentContext:   &context,
+		}
+		property, err := GetValue(key, itemContext)
 		if err != nil {
-			return nil, fmt.Errorf("Cannot get storage: %v", err)
+			return nil, err
 		}
-		if storageRaw == nil {
-			continue
-		}
-		storageI, ok := storageRaw.([]interface{})
-		if !ok {
-			storageI = []interface{}{storageRaw}
-		}
-		if len(storageI) == 0 {
-			continue
-		}
-		storages, err := ConvertInterfaceSlicesToMapSlice(storageI)
-		if err != nil {
-			return nil, fmt.Errorf("Cannot convert storage: %v", err)
-		}
-		storagesResults := []Storage{}
-		for _, storageMap := range storages {
-			storage, err := getStorage(storageMap, itemMap)
-			if err != nil {
-				return nil, err
-			}
-
-			if storage != nil {
-				storagesResults = append(storagesResults, *storage)
-			}
-		}
-		return storagesResults, nil
-
+		result[key] = property
 	}
-	return nil, nil
+	return result, nil
 }
 
 type ValueWithUnit struct {
@@ -115,70 +166,37 @@ type ValueWithUnit struct {
 	Unit  *string
 }
 
-func getStorage(storageMap map[string]interface{}, itemMap map[string]interface{}) (*Storage, error) {
-	storageSize, err := GetValue("size", "storage", storageMap, itemMap)
-	if err != nil {
-		return nil, err
-	}
-
-	if storageSize == nil {
-		return nil, nil
-	}
-	storageSizeGb, err := decimal.NewFromString(fmt.Sprintf("%v", storageSize.Value))
-	if err != nil {
-		return nil, fmt.Errorf("Cannot convert storage size to int: %v", storageSize)
-	}
-	storageType, err := GetValue("type", "storage", storageMap, itemMap)
-	if err != nil {
-		return nil, err
-	}
-	// TODO get storage size unit correctly
-	unit := storageSize.Unit
-	if unit != nil {
-		if strings.ToLower(*unit) == "mb" {
-			storageSizeGb = storageSizeGb.Div(decimal.NewFromInt32(1024))
-		}
-		if strings.ToLower(*unit) == "tb" {
-			storageSizeGb = storageSizeGb.Mul(decimal.NewFromInt32(1024))
-		}
-		if strings.ToLower(*unit) == "kb" {
-			storageSizeGb = storageSizeGb.Div(decimal.NewFromInt32(1024)).Div(decimal.NewFromInt32(1024))
-		}
-		if strings.ToLower(*unit) == "b" {
-			storageSizeGb = storageSizeGb.Div(decimal.NewFromInt32(1024)).Div(decimal.NewFromInt32(1024)).Div(decimal.NewFromInt32(1024))
-		}
-	}
-	isSSD := false
-	if storageType != nil {
-		if strings.ToLower(storageType.Value.(string)) == "ssd" {
-			isSSD = true
-		}
-	}
-
-	return &Storage{
-		SizeGb: storageSizeGb,
-		IsSSD:  isSSD,
-	}, nil
-}
-
 type KeyValue struct {
 	Key   string
 	Value interface{}
 }
 
-func ReadPaths(resourceAdress string, pathsProperty interface{}, pathTemplateValuesParams ...*map[string]string) ([]interface{}, error) {
-	var paths []interface{}
-	if pathsStr, ok := pathsProperty.(string); ok {
-		paths = []interface{}{pathsStr}
-	} else if pathsSlice, ok := pathsProperty.([]interface{}); ok {
-		paths = pathsSlice
-	} else {
-		return nil, fmt.Errorf("paths is neither a string nor a slice of strings for %v", resourceAdress)
+func ReadPaths(pathsProperty interface{}, pathTemplateValuesParams ...*map[string]string) ([]string, error) {
+	var paths []string
+	if pathsProperty == nil {
+		return paths, nil
+	}
+
+	switch path := pathsProperty.(type) {
+	case string:
+		paths = []string{path}
+	case []string:
+		paths = path
+	case []interface{}:
+		for _, pathI := range path {
+			pathStr, ok := pathI.(string)
+			if !ok {
+				return nil, errors.Errorf("Cannot convert path to string: %T", pathI)
+			}
+			paths = append(paths, pathStr)
+		}
+	default:
+		return nil, errors.Errorf("Cannot convert paths to string or []string: %T", pathsProperty)
 	}
 
 	for _, pathTemplateValues := range pathTemplateValuesParams {
 		for path := range paths {
-			pathStr := paths[path].(string)
+			pathStr := paths[path]
 			for key, value := range *pathTemplateValues {
 				pathStr = strings.ReplaceAll(pathStr, "${"+key+"}", value)
 			}
@@ -188,18 +206,18 @@ func ReadPaths(resourceAdress string, pathsProperty interface{}, pathTemplateVal
 	return paths, nil
 }
 
-func GetValue(key string, resourceAdress string, resource map[string]interface{}, mapping map[string]interface{}) (*ValueWithUnit, error) {
+func GetValue(key string, context TFContext) (*ValueWithUnit, error) {
 
-	propertyMappings := GetPropertyMappings(mapping, key, resourceAdress)
+	propertyMappings := GetPropertyMappings(key, context)
 	if propertyMappings == nil {
-		log.Debugf("No property mapping found for key %v of resource type %v", key, resourceAdress)
+		log.Debugf("No property mapping found for key %v of resource type %v", key, context.ResourceAddress)
 		return nil, nil
 	}
 
 	var valueFound interface{}
 	for _, propertyMapping := range propertyMappings {
 		pathProperty := propertyMapping["paths"]
-		paths, err := ReadPaths(resourceAdress, pathProperty)
+		paths, err := ReadPaths(pathProperty)
 		if err != nil {
 			return nil, err
 		}
@@ -213,41 +231,43 @@ func GetValue(key string, resourceAdress string, resource map[string]interface{}
 			unit = &unitStr
 		}
 
-		for _, path := range paths {
+		for _, pathRaw := range paths {
 			if valueFound != nil {
 				break
 			}
-			if strings.Contains(path.(string), "${") {
-				// TODO ${template_config}
-				log.Warnf("Template config not yet implemented in %v", path.(string))
-				continue
+			path := pathRaw
+			if strings.Contains(pathRaw, "${") {
+				path, err = resolvePlaceholders(path, context)
+				if err != nil {
+					return nil, err
+				}
 			}
-			valueFounds, err := jsonpath.Get(path.(string), resource)
+			valueFounds, err := utils.JsonGet(path, context.Resource)
 			if err != nil {
 				return nil, err
 			}
-			if valueFounds != nil {
-				valueFoundSlice, ok := valueFounds.([]interface{})
-				if ok {
-					if len(valueFoundSlice) > 1 {
-						return nil, fmt.Errorf("Found more than one value for property %v of resource type %v", key, resourceAdress)
-					}
-					if len(valueFoundSlice) == 0 {
-						return nil, fmt.Errorf("No value found for property %v of resource type %v", key, resourceAdress)
-					}
-					valueFound = valueFoundSlice[0]
-				} else {
-					valueFound = valueFounds
+			if len(valueFounds) == 0 {
+				// Try to resolve it against the whole plan
+				valueFounds, err = utils.JsonGet(path, *TfPlan)
+				if err != nil {
+					return nil, err
 				}
+			}
+			if len(valueFounds) > 0 {
+				// TODO check if we can safely remove this
+				// if len(valueFounds) > 1 {
+				// 	return nil, fmt.Errorf("Found more than one value for property %v of resource type %v", key, context.ResourceAddress)
+				// }
+				valueFound = valueFounds[0]
 			}
 		}
 
 		if valueFound != nil {
-			valueFound, err = ApplyRegex(valueFound, propertyMapping, resourceAdress)
+			valueFound, err = ApplyRegex(valueFound, propertyMapping, context.ResourceAddress)
 			if err != nil {
 				return nil, err
 			}
-			valueFound, err = ApplyReference(valueFound, propertyMapping, resourceAdress)
+			valueFound, err = ApplyReference(valueFound, propertyMapping, context.ResourceAddress)
 			if err != nil {
 				return nil, err
 			}
@@ -262,7 +282,7 @@ func GetValue(key string, resourceAdress string, resource map[string]interface{}
 	}
 
 	if valueFound == nil {
-		defaultValue, err := GetDefaultValue(key, resourceAdress, resource, mapping)
+		defaultValue, err := GetDefaultValue(key, context)
 		if err != nil {
 			return nil, err
 		}
@@ -275,10 +295,67 @@ func GetValue(key string, resourceAdress string, resource map[string]interface{}
 	return nil, nil
 }
 
-func GetDefaultValue(key string, resourceAdress string, resource map[string]interface{}, mapping map[string]interface{}) (*ValueWithUnit, error) {
-	propertyMappings := GetPropertyMappings(mapping, key, resourceAdress)
+func resolvePlaceholders(input string, context TFContext) (string, error) {
+	placeholderPattern := `\${([^}]+)}`
+
+	// Compile the regular expression
+	rx := regexp.MustCompile(placeholderPattern)
+
+	// Find all matches in the input string
+	matches := rx.FindAllStringSubmatch(input, -1)
+
+	// Create a map to store resolved expressions
+	resolvedExpressions := make(map[string]string)
+
+	// Iterate through the matches and resolve expressions
+	for _, match := range matches {
+		placeholder := match[0]
+		expression := match[1]
+		resolved, err := resolvePlaceholder(expression, context)
+		if err != nil {
+			return input, err
+		}
+		resolvedExpressions[placeholder] = resolved
+	}
+
+	// Replace placeholders in the input string with resolved expressions
+	replacerStrings := make([]string, 0, len(resolvedExpressions)*2)
+	for placeholder, resolved := range resolvedExpressions {
+		replacerStrings = append(replacerStrings, placeholder, resolved)
+	}
+
+	replacer := strings.NewReplacer(replacerStrings...)
+	resolvedString := replacer.Replace(input)
+	return resolvedString, nil
+}
+
+func resolvePlaceholder(expression string, context TFContext) (string, error) {
+	result := ""
+	if strings.HasPrefix(expression, "this.") {
+		thisProperty := strings.TrimPrefix(expression, "this.")
+		value, err := GetValue(thisProperty, *context.ParentContext)
+		if err != nil {
+			return "", errors.Wrapf(err, "Cannot get value for variable %s", expression)
+		}
+		if value == nil {
+			return "", errors.Errorf("No value found for variable %s", expression)
+		}
+		return fmt.Sprintf("%v", value.Value), err
+	}
+	variable, err := GetVariable(expression, context, context)
+	if err != nil {
+		return "", err
+	}
+	if variable != nil {
+		result = fmt.Sprintf("%v", variable)
+	}
+	return result, nil
+}
+
+func GetDefaultValue(key string, context TFContext) (*ValueWithUnit, error) {
+	propertyMappings := GetPropertyMappings(key, context)
 	if propertyMappings == nil {
-		log.Debugf("No property mapping found for key %v of resource type %v", key, resourceAdress)
+		log.Debugf("No property mapping found for key %v of resource type %v", key, context.ResourceAddress)
 		return nil, nil
 	}
 
@@ -301,6 +378,16 @@ func GetDefaultValue(key string, resourceAdress string, resource map[string]inte
 			}
 			unit = &unitStr
 		}
+
+		var err error
+		valueFound, err = ApplyRegex(valueFound, propertyMapping, context.ResourceAddress)
+		if err != nil {
+			return nil, err
+		}
+		valueFound, err = ApplyReference(valueFound, propertyMapping, context.ResourceAddress)
+		if err != nil {
+			return nil, err
+		}
 	}
 	if valueFound != nil {
 		return &ValueWithUnit{
@@ -310,4 +397,26 @@ func GetDefaultValue(key string, resourceAdress string, resource map[string]inte
 	}
 	return nil, nil
 
+}
+
+func GetVariable(name string, context TFContext, parentContext TFContext) (interface{}, error) {
+	variablesMapping := context.Mapping["variables"]
+	if variablesMapping == nil {
+		return nil, nil
+	}
+	if variables, ok := variablesMapping.(map[string]interface{}); ok {
+		variableContext := TFContext{
+			Resource:        context.Resource,
+			Mapping:         variables,
+			ResourceAddress: context.ResourceAddress + ".variables",
+			ParentContext:   &parentContext,
+		}
+		value, err := GetValue(name, variableContext)
+		if err != nil {
+			return nil, err
+		}
+		return value.Value, nil
+	} else {
+		return nil, fmt.Errorf("Cannot convert variables to map[string]interface{}: %v", variablesMapping)
+	}
 }

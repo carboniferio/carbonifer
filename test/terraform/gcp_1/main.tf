@@ -44,7 +44,7 @@ resource "google_compute_instance" "first" {
   }
 
   guest_accelerator {
-    type = "nvidia-tesla-k80"
+    type = "nvidia-tesla-a100"
     count = 2
   }
 }

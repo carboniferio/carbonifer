@@ -27,10 +27,11 @@ type PropertyDefinition struct {
 }
 
 type Reference struct {
-	General  string   `yaml:"general,omitempty"`
-	JsonFile string   `yaml:"json_file,omitempty"`
-	Property string   `yaml:"property,omitempty"`
-	Paths    []string `yaml:"paths,omitempty"`
+	General    string   `yaml:"general,omitempty"`
+	JsonFile   string   `yaml:"json_file,omitempty"`
+	Property   string   `yaml:"property,omitempty"`
+	Paths      []string `yaml:"paths,omitempty"`
+	ReturnPath bool     `yaml:"return_path,omitempty"`
 }
 
 type Regex struct {

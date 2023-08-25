@@ -1,48 +1,46 @@
-general:
-  json_data:
-    gcp_machines_types: "gcp_instances.json"
-
 compute_resource:
   google_compute_disk:
     paths:
-      - $.planned_values.root_module.resources[?(@.type=="google_compute_disk")]
-      - $.planned_values.root_module.resources[?(@.type=="google_compute_region_disk")]
+      - .planned_values.root_module.resources[] | select(.type == "google_compute_disk")
+      - .planned_values.root_module.resources[] | select(.type == "google_compute_region_disk")
     type: resource
     properties:
       name:
-        paths: "name"
+        paths: ".name"
       address:
-        paths: "address"
+        paths: ".address"
+      type:
+        paths: ".type"
       zone:
-        - paths: "values.zone"
-        - paths: "values.replica_zones[0]"
+        - paths: ".values.zone"
+        - paths: ".values.replica_zones[0]"
       region:
-        - paths: "values.zone"
+        - paths: ".values.zone"
           regex:
             pattern: "^(.*)-.*$"
             group: 1
-        - paths: "values.replica_zones[0]"
+        - paths: ".values.replica_zones[0]"
           regex:
             pattern: "^(.*)-.*$"
             group: 1
       replication_factor:
-        - paths: "values.replica_zones.length()"
+        - paths: .values.replica_zones | length
         - default: 1
       storage:
         type: list
         item:
-          - paths: values
+          - paths: ".values"
             size:
-              - paths: "size"
-                default: 10
+              - paths: ".size"
                 unit: gb
-              - paths: "image"
-                default: 10
+              - paths: ".image"
                 unit: gb
                 reference:
-                  paths: $.prior_state.values.root_module.resources[?(@.values.self_link=="${key}")].values
+                  paths: .prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values
                   property: "disk_size_gb"
+              - default: 100
+                unit: gb
             type:
-              paths: "type"
+              paths: ".type"
               reference:
                 general: disk_types

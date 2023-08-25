@@ -29,7 +29,10 @@ require (
 	github.com/cloudflare/circl v1.3.3 // indirect
 	github.com/google/s2a-go v0.1.4 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
+	github.com/itchyny/gojq v0.12.13 // indirect
+	github.com/itchyny/timefmt-go v0.1.5 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect

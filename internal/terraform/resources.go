@@ -2,11 +2,15 @@ package terraform
 
 import (
 	"encoding/json"
+	"fmt"
+	"regexp"
 	"strings"
 
-	"github.com/PaesslerAG/jsonpath"
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/carboniferio/carbonifer/internal/utils"
+	"github.com/pkg/errors"
+	"github.com/shopspring/decimal"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -17,6 +21,7 @@ type GeneralConfig struct {
 		Default string            `json:"default"`
 		Types   map[string]string `json:"types"`
 	} `json:"disk_types"`
+	IgnoredResources []string `json:"ignored_resources"`
 }
 
 var GeneralMappingConfig *GeneralConfig
@@ -26,14 +31,16 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 	TfPlan = tfplan
 
 	// Get resources from Terraform plan
-	plannedResourcesRaw, err := jsonpath.Get("$.planned_values.root_module.resources", *TfPlan)
+	plannedResourcesResult, err := utils.JsonGet(".planned_values.root_module.resources", *TfPlan)
 	if err != nil {
 		return nil, err
 	}
-	plannedResources := plannedResourcesRaw.([]interface{})
-
+	if len(plannedResourcesResult) == 0 {
+		return nil, errors.New("No resources found in Terraform plan")
+	}
+	plannedResources := plannedResourcesResult[0].([]interface{})
 	log.Debugf("Reading resources from Terraform plan: %d resources", len(plannedResources))
-	resourcesMap := make(map[string]resources.Resource)
+	resourcesMap := map[string]resources.Resource{}
 
 	mappings, err := LoadMapping("internal/terraform/gcp/mappings")
 	if err != nil {
@@ -58,7 +65,47 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 		}
 	}
 
+	// Get resource not in mapping
+	for _, resourceI := range plannedResources {
+		resource := resourceI.(map[string]interface{})
+		resourceAddress := resource["address"].(string)
+		resourceMap := resourcesMap[resourceAddress]
+		if resourceMap == nil {
+			// That is an unsupported resource
+			resourceType := resource["type"].(string)
+			if checkIgnoredResource(resourceType) {
+				continue
+			}
+			unsupportedResource := resources.UnsupportedResource{
+				Identification: &resources.ResourceIdentification{
+					Name:         resource["name"].(string),
+					ResourceType: resourceType,
+					// TODO get provider from Terraform plan
+					Provider: providers.GCP,
+					Count:    1,
+				},
+			}
+			resourcesMap[resourceAddress] = unsupportedResource
+		}
+	}
+
 	return resourcesMap, nil
+}
+
+func checkIgnoredResource(resourceType string) bool {
+	ignoredResourceNames := GeneralMappingConfig.IgnoredResources
+	for _, ignoredResource := range ignoredResourceNames {
+		if ignoredResource == resourceType {
+			return true
+		}
+		// Case of regex
+		regex := regexp.MustCompile(ignoredResource)
+		if regex.MatchString(resourceType) {
+			return true
+		}
+
+	}
+	return false
 }
 
 func convertToGeneralConfig(generalMapping map[string]interface{}) (*GeneralConfig, error) {
@@ -81,7 +128,7 @@ func convertToGeneralConfig(generalMapping map[string]interface{}) (*GeneralConf
 
 func GetResourcesOfType(resourceType string, mapping map[string]interface{}) ([]resources.Resource, error) {
 	pathsProperty := mapping["paths"]
-	paths, err := ReadPaths(resourceType, pathsProperty)
+	paths, err := ReadPaths(pathsProperty)
 	if err != nil {
 		return nil, err
 	}
@@ -89,14 +136,13 @@ func GetResourcesOfType(resourceType string, mapping map[string]interface{}) ([]
 	resourcesResult := []resources.Resource{}
 	for _, path := range paths {
 		log.Debugf("  Reading resources of type '%s' from path '%s'", resourceType, path)
-		resourcesRaw, err := jsonpath.Get(path.(string), *TfPlan)
+		resourcesFound, err := utils.JsonGet(path, *TfPlan)
 		if err != nil {
 			return nil, err
 		}
-		resourcesFound := resourcesRaw.([]interface{})
 		log.Debugf("  Found %d resources of type '%s'", len(resourcesFound), resourceType)
 		for _, resourceI := range resourcesFound {
-			resourcesResult, err = GetComputeResource(resourceI, resourceType, mapping, resourcesResult)
+			resourcesResult, err = GetComputeResource(resourceI, mapping, resourcesResult)
 			if err != nil {
 				return nil, err
 			}
@@ -107,40 +153,72 @@ func GetResourcesOfType(resourceType string, mapping map[string]interface{}) ([]
 
 }
 
-func GetComputeResource(resourceI interface{}, resourceType string, mapping map[string]interface{}, resourcesResult []resources.Resource) ([]resources.Resource, error) {
-	resourceAdress := resourceI.(map[string]interface{})["address"].(string)
+func GetComputeResource(resourceI interface{}, mapping map[string]interface{}, resourcesResult []resources.Resource) ([]resources.Resource, error) {
 	resource := resourceI.(map[string]interface{})
-	name, err := GetString("name", resourceAdress, resource, mapping)
+	resourceAddress := resource["address"].(string)
+	context := TFContext{
+		ResourceAddress: resourceAddress,
+		Mapping:         mapping,
+		Resource:        resource,
+	}
+	name, err := GetString("name", context)
 	if err != nil {
 		return nil, err
 	}
-	region, err := GetString("region", resourceAdress, resource, mapping)
+	region, err := GetString("region", context)
 	if err != nil {
 		return nil, err
+	}
+
+	// TODO case of region missing (aws)
+
+	resourceType, err := GetString("type", context)
+	if err != nil {
+		return nil, err
+	}
+
+	index := resource["index"]
+	if index != nil {
+		nameStr := fmt.Sprintf("%s[%d]", *name, int(index.(float64)))
+		name = &nameStr
 	}
 
 	computeResource := resources.ComputeResource{
 		Identification: &resources.ResourceIdentification{
 			Name:         *name,
-			ResourceType: resourceAdress,
+			ResourceType: *resourceType,
 			Provider:     providers.GCP,
 			Region:       *region,
 		},
 		Specs: &resources.ComputeResourceSpecs{},
 	}
-	vcpus, err := GetValue("vCPUs", resourceAdress, resource, mapping)
+
+	// Add vCPUs
+	vcpus, err := GetValue("vCPUs", context)
 	if err != nil {
 		return nil, err
 	}
 	if vcpus != nil && vcpus.Value != nil {
-		computeResource.Specs.VCPUs = int32(vcpus.Value.(float64))
+
+		intValue, err := utils.ParseToInt(vcpus.Value)
+		if err != nil {
+			return nil, err
+		}
+		computeResource.Specs.VCPUs = int32(intValue)
+
 	}
-	memory, err := GetValue("memory", resourceAdress, resource, mapping)
+
+	// Add memory
+	memory, err := GetValue("memory", context)
 	if err != nil {
 		return nil, err
 	}
 	if memory != nil && memory.Value != nil {
-		computeResource.Specs.MemoryMb = int32(memory.Value.(float64))
+		intValue, err := utils.ParseToInt(memory.Value)
+		if err != nil {
+			return nil, err
+		}
+		computeResource.Specs.MemoryMb = int32(intValue)
 		unit := strings.ToLower(*memory.Unit)
 		switch unit {
 		case "gb":
@@ -159,22 +237,71 @@ func GetComputeResource(resourceI interface{}, resourceType string, mapping map[
 			log.Fatalf("Unknown unit for memory: %v", unit)
 		}
 	}
-	// TODO: add GPU
-	// TODO: add CPU type
-	// TODO: add replication factor
 
-	storages, err := GetSlice("storage", resourceAdress, resource, mapping)
+	// Add GPUs
+	gpus, err := GetSlice("guest_accelerator", context)
+	if err != nil {
+		return nil, err
+	}
+	for _, gpuI := range gpus {
+		gpu := gpuI.(map[string]interface{})
+		gpuTypes, err := getGPU(gpu)
+		if err != nil {
+			return nil, errors.Wrapf(err, "Cannot get GPU types for %v", resourceAddress)
+		}
+		computeResource.Specs.GpuTypes = append(computeResource.Specs.GpuTypes, gpuTypes...)
+	}
+
+	// Add CPU type
+	cpuType, err := GetString("cpu_platform", context)
+	if err != nil {
+		return nil, err
+	}
+	if cpuType != nil {
+		computeResource.Specs.CPUType = *cpuType
+	}
+
+	// Add replication factor
+	replicationFactor, err := GetValue("replication_factor", context)
+	if err != nil {
+		return nil, err
+	}
+	if replicationFactor != nil && replicationFactor.Value != nil {
+		intValue, err := utils.ParseToInt(replicationFactor.Value)
+		if err != nil {
+			return nil, err
+		}
+		computeResource.Specs.ReplicationFactor = int32(intValue)
+	}
+
+	// Add count (case of autoscaling group)
+	count, err := GetValue("count", context)
+	if err != nil {
+		return nil, err
+	}
+	if count != nil && count.Value != nil {
+		intValue, err := utils.ParseToInt(count.Value)
+		if err != nil {
+			return nil, err
+		}
+		computeResource.Identification.Count = int64(intValue)
+	} else {
+		computeResource.Identification.Count = 1
+	}
+
+	// Add storage
+	storages, err := GetSlice("storage", context)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, storageI := range storages {
-		storage := storageI.(Storage)
+		storage := getStorage(storageI.(map[string]interface{}))
 		size := storage.SizeGb
 		if storage.IsSSD {
 			computeResource.Specs.SsdStorage = computeResource.Specs.SsdStorage.Add(size)
 		} else {
-			computeResource.Specs.SsdStorage = computeResource.Specs.HddStorage.Add(size)
+			computeResource.Specs.HddStorage = computeResource.Specs.HddStorage.Add(size)
 		}
 	}
 
@@ -183,11 +310,68 @@ func GetComputeResource(resourceI interface{}, resourceType string, mapping map[
 	return resourcesResult, nil
 }
 
-func GetPropertyMappings(mapping map[string]interface{}, key string, resourceType string) []map[string]interface{} {
-	resourcePropertiesMapping := GetMappingProperties(mapping)
+func getGPU(gpu map[string]interface{}) ([]string, error) {
+	gpuTypes := []string{}
+	gpuType := gpu["type"].(*ValueWithUnit)
+	if gpuType == nil {
+		return nil, errors.Errorf("Cannot find GPU type")
+	}
+	count := gpu["count"].(*ValueWithUnit)
+	if count != nil && count.Value != nil {
+		intValue, err := utils.ParseToInt(count.Value)
+		if err != nil {
+			return nil, err
+		}
+		for i := 0; i < intValue; i++ {
+			gpuTypeValue := gpuType.Value.(string)
+			gpuTypes = append(gpuTypes, gpuTypeValue)
+		}
+	}
+	return gpuTypes, nil
+}
+
+func getStorage(storageMap map[string]interface{}) *Storage {
+	storageSize := storageMap["size"].(*ValueWithUnit)
+	storageSizeGb, err := decimal.NewFromString(fmt.Sprintf("%v", storageSize.Value))
+	if err != nil {
+		log.Fatal(err)
+	}
+	storageType := storageMap["type"].(*ValueWithUnit)
+	// TODO get storage size unit correctly
+	unit := storageSize.Unit
+	if unit != nil {
+		if strings.ToLower(*unit) == "mb" {
+			storageSizeGb = storageSizeGb.Div(decimal.NewFromInt32(1024))
+		}
+		if strings.ToLower(*unit) == "tb" {
+			storageSizeGb = storageSizeGb.Mul(decimal.NewFromInt32(1024))
+		}
+		if strings.ToLower(*unit) == "kb" {
+			storageSizeGb = storageSizeGb.Div(decimal.NewFromInt32(1024)).Div(decimal.NewFromInt32(1024))
+		}
+		if strings.ToLower(*unit) == "b" {
+			storageSizeGb = storageSizeGb.Div(decimal.NewFromInt32(1024)).Div(decimal.NewFromInt32(1024)).Div(decimal.NewFromInt32(1024))
+		}
+	}
+
+	isSSD := false
+	if storageType != nil {
+		if strings.ToLower(storageType.Value.(string)) == "ssd" {
+			isSSD = true
+		}
+	}
+	storage := Storage{
+		SizeGb: storageSizeGb,
+		IsSSD:  isSSD,
+	}
+	return &storage
+}
+
+func GetPropertyMappings(key string, context TFContext) []map[string]interface{} {
+	resourcePropertiesMapping := GetMappingProperties(context.Mapping)
 	mappingPropertyI, ok := resourcePropertiesMapping[key]
 	if !ok {
-		log.Debugf("Cannot find resource properties mapping %v of resource type %v", key, resourceType)
+		log.Debugf("Cannot find resource properties mapping %v of resource %v", key, context.ResourceAddress)
 		return nil
 	}
 	var propertyMappings []map[string]interface{}
@@ -197,12 +381,12 @@ func GetPropertyMappings(mapping map[string]interface{}, key string, resourceTyp
 		if !ok {
 			mappingPropertyUniqueI, ok := mappingPropertyI.(map[interface{}]interface{})
 			if !ok {
-				log.Fatalf("Cannot find property mapping %v of resource type %v", key, resourceType)
+				log.Fatalf("Cannot find property mapping %v of resource %v", key, context.ResourceAddress)
 			}
 			var errConv error
 			mappingPropertyUnique, errConv = convertMapKeysToStrings(mappingPropertyUniqueI)
 			if errConv != nil {
-				log.Fatalf("Cannot convert property mapping %v of resource type %v: %v", key, resourceType, errConv)
+				log.Fatalf("Cannot convert property mapping %v of resource %v: %v", key, context.ResourceAddress, errConv)
 			}
 		}
 		propertyMappings = []map[string]interface{}{mappingPropertyUnique}
@@ -210,7 +394,7 @@ func GetPropertyMappings(mapping map[string]interface{}, key string, resourceTyp
 		var errMapping error
 		propertyMappings, errMapping = ConvertInterfaceSlicesToMapSlice(propertyMappingsI)
 		if errMapping != nil {
-			log.Fatalf("Cannot convert property mapping %v of resource type %v: %v", key, resourceType, errMapping)
+			log.Fatalf("Cannot convert property mapping %v of resource %v: %v", key, context.ResourceAddress, errMapping)
 		}
 	}
 	return propertyMappings

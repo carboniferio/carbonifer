@@ -80,6 +80,7 @@ Example usages:
 		outFile := viper.Get("out.file").(string)
 		if outFile == "" {
 			log.Debug("output : stdout")
+			cmd.SetOut(os.Stdout)
 			cmd.Println(reportText)
 		} else {
 			log.Debug("output :", outFile)

@@ -3,3 +3,8 @@ general:
     default: ssd
     types:
       pd-standard: hdd
+  json_data:
+    gcp_machines_types: "gcp_instances.json"
+    gcp_sql_tiers: "gcp_sql_tiers.json"
+  ignored_resources:
+    - ".*_template"
