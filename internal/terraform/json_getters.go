@@ -8,6 +8,7 @@ import (
 	"github.com/carboniferio/carbonifer/internal/utils"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 // Context object
@@ -99,14 +100,12 @@ func GetSliceItems(context TFContext) ([]interface{}, error) {
 				return nil, err
 			}
 		}
-		fmt.Println(path)
 		jsonResults, err := utils.JsonGet(path, context.Resource)
 		if err != nil {
 			return nil, errors.Wrapf(err, "Cannot get item: %v", path)
 		}
 		// if no result, try to get it from the whole plan
 		if len(jsonResults) == 0 {
-			fmt.Println("No result for path", path)
 			jsonResults, err = utils.JsonGet(path, *TfPlan)
 			if err != nil {
 				return nil, errors.Wrapf(err, "Cannot get item: %v", path)
@@ -341,6 +340,10 @@ func resolvePlaceholder(expression string, context TFContext) (string, error) {
 			return "", errors.Errorf("No value found for variable %s", expression)
 		}
 		return fmt.Sprintf("%v", value.Value), err
+	} else if strings.HasPrefix(expression, "config.") {
+		configProperty := strings.TrimPrefix(expression, "config.")
+		value := viper.GetFloat64(configProperty)
+		return fmt.Sprintf("%v", value), nil
 	}
 	variable, err := GetVariable(expression, context, context)
 	if err != nil {
@@ -414,6 +417,9 @@ func GetVariable(name string, context TFContext, parentContext TFContext) (inter
 		value, err := GetValue(name, variableContext)
 		if err != nil {
 			return nil, err
+		}
+		if value == nil {
+			return nil, fmt.Errorf("Cannot get variable : %v", name)
 		}
 		return value.Value, nil
 	} else {

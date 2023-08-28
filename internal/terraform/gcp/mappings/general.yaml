@@ -8,3 +8,4 @@ general:
     gcp_sql_tiers: "gcp_sql_tiers.json"
   ignored_resources:
     - ".*_template"
+    - "google_compute_autoscaler"

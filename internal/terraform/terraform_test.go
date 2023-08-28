@@ -114,8 +114,8 @@ func TestTerraformShow_JSON(t *testing.T) {
 
 	tfPlan, err := CarboniferPlan("test/terraform/planJson/plan.json")
 	assert.NoError(t, err)
-	tfVersion, _ := utils.JsonGet(".terraform_version", tfPlan)
-	assert.Equal(t, "1.3.7", tfVersion)
+	tfVersion, _ := utils.JsonGet(".terraform_version", *tfPlan)
+	assert.Equal(t, "1.3.7", tfVersion[0])
 
 }
 
@@ -133,8 +133,8 @@ func TestTerraformShow_RawPlan(t *testing.T) {
 
 	tfPlan, err := CarboniferPlan("test/terraform/planRaw/plan.tfplan")
 	assert.NoError(t, err)
-	tfVersion, _ := utils.JsonGet(".terraform_version", tfPlan)
-	assert.Equal(t, tfVersion, "1.4.6")
+	tfVersion, _ := utils.JsonGet(".terraform_version", *tfPlan)
+	assert.Equal(t, tfVersion[0], "1.4.6")
 
 }
 
@@ -158,12 +158,12 @@ func TestTerraformShow_SetVarDifferentFromPlanFile(t *testing.T) {
 	plan, err := CarboniferPlan(wd)
 	assert.NoError(t, err)
 	log.Info(plan)
-	machineTypeVar, _ := utils.JsonGet(".variables.machine_type.value", plan)
-	assert.Equal(t, "f1-medium", machineTypeVar)
+	machineTypeVar, _ := utils.JsonGet(".variables.machine_type.value", *plan)
+	assert.Equal(t, "f1-medium", machineTypeVar[0])
 
 	wd2 := path.Join(testutils.RootDir, "test/terraform/planRaw/plan.tfplan")
 	plan2, err2 := CarboniferPlan(wd2)
 	assert.NoError(t, err2)
-	machineTypeVar2, _ := utils.JsonGet(".variables.machine_type.value", plan2)
-	assert.Equal(t, "f1-micro", machineTypeVar2)
+	machineTypeVar2, _ := utils.JsonGet(".variables.machine_type.value", *plan2)
+	assert.Equal(t, "f1-micro", machineTypeVar2[0])
 }
