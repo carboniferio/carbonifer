@@ -5,42 +5,46 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/ghodss/yaml"
-	"github.com/pkg/errors"
 )
 
-type Mappings struct {
+type MappingsFromFiles struct {
 	General         map[string]interface{} `yaml:"general"`
 	ComputeResource map[string]interface{} `yaml:"compute_resource"`
 }
 
-func convertInnerMaps(m map[string]interface{}) (map[string]interface{}, error) {
-	newMap := make(map[string]interface{})
-	for k, v := range m {
-		if innerMap, ok := v.(map[interface{}]interface{}); ok {
-			newInnerMap := make(map[string]interface{})
-			for innerK, innerV := range innerMap {
-				if innerKStr, ok := innerK.(string); ok {
-					newInnerMap[innerKStr] = innerV
-				} else {
-					return nil, fmt.Errorf("invalid key type: expected string, got %T", innerK)
-				}
-			}
-			newMap[k] = newInnerMap
-		} else {
-			newMap[k] = v
-		}
-	}
-	return newMap, nil
+type mappings struct {
+	general         *GeneralConfig
+	computeResource *map[string]map[string]interface{}
 }
 
-func LoadMapping(mappingFolder string) (*Mappings, error) {
-	files, err := os.ReadDir(mappingFolder)
+// Mapping is the mapping of the terraform resources
+var mapping *mappings
+
+// GetMapping returns the mapping of the terraform resources
+func getMapping(provider providers.Provider) (*mappings, error) {
+	if mapping != nil {
+		return mapping, nil
+	}
+	err := loadMapping(provider)
 	if err != nil {
 		return nil, err
 	}
+	return mapping, nil
+}
 
-	mergedMappings := &Mappings{
+func loadMapping(provider providers.Provider) error {
+	if mapping != nil {
+		return nil
+	}
+	mappingFolder := fmt.Sprintf("internal/terraform/%s/mappings", provider)
+	files, err := os.ReadDir(mappingFolder)
+	if err != nil {
+		return err
+	}
+
+	mergedMappings := &MappingsFromFiles{
 		General:         make(map[string]interface{}),
 		ComputeResource: make(map[string]interface{}),
 	}
@@ -51,23 +55,23 @@ func LoadMapping(mappingFolder string) (*Mappings, error) {
 		}
 		yamlFile, err := os.ReadFile(filepath.Join(mappingFolder, file.Name()))
 		if err != nil {
-			return nil, err
+			return err
 		}
 		var currentMapping map[string]interface{}
 		err = yaml.Unmarshal(yamlFile, &currentMapping)
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		generalI := currentMapping["general"]
 		if generalI != nil {
 			generalMapping, ok := generalI.(map[string]interface{})
 			if !ok {
-				return nil, fmt.Errorf("general mapping is not a map[string]interface{}")
+				return fmt.Errorf("general mapping is not a map[string]interface{}")
 			}
 			for k, v := range generalMapping {
 				mergedMappings.General[k] = v
@@ -79,7 +83,7 @@ func LoadMapping(mappingFolder string) (*Mappings, error) {
 		if computeMappingI != nil {
 			computeResourceMapping, ok := computeMappingI.(map[string]interface{})
 			if !ok {
-				return nil, fmt.Errorf("compute_resource mapping is not a map[string]interface{}")
+				return fmt.Errorf("compute_resource mapping is not a map[string]interface{}")
 			}
 			for k, v := range computeResourceMapping {
 				mergedMappings.ComputeResource[k] = v
@@ -87,71 +91,36 @@ func LoadMapping(mappingFolder string) (*Mappings, error) {
 		}
 	}
 
-	return mergedMappings, nil
+	generalConfig, err := convertToGeneralConfig(mergedMappings.General)
+	if err != nil {
+		return err
+	}
+
+	computeResourceMapping, err := convertMapToMapOfMaps(mergedMappings.ComputeResource)
+	if err != nil {
+		return err
+	}
+
+	mapping = &mappings{
+		general:         generalConfig,
+		computeResource: &computeResourceMapping,
+	}
+
+	return nil
 }
 
-func GetMappingProperties(mapping map[string]interface{}) map[string]interface{} {
+func getMappingProperties(mapping map[string]interface{}) map[string]interface{} {
 	propertiesI, ok := mapping["properties"]
 	if !ok {
-		properties, err := ConvertInterfaceToMap(mapping)
+		properties, err := convertInterfaceToMap(mapping)
 		if err != nil {
 			panic(err)
 		}
 		return properties
 	}
-	properties, err := ConvertInterfaceToMap(propertiesI)
+	properties, err := convertInterfaceToMap(propertiesI)
 	if err != nil {
 		panic(err)
 	}
 	return properties
-}
-
-func ConvertInterfaceToMap(input interface{}) (map[string]interface{}, error) {
-	switch typedInput := input.(type) {
-	case map[string]interface{}:
-		return typedInput, nil
-	case map[interface{}]interface{}:
-		strKeysMap, err := convertMapKeysToStrings(typedInput)
-		if err != nil {
-			return nil, err
-		}
-		return convertInnerMaps(strKeysMap)
-	default:
-		return nil, fmt.Errorf("input is neither map[string]interface{} nor map[interface{}]interface{}")
-	}
-}
-
-func ConvertInterfaceSlicesToMapSlice(input []interface{}) ([]map[string]interface{}, error) {
-	var output []map[string]interface{}
-	for _, element := range input {
-		switch typedElement := element.(type) {
-		case map[string]interface{}:
-			output = append(output, typedElement)
-		case map[interface{}]interface{}:
-			strKeysMap, err := convertMapKeysToStrings(typedElement)
-			if err != nil {
-				return nil, err
-			}
-			convertedMap, err := convertInnerMaps(strKeysMap)
-			if err != nil {
-				return nil, err
-			}
-			output = append(output, convertedMap)
-		default:
-			return nil, errors.Errorf("input is neither map[string]interface{} nor map[interface{}]interface{} : %T", element)
-		}
-	}
-	return output, nil
-}
-
-func convertMapKeysToStrings(in map[interface{}]interface{}) (map[string]interface{}, error) {
-	out := make(map[string]interface{})
-	for key, value := range in {
-		strKey, ok := key.(string)
-		if !ok {
-			return nil, fmt.Errorf("cannot convert map key of type %T to string", key)
-		}
-		out[strKey] = value
-	}
-	return out, nil
 }

@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 Carbonifer contact@carbonifer.io
-*/
 package cmd
 
 import (
@@ -17,7 +14,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var test_planCmdHasRun = false
+var testPlanCmdHasRun = false
 
 // planCmd represents the plan command
 var planCmd = &cobra.Command{
@@ -37,7 +34,7 @@ Example usages:
 	carbonifer plan /path/to/terraform/plan.tfplan`,
 	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		test_planCmdHasRun = true
+		testPlanCmdHasRun = true
 		log.Debug("Running command 'plan'")
 
 		workdir, err := os.Getwd()
@@ -71,7 +68,7 @@ Example usages:
 		// Generate report
 		reportText := ""
 		if viper.Get("out.format") == "json" {
-			reportText = output.GenerateReportJson(estimations)
+			reportText = output.GenerateReportJSON(estimations)
 		} else {
 			reportText = output.GenerateReportText(estimations)
 		}

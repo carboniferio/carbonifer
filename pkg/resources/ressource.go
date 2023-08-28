@@ -11,6 +11,7 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// GenericResource is a struct that contains the information of a generic resource
 type GenericResource struct {
 	Name              string
 	Region            string
@@ -34,6 +35,7 @@ func (g GenericResource) IsSupported() bool {
 	}
 }
 
+// GetIdentification returns the identification of the resource
 func (g GenericResource) GetIdentification() *resources.ResourceIdentification {
 	return &resources.ResourceIdentification{
 		Name:         g.Name,
@@ -44,15 +46,18 @@ func (g GenericResource) GetIdentification() *resources.ResourceIdentification {
 	}
 }
 
+// GetAddress returns the address of the resource
 func (g GenericResource) GetAddress() string {
 	return fmt.Sprintf("%v.%v", g.GetIdentification().ResourceType, g.GetIdentification().Name)
 }
 
+// Storage is the struct that contains the storage of a resource
 type Storage struct {
 	HddStorage decimal.Decimal
 	SsdStorage decimal.Decimal
 }
 
+// GetResource returns a GenericResource from an instance type
 func GetResource(instanceType string, zone string, provider providers.Provider) (GenericResource, error) {
 	switch provider {
 	case providers.GCP:
@@ -69,7 +74,7 @@ func fromGCPMachineTypeToResource(region string, machineType gcp.MachineType) Ge
 		Provider:          providers.GCP,
 		GPUTypes:          machineType.GPUTypes,
 		MemoryMb:          machineType.MemoryMb,
-		CPUTypes:          machineType.CpuTypes,
+		CPUTypes:          machineType.CPUTypes,
 		VCPUs:             machineType.Vcpus,
 		Storage:           Storage{},
 		ReplicationFactor: 0,

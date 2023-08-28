@@ -9,6 +9,7 @@ import (
 	"github.com/carboniferio/carbonifer/internal/utils"
 )
 
+// RootDir is the root directory of the project
 var RootDir string
 
 func init() {
@@ -27,6 +28,7 @@ func init() {
 
 }
 
+// SkipWithCreds skips the test if the environment variable SKIP_WITH_CREDENTIALS is set
 func SkipWithCreds(t *testing.T) {
 	if os.Getenv("SKIP_WITH_CREDENTIALS") != "" {
 		t.Skip("Skipping testing requiring providers credentials")

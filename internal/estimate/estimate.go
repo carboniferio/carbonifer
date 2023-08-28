@@ -2,6 +2,7 @@ package estimate
 
 import (
 	"fmt"
+	"sort"
 	"time"
 
 	"github.com/carboniferio/carbonifer/internal/estimate/estimate"
@@ -14,6 +15,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// EstimateResources estimates the power and carbon emissions of a list of resources
 func EstimateResources(resourceList map[string]resources.Resource) estimation.EstimationReport {
 
 	var estimationResources []estimation.EstimationResource
@@ -64,6 +66,14 @@ func EstimateResources(resourceList map[string]resources.Resource) estimation.Es
 
 }
 
+// SortEstimations sorts a list of estimation resources by resource address
+func SortEstimations(resources *[]estimation.EstimationResource) {
+	sort.Slice(*resources, func(i, j int) bool {
+		return (*resources)[i].Resource.GetAddress() < (*resources)[j].Resource.GetAddress()
+	})
+}
+
+// EstimateResource estimates the power and carbon emissions of a resource
 func EstimateResource(resource resources.Resource) (*estimation.EstimationResource, *providers.UnsupportedProviderError) {
 	if !resource.IsSupported() {
 		return estimateNotSupported(resource.(resources.UnsupportedResource)), nil

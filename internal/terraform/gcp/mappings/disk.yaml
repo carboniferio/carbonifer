@@ -24,7 +24,7 @@ compute_resource:
             pattern: "^(.*)-.*$"
             group: 1
       replication_factor:
-        - paths: .values.replica_zones | length
+        - paths: '.values.replica_zones | length | if . == 0 then 1 else . end'
         - default: 1
       storage:
         type: list
@@ -38,7 +38,7 @@ compute_resource:
                 reference:
                   paths: .prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values
                   property: "disk_size_gb"
-              - default: 100
+              - default: 10
                 unit: gb
             type:
               paths: ".type"

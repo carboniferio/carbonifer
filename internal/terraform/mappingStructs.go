@@ -1,9 +1,6 @@
 package terraform
 
-type ComputeResource struct {
-	Resources map[string]Resource `yaml:",inline"`
-}
-
+// TODO try to use this while parsing the yaml
 type Resource struct {
 	Paths      []string                      `yaml:"paths"`
 	Type       string                        `yaml:"type"`
@@ -28,7 +25,7 @@ type PropertyDefinition struct {
 
 type Reference struct {
 	General    string   `yaml:"general,omitempty"`
-	JsonFile   string   `yaml:"json_file,omitempty"`
+	JSONFile   string   `yaml:"json_file,omitempty"`
 	Property   string   `yaml:"property,omitempty"`
 	Paths      []string `yaml:"paths,omitempty"`
 	ReturnPath bool     `yaml:"return_path,omitempty"`

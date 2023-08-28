@@ -11,6 +11,7 @@ import (
 
 var wattPerGPU map[string]GPUWatt
 
+// GPUWatt is the struct that contains the min and max watts of a GPU
 type GPUWatt struct {
 	Name     string
 	MinWatts decimal.Decimal
@@ -23,8 +24,9 @@ type gpuWattCSV struct {
 	MaxWatts float64 `name:"max watts"`
 }
 
-// Source: https://www.cloudcarbonfootprint.org/docs/methodology#appendix-iii-gpus-and-minmax-watts
+// GetGPUWatt returns the min and max watts of a GPU
 func GetGPUWatt(gpuName string) GPUWatt {
+	// Source: https://www.cloudcarbonfootprint.org/docs/methodology#appendix-iii-gpus-and-minmax-watts
 	log.Debugf("  Getting info for GPU type: %v", gpuName)
 	if wattPerGPU == nil {
 		// Read the CSV records

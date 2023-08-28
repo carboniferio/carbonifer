@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestJsonGet(t *testing.T) {
+func TestGetJSON(t *testing.T) {
 	// Sample JSON input for testing
 	json := map[string]interface{}{
 		"name": "John",
@@ -80,7 +80,7 @@ func TestJsonGet(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		result, err := JsonGet(tc.query, json)
+		result, err := GetJSON(tc.query, json)
 		if tc.expectError {
 			assert.Error(t, err, "Expected an error for query: %s", tc.query)
 		} else {

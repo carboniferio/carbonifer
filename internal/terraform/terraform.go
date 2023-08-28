@@ -18,7 +18,7 @@ import (
 
 var terraformExec *tfexec.Terraform
 
-func GetTerraformExec() (*tfexec.Terraform, error) {
+func getTerraformExec() (*tfexec.Terraform, error) {
 	if terraformExec == nil {
 		log.Debugf("Finding or installing terraform exec")
 		// Check if terraform is already installed
@@ -48,7 +48,7 @@ func GetTerraformExec() (*tfexec.Terraform, error) {
 	return terraformExec, nil
 }
 
-func ResetTerraformExec() {
+func resetTerraformExec() {
 	terraformExec = nil
 }
 
@@ -89,8 +89,8 @@ func installTerraform() string {
 	return execPath
 }
 
-func TerraformInit() (*tfexec.Terraform, *context.Context, error) {
-	tf, err := GetTerraformExec()
+func terraformInit() (*tfexec.Terraform, *context.Context, error) {
+	tf, err := getTerraformExec()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -108,6 +108,7 @@ func TerraformInit() (*tfexec.Terraform, *context.Context, error) {
 	return tf, &ctx, err
 }
 
+// CarboniferPlan generates a Terraform plan from a tfplan file or a Terraform directory
 func CarboniferPlan(input string) (*map[string]interface{}, error) {
 	fileInfo, err := os.Stat(input)
 	if err != nil {
@@ -119,25 +120,25 @@ func CarboniferPlan(input string) (*map[string]interface{}, error) {
 		parentDir := filepath.Dir(input)
 		fileName := filepath.Base(input)
 		viper.Set("workdir", parentDir)
-		tfPlan, err := TerraformShow(fileName)
-		return tfPlan, err
-	} else {
-		// If the path points to a directory, run plan
-		viper.Set("workdir", input)
-		tfPlan, err := TerraformPlan()
-		if err != nil {
-			if e, ok := err.(*ProviderAuthError); ok {
-				log.Warnf("Skipping Authentication error: %v", e)
-			} else {
-				return nil, err
-			}
-		}
+		tfPlan, err := terraformShow(fileName)
 		return tfPlan, err
 	}
+	// If the path points to a directory, run plan
+	viper.Set("workdir", input)
+	tfPlan, err := terraformPlan()
+	if err != nil {
+		if e, ok := err.(*ProviderAuthError); ok {
+			log.Warnf("Skipping Authentication error: %v", e)
+		} else {
+			return nil, err
+		}
+	}
+	return tfPlan, err
+
 }
 
-func TerraformPlan() (*map[string]interface{}, error) {
-	tf, ctx, err := TerraformInit()
+func terraformPlan() (*map[string]interface{}, error) {
+	tf, ctx, err := terraformInit()
 	if err != nil {
 		return nil, err
 	}
@@ -172,7 +173,7 @@ func TerraformPlan() (*map[string]interface{}, error) {
 	log.Debugf("Running terraform exec %v", tf.ExecPath())
 
 	// Run Terraform Plan with an output file
-	err = terraformPlanExec(tf, *ctx, tfPlanFile)
+	err = terraformPlanExec(*ctx, tf, tfPlanFile)
 	if err != nil {
 		return nil, err
 	}
@@ -189,15 +190,15 @@ func TerraformPlan() (*map[string]interface{}, error) {
 		return nil, err
 	}
 
-	var tfplanJson map[string]interface{}
-	err = json.Unmarshal(bytes, &tfplanJson)
+	var tfplanJSON map[string]interface{}
+	err = json.Unmarshal(bytes, &tfplanJSON)
 	if err != nil {
 		return nil, err
 	}
-	return &tfplanJson, nil
+	return &tfplanJSON, nil
 }
 
-func terraformPlanExec(tf *tfexec.Terraform, ctx context.Context, tfPlanFile *os.File) error {
+func terraformPlanExec(ctx context.Context, tf *tfexec.Terraform, tfPlanFile *os.File) error {
 	out := tfexec.Out(tfPlanFile.Name())
 	_, err := tf.Plan(ctx, out)
 	var authError ProviderAuthError
@@ -208,15 +209,15 @@ func terraformPlanExec(tf *tfexec.Terraform, ctx context.Context, tfPlanFile *os
 			strings.Contains(uwErr, "no valid credential") {
 			authError = ProviderAuthError{ParentError: err}
 			return &authError
-		} else {
-			log.Errorf("error running  Terraform Plan: %s", err)
-			return err
 		}
+		log.Errorf("error running  Terraform Plan: %s", err)
+		return err
+
 	}
 	return nil
 }
 
-func TerraformShow(fileName string) (*map[string]interface{}, error) {
+func terraformShow(fileName string) (*map[string]interface{}, error) {
 	if strings.HasSuffix(fileName, ".json") {
 		planFilePath := filepath.Join(viper.GetString("workdir"), fileName)
 		log.Debugf("Reading Terraform plan from %v", planFilePath)
@@ -235,7 +236,7 @@ func TerraformShow(fileName string) (*map[string]interface{}, error) {
 		return &tfplan, nil
 	}
 
-	tf, ctx, err := TerraformInit()
+	tf, ctx, err := terraformInit()
 	if err != nil {
 		return nil, err
 	}
@@ -245,16 +246,16 @@ func TerraformShow(fileName string) (*map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	tfPlanJsonBytes, err := json.MarshalIndent(tfPlan, "", "  ")
+	tfPlanJSONBytes, err := json.MarshalIndent(tfPlan, "", "  ")
 	if err != nil {
 		log.Fatalf("Failed to marshal plan: %v", err)
 	}
 
-	var tfPlanJson map[string]interface{}
-	err = json.Unmarshal(tfPlanJsonBytes, &tfPlanJson)
+	var tfPlanJSON map[string]interface{}
+	err = json.Unmarshal(tfPlanJSONBytes, &tfPlanJSON)
 	if err != nil {
 		return nil, err
 	}
 
-	return &tfPlanJson, nil
+	return &tfPlanJSON, nil
 }

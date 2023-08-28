@@ -13,8 +13,17 @@ import (
 	"github.com/yunabe/easycsv"
 )
 
+// EmissionsPerRegion is a map of regions to their emissions
 var EmissionsPerRegion map[string]Emissions
 
+// Emissions is the emissions of a region
+type Emissions struct {
+	Region              string
+	Location            string
+	GridCarbonIntensity decimal.Decimal
+}
+
+// RegionEmission returns the emissions of a region
 func RegionEmission(provider providers.Provider, region string) (*Emissions, error) {
 	var dataFile string
 	switch provider {
@@ -38,22 +47,16 @@ func RegionEmission(provider providers.Provider, region string) (*Emissions, err
 	return &emissions, nil
 }
 
-type EmissionsCSV struct {
+type emissionsCSV struct {
 	Region              string  `name:"Region"`
 	Location            string  `name:"Location"`
 	GridCarbonIntensity float64 `name:"Grid carbon intensity (gCO2eq / kWh)"`
 }
 
-type Emissions struct {
-	Region              string
-	Location            string
-	GridCarbonIntensity decimal.Decimal
-}
-
 // Source: Google
 func loadEmissionsPerRegion(dataFile string) map[string]Emissions {
 	// Read the CSV records
-	var records []EmissionsCSV
+	var records []emissionsCSV
 	regionEmissionFile := data.ReadDataFile(dataFile)
 	log.Debugf("reading GCP region/grid emissions from: %v", dataFile)
 	if err := easycsv.NewReader(strings.NewReader(string(regionEmissionFile))).ReadAll(&records); err != nil {

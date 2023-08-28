@@ -1,6 +1,7 @@
-package gcp
+package terraform
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/carboniferio/carbonifer/internal/providers"
@@ -12,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var persistenDisk tfjson.StateResource = tfjson.StateResource{
+var persistentDisk tfjson.StateResource = tfjson.StateResource{
 	Address: "google_compute_disk.disk1",
 	Type:    "google_compute_disk",
 	Name:    "disk1",
@@ -24,7 +25,7 @@ var persistenDisk tfjson.StateResource = tfjson.StateResource{
 	},
 }
 
-var persistenDiskNoSize tfjson.StateResource = tfjson.StateResource{
+var persistentDiskNoSize tfjson.StateResource = tfjson.StateResource{
 	Address: "google_compute_disk.disk2",
 	Type:    "google_compute_disk",
 	Name:    "disk2",
@@ -53,7 +54,7 @@ var gpuAttachedMachine tfjson.StateResource = tfjson.StateResource{
 	Name:    "attachedgpu",
 	AttributeValues: map[string]interface{}{
 		"name":         "attachedgpu",
-		"machine_type": "n2-standard-2",
+		"machine_type": "n1-standard-2",
 		"zone":         "europe-west9-a",
 		"boot_disk":    []interface{}{},
 		"guest_accelerator": []interface{}{
@@ -78,8 +79,12 @@ var gpuDefaultMachine tfjson.StateResource = tfjson.StateResource{
 }
 
 func TestGetResource(t *testing.T) {
+	mapping, err := getMapping(providers.GCP)
+	assert.NoError(t, err)
+	computeResourceMapping := *mapping.computeResource
 	type args struct {
 		tfResource tfjson.StateResource
+		mapping    map[string]interface{}
 	}
 	tests := []struct {
 		name string
@@ -89,7 +94,8 @@ func TestGetResource(t *testing.T) {
 		{
 			name: "diskWithSize",
 			args: args{
-				tfResource: persistenDisk,
+				tfResource: persistentDisk,
+				mapping:    computeResourceMapping["google_compute_disk"],
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
@@ -100,7 +106,7 @@ func TestGetResource(t *testing.T) {
 					Count:        1,
 				},
 				Specs: &resources.ComputeResourceSpecs{
-					HddStorage:        decimal.NewFromInt(1024),
+					HddStorage:        decimal.New(1024, 0),
 					SsdStorage:        decimal.Zero,
 					ReplicationFactor: 1,
 				},
@@ -109,7 +115,8 @@ func TestGetResource(t *testing.T) {
 		{
 			name: "diskWithNoSize",
 			args: args{
-				tfResource: persistenDiskNoSize,
+				tfResource: persistentDiskNoSize,
+				mapping:    computeResourceMapping["google_compute_disk"],
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
@@ -120,7 +127,7 @@ func TestGetResource(t *testing.T) {
 					Count:        1,
 				},
 				Specs: &resources.ComputeResourceSpecs{
-					HddStorage:        decimal.New(50, 1),
+					HddStorage:        decimal.New(10, 0),
 					SsdStorage:        decimal.Zero,
 					ReplicationFactor: 1,
 				},
@@ -130,6 +137,7 @@ func TestGetResource(t *testing.T) {
 			name: "regionDisk",
 			args: args{
 				tfResource: regionDisk,
+				mapping:    computeResourceMapping["google_compute_disk"],
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
@@ -150,6 +158,7 @@ func TestGetResource(t *testing.T) {
 			name: "gpu attached",
 			args: args{
 				tfResource: gpuAttachedMachine,
+				mapping:    computeResourceMapping["google_compute_instance"],
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
@@ -160,6 +169,8 @@ func TestGetResource(t *testing.T) {
 					Count:        1,
 				},
 				Specs: &resources.ComputeResourceSpecs{
+					VCPUs:    int32(2),
+					MemoryMb: int32(7680),
 					GpuTypes: []string{
 						"nvidia-tesla-k80",
 						"nvidia-tesla-k80",
@@ -174,6 +185,7 @@ func TestGetResource(t *testing.T) {
 			name: "gpu default",
 			args: args{
 				tfResource: gpuDefaultMachine,
+				mapping:    computeResourceMapping["google_compute_instance"],
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
@@ -184,9 +196,7 @@ func TestGetResource(t *testing.T) {
 					Count:        1,
 				},
 				Specs: &resources.ComputeResourceSpecs{
-					GpuTypes: []string{
-						"testing-custom-data-file",
-					},
+					GpuTypes:          nil,
 					VCPUs:             int32(12),
 					MemoryMb:          int32(87040),
 					HddStorage:        decimal.Zero,
@@ -198,9 +208,14 @@ func TestGetResource(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			resource, _ := testutils.TfResourceToJson(tt.args.tfResource)
-			got := GetResource(resource, nil)
-			assert.Equal(t, tt.want, got)
+			resource, _ := testutils.TfResourceToJSON(&tt.args.tfResource)
+			got, err := getComputeResource(*resource, tt.args.mapping, nil)
+			assert.Len(t, got, 1)
+			assert.IsType(t, resources.ComputeResource{}, got[0])
+			gotResource := got[0].(resources.ComputeResource)
+			fmt.Println(gotResource.Specs.SsdStorage)
+			assert.Equal(t, tt.want, gotResource)
+			assert.NoError(t, err)
 		})
 	}
 }

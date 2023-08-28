@@ -12,16 +12,16 @@ import (
 )
 
 // InstanceType is the struct that will be exported in the json
-type InstanceType struct {
+type instanceType struct {
 	InstanceType    string
 	VCPU            int64
 	MemoryMb        int64
 	GPUs            []string
 	GPUMemoryMb     int64
-	InstanceStorage *InstanceStorage
+	InstanceStorage *instanceStorage
 }
 
-type InstanceStorage struct {
+type instanceStorage struct {
 	SizePerDiskGB int64
 	Count         int64
 	Type          string
@@ -38,7 +38,7 @@ func main() {
 
 	// Get the list of instance types
 	// Convert the list of instance types to the InstanceType struct
-	instances := map[string]InstanceType{}
+	instances := map[string]instanceType{}
 	token := describeInstanceTypesPaginated(svc, &instances, nil)
 	for token != nil {
 		token = describeInstanceTypesPaginated(svc, &instances, token)
@@ -52,7 +52,7 @@ func main() {
 	fmt.Println(string(json))
 }
 
-func describeInstanceTypesPaginated(svc *ec2.EC2, instances *map[string]InstanceType, token *string) *string {
+func describeInstanceTypesPaginated(svc *ec2.EC2, instances *map[string]instanceType, token *string) *string {
 	instanceTypesOutput, err := svc.DescribeInstanceTypes(&ec2.DescribeInstanceTypesInput{
 		NextToken: token,
 	})
@@ -60,8 +60,8 @@ func describeInstanceTypesPaginated(svc *ec2.EC2, instances *map[string]Instance
 		panic(err)
 	}
 
-	for _, instanceType := range instanceTypesOutput.InstanceTypes {
-		gpuInfos := instanceType.GpuInfo
+	for _, instanceTypeInfo := range instanceTypesOutput.InstanceTypes {
+		gpuInfos := instanceTypeInfo.GpuInfo
 		totalGPUMemoryMb := int64(0)
 		gpus := []string{}
 		if gpuInfos != nil {
@@ -70,22 +70,22 @@ func describeInstanceTypesPaginated(svc *ec2.EC2, instances *map[string]Instance
 			}
 			totalGPUMemoryMb = *gpuInfos.TotalGpuMemoryInMiB
 		}
-		var instanceStorage InstanceStorage
-		if instanceType.InstanceStorageSupported != nil && *instanceType.InstanceStorageSupported {
-			instanceStorage = InstanceStorage{
-				SizePerDiskGB: *instanceType.InstanceStorageInfo.Disks[0].SizeInGB,
-				Count:         *instanceType.InstanceStorageInfo.Disks[0].Count,
-				Type:          *instanceType.InstanceStorageInfo.Disks[0].Type,
+		var instanceStorageInfo instanceStorage
+		if instanceTypeInfo.InstanceStorageSupported != nil && *instanceTypeInfo.InstanceStorageSupported {
+			instanceStorageInfo = instanceStorage{
+				SizePerDiskGB: *instanceTypeInfo.InstanceStorageInfo.Disks[0].SizeInGB,
+				Count:         *instanceTypeInfo.InstanceStorageInfo.Disks[0].Count,
+				Type:          *instanceTypeInfo.InstanceStorageInfo.Disks[0].Type,
 			}
 		}
-		name := *instanceType.InstanceType
-		instance := InstanceType{
+		name := *instanceTypeInfo.InstanceType
+		instance := instanceType{
 			InstanceType:    name,
-			VCPU:            *instanceType.VCpuInfo.DefaultVCpus,
-			MemoryMb:        *instanceType.MemoryInfo.SizeInMiB,
+			VCPU:            *instanceTypeInfo.VCpuInfo.DefaultVCpus,
+			MemoryMb:        *instanceTypeInfo.MemoryInfo.SizeInMiB,
 			GPUs:            gpus,
 			GPUMemoryMb:     int64(totalGPUMemoryMb),
-			InstanceStorage: &instanceStorage,
+			InstanceStorage: &instanceStorageInfo,
 		}
 		instanceMap := *instances
 		instanceMap[name] = instance

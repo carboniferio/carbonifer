@@ -26,7 +26,7 @@ func TestGetGCPMachineType(t *testing.T) {
 				Vcpus:    2,
 				GPUTypes: nil,
 				MemoryMb: 8192,
-				CpuTypes: []string{
+				CPUTypes: []string{
 					"Skylake", "Broadwell", "Haswell", "AMD EPYC Rome", "AMD EPYC Milan",
 				},
 			},

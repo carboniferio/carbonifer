@@ -19,10 +19,10 @@ func estimateWattCPU(resource *resources.ComputeResource) decimal.Decimal {
 
 	var avgWatts decimal.Decimal
 	// Average Watts = Min Watts + Avg vCPU Utilization * (Max Watts - Min Watts)
-	cpu_platform := resource.Specs.CPUType
-	if cpu_platform != "" && resource.Identification.Provider == providers.GCP {
-		cpu_platform := gcp.GetCPUWatt(strings.ToLower(cpu_platform))
-		avgWatts = cpu_platform.MinWatts.Add(averageCPUUse.Mul(cpu_platform.MaxWatts.Sub(cpu_platform.MinWatts)))
+	cpuPlatform := resource.Specs.CPUType
+	if cpuPlatform != "" && resource.Identification.Provider == providers.GCP {
+		cpuPlatform := gcp.GetCPUWatt(strings.ToLower(cpuPlatform))
+		avgWatts = cpuPlatform.MinWatts.Add(averageCPUUse.Mul(cpuPlatform.MaxWatts.Sub(cpuPlatform.MinWatts)))
 	} else {
 		minWH := coefficients.GetEnergyCoefficients().GetByProvider(provider).CPUMinWh
 		maxWh := coefficients.GetEnergyCoefficients().GetByProvider(provider).CPUMaxWh

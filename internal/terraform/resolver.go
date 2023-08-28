@@ -12,23 +12,23 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type Storage struct {
+type storage struct {
 	SizeGb decimal.Decimal
 	IsSSD  bool
 }
 
-func ApplyReference(valueFound interface{}, propertyMapping map[string]interface{}, resourceAddress string) (interface{}, error) {
+func applyReference(valueFound interface{}, propertyMapping map[string]interface{}, resourceAddress string) (interface{}, error) {
 	refI, ok := propertyMapping["reference"]
 	if !ok {
 		return valueFound, nil
 	}
-	refMap, err := ConvertInterfaceToMap(refI)
+	refMap, err := convertInterfaceToMap(refI)
 	if err != nil {
 		return nil, err
 	}
 	reference := Reference{}
 	if jsonFile, ok := refMap["json_file"]; ok {
-		reference.JsonFile = jsonFile.(string)
+		reference.JSONFile = jsonFile.(string)
 	}
 	if property, ok := refMap["property"]; ok {
 		reference.Property = property.(string)
@@ -51,13 +51,13 @@ func ApplyReference(valueFound interface{}, propertyMapping map[string]interface
 	if jsonFile, ok := refMap["general"]; ok {
 		reference.General = jsonFile.(string)
 	}
-	valueTransformed, err := ResolveReference(valueFound.(string), reference, resourceAddress)
+	valueTransformed, err := resolveReference(valueFound.(string), reference, resourceAddress)
 	return valueTransformed, err
 }
 
-func ResolveReference(key string, reference Reference, resourceAddress string) (interface{}, error) {
-	if reference.JsonFile != "" {
-		filename := GeneralMappingConfig.JSONData[reference.JsonFile]
+func resolveReference(key string, reference Reference, resourceAddress string) (interface{}, error) {
+	if reference.JSONFile != "" {
+		filename := mapping.general.JSONData[reference.JSONFile]
 		byteValue := data.ReadDataFile(filename)
 		var fileMap map[string]interface{}
 		err := json.Unmarshal([]byte(byteValue), &fileMap)
@@ -67,7 +67,7 @@ func ResolveReference(key string, reference Reference, resourceAddress string) (
 		item, ok := fileMap[key]
 		if !ok {
 			// Not an error, for example gcp compute type can be a regex
-			log.Debugf("Cannot find key %v in file %v", key, reference.JsonFile)
+			log.Debugf("Cannot find key %v in file %v", key, reference.JSONFile)
 			return nil, nil
 		}
 		var value interface{}
@@ -75,19 +75,19 @@ func ResolveReference(key string, reference Reference, resourceAddress string) (
 		if property != "" {
 			value, ok = item.(map[string]interface{})[reference.Property]
 			if !ok {
-				log.Fatalf("Cannot find property %v in file %v", reference.Property, reference.JsonFile)
+				log.Fatalf("Cannot find property %v in file %v", reference.Property, reference.JSONFile)
 			}
 		}
 		return value, nil
 	}
 	if reference.General != "" {
-		for providerDiskType, diskType := range GeneralMappingConfig.DiskTypes.Types {
+		for providerDiskType, diskType := range mapping.general.DiskTypes.Types {
 			if providerDiskType == key {
 				return diskType, nil
 			}
 		}
-		if GeneralMappingConfig.DiskTypes.Default != "" {
-			return GeneralMappingConfig.DiskTypes.Default, nil
+		if mapping.general.DiskTypes.Default != "" {
+			return mapping.general.DiskTypes.Default, nil
 		}
 		return "ssd", nil
 	}
@@ -95,12 +95,12 @@ func ResolveReference(key string, reference Reference, resourceAddress string) (
 		templatePlaceholders := map[string]string{
 			"key": key,
 		}
-		paths, err := ReadPaths(reference.Paths, &templatePlaceholders)
+		paths, err := readPaths(reference.Paths, &templatePlaceholders)
 		if err != nil {
 			return nil, err
 		}
 		for _, path := range paths {
-			referencedItems, err := utils.JsonGet(path, *TfPlan)
+			referencedItems, err := utils.GetJSON(path, *TfPlan)
 			if err != nil {
 				return nil, err
 			}
@@ -122,12 +122,12 @@ func ResolveReference(key string, reference Reference, resourceAddress string) (
 	return key, nil
 }
 
-func ApplyRegex(valueFound interface{}, propertyMapping map[string]interface{}, resourceAddressw string) (interface{}, error) {
+func applyRegex(valueFound interface{}, propertyMapping map[string]interface{}, resourceAddressw string) (interface{}, error) {
 	regexI, ok := propertyMapping["regex"]
 	if !ok {
 		return valueFound, nil
 	}
-	regexMap, err := ConvertInterfaceToMap(regexI)
+	regexMap, err := convertInterfaceToMap(regexI)
 	if err != nil {
 		return nil, err
 	}
@@ -136,18 +136,18 @@ func ApplyRegex(valueFound interface{}, propertyMapping map[string]interface{}, 
 		Pattern: regexMap["pattern"].(string),
 		Group:   int(regexMap["group"].(float64)),
 	}
-	valueTransformed, err := ResolveRegex(valueFound.(string), regex)
+	valueTransformed, err := resolveRegex(valueFound.(string), regex)
 	return valueTransformed, err
 }
 
-func ResolveRegex(value string, regex Regex) (string, error) {
+func resolveRegex(value string, regex Regex) (string, error) {
 	r, _ := regexp.Compile(regex.Pattern)
 
 	matches := r.FindStringSubmatch(value)
 
 	if len(matches) > 1 {
 		return matches[regex.Group], nil
-	} else {
-		return "", fmt.Errorf("No match found for regex %v in value %v", regex.Pattern, value)
 	}
+	return "", fmt.Errorf("No match found for regex %v in value %v", regex.Pattern, value)
+
 }

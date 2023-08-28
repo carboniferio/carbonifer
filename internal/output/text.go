@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/carboniferio/carbonifer/internal/estimate"
 	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
-	"github.com/carboniferio/carbonifer/internal/utils"
 	"github.com/olekukonko/tablewriter"
 	log "github.com/sirupsen/logrus"
 )
 
+// GenerateReportText generates a text report from an estimation report
 func GenerateReportText(report estimation.EstimationReport) string {
 	log.Debug("Generating text report")
 	tableString := &strings.Builder{}
@@ -20,7 +21,7 @@ func GenerateReportText(report estimation.EstimationReport) string {
 
 	// Default sort
 	estimations := report.Resources
-	utils.SortEstimations(&estimations)
+	estimate.SortEstimations(&estimations)
 
 	for _, resource := range report.Resources {
 		table.Append([]string{

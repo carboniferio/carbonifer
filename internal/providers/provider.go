@@ -7,6 +7,7 @@ import "fmt"
 //go:generate go-enum --nocase --noprefix --marshal
 type Provider int
 
+// UnsupportedProviderError is an error that occurs when a provider is not supported
 type UnsupportedProviderError struct {
 	Provider string
 }

@@ -7,7 +7,8 @@ import (
 	"github.com/itchyny/gojq"
 )
 
-func JsonGet(query string, json interface{}) ([]interface{}, error) {
+// GetJSON returns the result of a jq query on a json object
+func GetJSON(query string, json interface{}) ([]interface{}, error) {
 	queryParsed, err := gojq.Parse(query)
 	if err != nil {
 		return nil, err

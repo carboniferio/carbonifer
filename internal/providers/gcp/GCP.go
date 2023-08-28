@@ -13,21 +13,24 @@ import (
 	"github.com/yunabe/easycsv"
 )
 
+// MachineType is a struct that contains the information of a GCP machine type
 type MachineType struct {
 	Name     string   `json:"name"`
 	Vcpus    int32    `json:"vcpus"`
 	GPUTypes []string `json:"gpus"`
 	MemoryMb int32    `json:"memoryMb"`
-	CpuTypes []string `json:"cpuTypes"`
+	CPUTypes []string `json:"cpuTypes"`
 }
 
-type SqlTier struct {
+// SQLTier is a struct that contains the information of a GCP SQL tier
+type SQLTier struct {
 	Name        string `json:"name"`
 	Vcpus       int64  `json:"vcpus"`
 	MemoryMb    int64  `json:"memoryMb"`
 	DiskQuotaGB int64  `json:"DiskQuotaGB"`
 }
 
+// CPUWatt is a struct that contains the information of a GCP CPU type
 type CPUWatt struct {
 	Architecture        string
 	MinWatts            decimal.Decimal
@@ -37,8 +40,9 @@ type CPUWatt struct {
 
 var gcpInstanceTypes map[string]MachineType
 var gcpWattPerCPU map[string]CPUWatt
-var gcpSQLTiers map[string]SqlTier
+var gcpSQLTiers map[string]SQLTier
 
+// GetGCPMachineType returns the information of a GCP instance type
 func GetGCPMachineType(machineTypeStr string, zone string) MachineType {
 	log.Debugf("  Getting info for GCP machine type: %v", machineTypeStr)
 	// Custom format is custom-<number_cpus>-<ram_mb>
@@ -83,6 +87,7 @@ type cpuWattCSV struct {
 }
 
 // Source: https://github.com/cloud-carbon-footprint/cloud-carbon-coefficients/blob/5fcb96101c6f28dac5060f8794bca5d4da6c72d8/output/coefficients-gcp-use.csv
+// GetCPUWatt returns the min and max watts of a CPU
 func GetCPUWatt(cpu string) CPUWatt {
 	log.Debugf("  Getting info for GCP CPU type: %v", cpu)
 	if gcpWattPerCPU == nil {
@@ -109,7 +114,8 @@ func GetCPUWatt(cpu string) CPUWatt {
 	return gcpWattPerCPU[strings.ToLower(cpu)]
 }
 
-func GetGCPSQLTier(tierName string) SqlTier {
+// GetGCPSQLTier returns the information of a GCP SQL tier
+func GetGCPSQLTier(tierName string) SQLTier {
 	log.Debugf("  Getting info for GCP SQL tier: %v", tierName)
 	// Custom format db-custom-<number_cpus>-<ram_mb>
 	customTierRegex := regexp.MustCompile(`db-custom-(?P<vcpus>\d+)-(?P<mem>\d+)`)
@@ -127,7 +133,7 @@ func GetGCPSQLTier(tierName string) SqlTier {
 		if err != nil {
 			log.Fatalf(err.Error())
 		}
-		return SqlTier{
+		return SQLTier{
 			Name:     tierName,
 			Vcpus:    int64(vCPUs),
 			MemoryMb: int64(ram),

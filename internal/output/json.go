@@ -7,7 +7,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func GenerateReportJson(estimations estimation.EstimationReport) string {
+// GenerateReportJSON generates a JSON report from an estimation report
+func GenerateReportJSON(estimations estimation.EstimationReport) string {
 	log.Debug("Generating JSON report")
 
 	reportTextBytes, err := json.MarshalIndent(estimations, "", "  ")

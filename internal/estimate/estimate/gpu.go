@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/viper"
 )
 
+// EstimateWattGPU estimates the power consumption of a GPU resource
 func EstimateWattGPU(resource *resources.ComputeResource) decimal.Decimal {
 	// Get average GPU usage
 	provider := strings.ToLower(resource.Identification.Provider.String())

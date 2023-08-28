@@ -9,6 +9,7 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// EstimationReport is the struct that contains the estimation of a resource
 type EstimationReport struct {
 	Resource        resources.GenericResource
 	Power           decimal.Decimal `json:"PowerPerInstance"`
@@ -17,6 +18,7 @@ type EstimationReport struct {
 	Count           decimal.Decimal
 }
 
+// GetEstimation returns the estimation of a resource
 func GetEstimation(resource resources.GenericResource) (EstimationReport, error) {
 	estimation, err := estimate.EstimateResource(toInternalComputeResource(resource))
 	if err != nil {
@@ -35,6 +37,7 @@ func GetEstimation(resource resources.GenericResource) (EstimationReport, error)
 	}, nil
 }
 
+// GetEstimationFromInstanceType returns the estimation of a resource from its instance type
 func GetEstimationFromInstanceType(instanceType string, zone string, provider providers.Provider) (EstimationReport, error) {
 	resource, err := resources.GetResource(instanceType, zone, provider)
 	if err != nil {

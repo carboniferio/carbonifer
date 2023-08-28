@@ -32,6 +32,6 @@ func TestRootPlan(t *testing.T) {
 		log.Debug(err)
 	}
 
-	assert.True(t, test_planCmdHasRun)
+	assert.True(t, testPlanCmdHasRun)
 
 }

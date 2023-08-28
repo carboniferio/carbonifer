@@ -1,15 +1,14 @@
 package utils
 
 import (
+	// embed in order to use go:embed command
 	_ "embed"
 	"io"
 	"os"
 	"path"
 	"path/filepath"
 	"runtime"
-	"sort"
 
-	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
 	"github.com/heirko/go-contrib/logrusHelper"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -18,12 +17,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// InitWithDefaultConfig initializes the configuration with the default config file
 func InitWithDefaultConfig() {
 	initViper("")
 	initLogger()
 	checkDataConfig()
 }
 
+// InitWithConfig initializes the configuration with a custom config file
 func InitWithConfig(customConfigFilePath string) {
 	initViper(customConfigFilePath)
 	initLogger()
@@ -49,7 +50,7 @@ func loadViperDefaults() {
 	log.Debug(settings)
 }
 
-func BasePath() string {
+func basePath() string {
 	_, b, _, _ := runtime.Caller(0)
 	d := filepath.Dir(b)
 	return filepath.Join(d, "../..")
@@ -87,7 +88,7 @@ func initViper(configFilePath string) {
 	// Set absolute data directory
 	dataPath := viper.GetString("data.path")
 	if dataPath != "" && !filepath.IsAbs(dataPath) {
-		basedir := BasePath()
+		basedir := basePath()
 		dataPath = filepath.Join(basedir, dataPath)
 	}
 	viper.Set("data.path", dataPath)
@@ -127,10 +128,4 @@ func checkDataConfig() {
 			log.Fatalf("Empty data directory \"%v\": %v", path, err)
 		}
 	}
-}
-
-func SortEstimations(resources *[]estimation.EstimationResource) {
-	sort.Slice(*resources, func(i, j int) bool {
-		return (*resources)[i].Resource.GetAddress() < (*resources)[j].Resource.GetAddress()
-	})
 }
