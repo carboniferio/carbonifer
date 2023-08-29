@@ -6,11 +6,11 @@ compute_resource:
     type: resource
     properties:
       name:
-        paths: ".name"
+        - paths: ".name"
       address:
-        paths: ".address"
+        - paths: ".address"
       type:
-        paths: ".type"
+        - paths: ".type"
       zone:
         - paths: ".values.zone"
         - paths: ".values.replica_zones[0]"
@@ -27,20 +27,21 @@ compute_resource:
         - paths: '.values.replica_zones | length | if . == 0 then 1 else . end'
         - default: 1
       storage:
-        type: list
-        item:
-          - paths: ".values"
-            size:
-              - paths: ".size"
-                unit: gb
-              - paths: ".image"
-                unit: gb
-                reference:
-                  paths: .prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values
-                  property: "disk_size_gb"
-              - default: 10
-                unit: gb
-            type:
-              paths: ".type"
-              reference:
-                general: disk_types
+        - type: list
+          item:
+            - paths: ".values"
+              properties:
+                size:
+                  - paths: ".size"
+                    unit: gb
+                  - paths: ".image"
+                    unit: gb
+                    reference:
+                      paths: .prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values
+                      property: "disk_size_gb"
+                  - default: 10
+                    unit: gb
+                type:
+                  - paths: ".type"
+                    reference:
+                      general: disk_types

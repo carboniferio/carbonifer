@@ -4,11 +4,11 @@ compute_resource:
     type: resource
     properties:
       name:
-        paths: ".name"
+        - paths: ".name"
       address:
-        paths: ".address"
+        - paths: ".address"
       type:
-        paths: ".type"
+        - paths: ".type"
       vCPUs:
         - paths: ".values.machine_type"
           reference:
@@ -18,7 +18,7 @@ compute_resource:
           regex:
             pattern: ".*custom-([0-9]+)-.*"
             group: 1
-            type: integer
+            value_type: integer
       memory:
         - paths: ".values.machine_type"
           unit: mb
@@ -30,54 +30,57 @@ compute_resource:
           regex:
             pattern: ".*custom-[0-9]+-([0-9]+).*"
             group: 1
-            type: integer
+            value_type: integer
       zone:
-        paths: ".values.zone"
+        - paths: ".values.zone"
       region:
-        paths: ".values.zone"
-        regex:
-          pattern: "^(.*)-.*$"
-          group: 1
+        - paths: ".values.zone"
+          regex:
+            pattern: "^(.*)-.*$"
+            group: 1
       replication_factor:
-        default: 1
+        - default: 1
       cpu_platform:
-        paths: ".values.cpu_platform"
+        - paths: ".values.cpu_platform"
       guest_accelerator:
-        type: list
-        item:
-          - paths: ".values.guest_accelerator"
-            count:
-              paths: ".count"
-              type: integer
-            type:
-              paths: ".type"
-              type: string
+        - type: list
+          item:
+            - paths: ".values.guest_accelerator"
+              properties:
+                count:
+                  - paths: ".count"
+                    value_type: integer
+                type:
+                  - paths: ".type"
+                    value_type: string
       storage:
-        type: list
-        item:
-          - paths: .values.disk[].initialize_params
-            size:
-              - paths: ".size"
-                default: 10
-                unit: gb
-              - paths: ".image"
-                default: 10
-                unit: gb
-                reference:
-                  paths: '.prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values'
-                  property: "disk_size_gb"
-            type:
-              paths: ".type"
-              default: pd-standard
-              reference:
-                general: disk_types
-          - paths: .values.scratch_disk
-            size:
-              paths: ".size"
-              unit: gb
-              default: 375
-            type: 
-              default: ssd
+        - type: list
+          item:
+            - paths: .values.disk[].initialize_params
+              properties:
+                size:
+                  - paths: ".size"
+                    default: 10
+                    unit: gb
+                  - paths: ".image"
+                    default: 10
+                    unit: gb
+                    reference:
+                      paths: '.prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values'
+                      property: "disk_size_gb"
+                type:
+                  - paths: ".type"
+                    default: pd-standard
+                    reference:
+                      general: disk_types
+            - paths: .values.scratch_disk
+              properties:
+                size:
+                  - paths: ".size"
+                    unit: gb
+                    default: 375
+                type: 
+                  - default: ssd
   google_compute_instance_from_template:
     paths:
       - .planned_values.root_module.resources[] | select(.type == "google_compute_instance_from_template")
@@ -85,74 +88,78 @@ compute_resource:
     variables:
       properties:
         template_config:
-          paths:
+          - paths:
             - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.source_instance_template.references[] | select(endswith("id") | not)'
-          reference:
-            paths:
-              - .planned_values.root_module.resources[] | select(.address == "${key}")
-              - .planned_values.root_module.child_modules[].resources | map(select(.address == "${key}"))
-              - .prior_state.values.root_module.resources[] | select(.address == "${key}")
-            return_path: true
+            reference:
+              paths:
+                - .planned_values.root_module.resources[] | select(.address == "${key}")
+                - .planned_values.root_module.child_modules[].resources | map(select(.address == "${key}"))
+                - .prior_state.values.root_module.resources[] | select(.address == "${key}")
+              return_path: true
     properties:
       name:
-        paths: ".name"
+        - paths: ".name"
       address:
-        paths: ".address"
+        - paths: ".address"
       type:
-        paths: ".type"
+        - paths: ".type"
       vCPUs:
-        paths: "${template_config}.values.machine_type"
-        reference:
-          json_file: gcp_machines_types
-          property: "vcpus"
+        - paths: "${template_config}.values.machine_type"
+          reference:
+            json_file: gcp_machines_types
+            property: "vcpus"
       memory:
-        paths: "${template_config}.values.machine_type"
-        unit: mb
-        reference:
-          json_file: gcp_machines_types
-          property: "memoryMb"
+        - paths: "${template_config}.values.machine_type"
+          unit: mb
+          reference:
+            json_file: gcp_machines_types
+            property: "memoryMb"
       zone:
-        paths: ".values.zone"
+        - paths: ".values.zone"
       region:
-        paths: ".values.zone"
-        regex:
-          pattern: "^(.*)-.*$"
-          group: 1
+        - paths: ".values.zone"
+          regex:
+            pattern: "^(.*)-.*$"
+            group: 1
       replication_factor:
-        default: 1
+        - default: 1
       cpu_platform:
-        paths: "${template_config}.values.min_cpu_platform"
+        - paths: "${template_config}.values.min_cpu_platform"
       guest_accelerator:
-        type: list
-        item:
-          - paths: "${template_config}.values.guest_accelerator"
-            count:
-              paths: ".count"
-              type: integer
-            type:
-              paths: ".type"
-              type: string
+        - type: list
+          item:
+            - paths: "${template_config}.values.guest_accelerator"
+              properties:
+                count:
+                  - paths: ".count"
+                    value_type: integer
+                type:
+                  - paths: ".type"
+                    value_type: string
       storage:
-        type: list
-        item:
-          - paths: ${template_config}.values.disk
-            size:
-              - paths: ".disk_size_gb"
-                unit: gb
-              - paths: ".image"
-                unit: gb
-                reference:
-                  paths: .prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values
-                  property: "disk_size_gb"
-              - default: 10
-            type:
-              paths: ".disk_type"
-              default: pd-standard
-              reference:
-                general: disk_types
-          - paths: .values.scratch_disk
-            size:
-              paths: "size"
-              unit: gb
-              default: 375
-            type: ssd
+        - type: list
+          item:
+            - paths: ${template_config}.values.disk
+              properties:
+                size:
+                  - paths: ".disk_size_gb"
+                    unit: gb
+                  - paths: ".image"
+                    unit: gb
+                    reference:
+                      paths: .prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values
+                      property: "disk_size_gb"
+                  - default: 10
+                type:
+                  - paths: ".disk_type"
+                    default: pd-standard
+                    reference:
+                      general: disk_types
+            - paths: .values.scratch_disk
+              properties:
+                size:
+                  - paths: "size"
+                    unit: gb
+                    default: 375
+                type: 
+                  - default: ssd

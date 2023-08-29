@@ -15,15 +15,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type GeneralConfig struct {
-	JSONData  map[string]string `json:"json_data"`
-	DiskTypes struct {
-		Default string            `json:"default"`
-		Types   map[string]string `json:"types"`
-	} `json:"disk_types"`
-	IgnoredResources []string `json:"ignored_resources"`
-}
-
 // TfPlan is the Terraform plan
 var TfPlan *map[string]interface{}
 
@@ -46,12 +37,14 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 	// Get compute resources
 	mapping, err := getMapping(providers.GCP)
 	if err != nil {
-		return nil, err
+		errW := errors.Wrap(err, "Cannot get mapping")
+		return nil, errW
 	}
-	for resourceType, mapping := range *mapping.computeResource {
-		resources, err := getResourcesOfType(resourceType, mapping)
+	for resourceType, mapping := range *mapping.ComputeResource {
+		resources, err := getResourcesOfType(resourceType, &mapping)
 		if err != nil {
-			return nil, err
+			errW := errors.Wrapf(err, "Cannot get resources of type %v", resourceType)
+			return nil, errW
 		}
 
 		for _, resource := range resources {
@@ -87,8 +80,8 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 }
 
 func checkIgnoredResource(resourceType string) bool {
-	ignoredResourceNames := mapping.general.IgnoredResources
-	for _, ignoredResource := range ignoredResourceNames {
+	ignoredResourceNames := globalMappings.General.IgnoredResources
+	for _, ignoredResource := range *ignoredResourceNames {
 		if ignoredResource == resourceType {
 			return true
 		}
@@ -120,11 +113,12 @@ func convertToGeneralConfig(generalMapping map[string]interface{}) (*GeneralConf
 	return &generalConfig, nil
 }
 
-func getResourcesOfType(resourceType string, mapping map[string]interface{}) ([]resources.Resource, error) {
-	pathsProperty := mapping["paths"]
+func getResourcesOfType(resourceType string, mapping *ResourceMapping) ([]resources.Resource, error) {
+	pathsProperty := mapping.Paths
 	paths, err := readPaths(pathsProperty)
 	if err != nil {
-		return nil, err
+		errW := errors.Wrapf(err, "Cannot read paths of resource type %v", resourceType)
+		return nil, errW
 	}
 
 	resourcesResult := []resources.Resource{}
@@ -132,13 +126,15 @@ func getResourcesOfType(resourceType string, mapping map[string]interface{}) ([]
 		log.Debugf("  Reading resources of type '%s' from path '%s'", resourceType, path)
 		resourcesFound, err := utils.GetJSON(path, *TfPlan)
 		if err != nil {
-			return nil, err
+			errW := errors.Wrapf(err, "Cannot find resource for path %v", path)
+			return nil, errW
 		}
 		log.Debugf("  Found %d resources of type '%s'", len(resourcesFound), resourceType)
 		for _, resourceI := range resourcesFound {
 			resourcesResult, err = getComputeResource(resourceI, mapping, resourcesResult)
 			if err != nil {
-				return nil, err
+				errW := errors.Wrapf(err, "Cannot get compute resource for path %v", path)
+				return nil, errW
 			}
 
 		}
@@ -147,12 +143,12 @@ func getResourcesOfType(resourceType string, mapping map[string]interface{}) ([]
 
 }
 
-func getComputeResource(resourceI interface{}, mapping map[string]interface{}, resourcesResult []resources.Resource) ([]resources.Resource, error) {
+func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping, resourcesResult []resources.Resource) ([]resources.Resource, error) {
 	resource := resourceI.(map[string]interface{})
 	resourceAddress := resource["address"].(string)
 	context := tfContext{
 		ResourceAddress: resourceAddress,
-		Mapping:         mapping,
+		Mapping:         resourceMapping,
 		Resource:        resource,
 	}
 	name, err := getString("name", context)
@@ -354,7 +350,8 @@ func getStorage(storageMap map[string]interface{}) *storage {
 
 	isSSD := false
 	if storageType != nil {
-		if strings.ToLower(storageType.Value.(string)) == "ssd" {
+		storageTypeValue := storageType.Value.(string)
+		if strings.ToLower(storageTypeValue) == "ssd" {
 			isSSD = true
 		}
 	}
@@ -365,35 +362,33 @@ func getStorage(storageMap map[string]interface{}) *storage {
 	return &storage
 }
 
-func getPropertyMappings(key string, context tfContext) []map[string]interface{} {
-	resourcePropertiesMapping := getMappingProperties(context.Mapping)
-	mappingPropertyI, ok := resourcePropertiesMapping[key]
-	if !ok {
-		log.Debugf("Cannot find resource properties mapping %v of resource %v", key, context.ResourceAddress)
-		return nil
-	}
-	var propertyMappings []map[string]interface{}
-	propertyMappingsI, ok := mappingPropertyI.([]interface{})
-	if !ok {
-		mappingPropertyUnique, ok := mappingPropertyI.(map[string]interface{})
-		if !ok {
-			mappingPropertyUniqueI, ok := mappingPropertyI.(map[interface{}]interface{})
-			if !ok {
-				log.Fatalf("Cannot find property mapping %v of resource %v", key, context.ResourceAddress)
-			}
-			var errConv error
-			mappingPropertyUnique, errConv = convertMapKeysToStrings(mappingPropertyUniqueI)
-			if errConv != nil {
-				log.Fatalf("Cannot convert property mapping %v of resource %v: %v", key, context.ResourceAddress, errConv)
-			}
-		}
-		propertyMappings = []map[string]interface{}{mappingPropertyUnique}
-	} else {
-		var errMapping error
-		propertyMappings, errMapping = convertInterfaceSlicesToMapSlice(propertyMappingsI)
-		if errMapping != nil {
-			log.Fatalf("Cannot convert property mapping %v of resource %v: %v", key, context.ResourceAddress, errMapping)
-		}
-	}
-	return propertyMappings
-}
+// func getPropertyMappings(key string, context tfContext) []map[string]interface{} {
+// 	resourcePropertiesMapping := (*context.Mapping).Properties
+// 	mappingProperty, ok := (*resourcePropertiesMapping)[key]
+// 	if !ok {
+// 		log.Fatalf("Cannot find property mapping %v of resource %v", key, context.ResourceAddress)
+// 	}
+// 	propertyMappingsI, ok := mappingPropertyI.([]interface{})
+// 	if !ok {
+// 		mappingPropertyUnique, ok := mappingPropertyI.(map[string]interface{})
+// 		if !ok {
+// 			mappingPropertyUniqueI, ok := mappingPropertyI.(map[interface{}]interface{})
+// 			if !ok {
+// 				log.Fatalf("Cannot find property mapping %v of resource %v", key, context.ResourceAddress)
+// 			}
+// 			var errConv error
+// 			mappingPropertyUnique, errConv = convertMapKeysToStrings(mappingPropertyUniqueI)
+// 			if errConv != nil {
+// 				log.Fatalf("Cannot convert property mapping %v of resource %v: %v", key, context.ResourceAddress, errConv)
+// 			}
+// 		}
+// 		propertyMappings = []map[string]interface{}{mappingPropertyUnique}
+// 	} else {
+// 		var errMapping error
+// 		propertyMappings, errMapping = convertInterfaceSlicesToMapSlice(propertyMappingsI)
+// 		if errMapping != nil {
+// 			log.Fatalf("Cannot convert property mapping %v of resource %v: %v", key, context.ResourceAddress, errMapping)
+// 		}
+// 	}
+// 	return propertyMappings
+// }

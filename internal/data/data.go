@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/viper"
@@ -38,7 +39,8 @@ func readEmbeddedFile(filename string) []byte {
 	log.Debugf("  reading datafile '%v' embedded", filename)
 	data, err := fs.ReadFile(data, "data/"+filename)
 	if err != nil {
-		log.Fatal(err)
+		errW := errors.Wrap(err, "cannot read embedded data file")
+		log.Fatal(errW)
 	}
 	return data
 }

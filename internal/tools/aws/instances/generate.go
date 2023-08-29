@@ -9,6 +9,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/pkg/errors"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // InstanceType is the struct that will be exported in the json
@@ -32,7 +35,8 @@ func main() {
 	// Create a EC2 service client.
 	session, err := session.NewSession(&aws.Config{Region: aws.String("us-east-1")})
 	if err != nil {
-		panic(err)
+		errW := errors.Wrap(err, "cannot create aws session")
+		log.Panic(errW)
 	}
 	svc := ec2.New(session)
 
@@ -47,7 +51,8 @@ func main() {
 	// Write the list of instances to stdout
 	json, err := json.MarshalIndent(instances, "", "  ")
 	if err != nil {
-		panic(err)
+		errW := errors.Wrap(err, "cannot marshal instances to json")
+		log.Panic(errW)
 	}
 	fmt.Println(string(json))
 }
@@ -57,7 +62,8 @@ func describeInstanceTypesPaginated(svc *ec2.EC2, instances *map[string]instance
 		NextToken: token,
 	})
 	if err != nil {
-		panic(err)
+		errW := errors.Wrap(err, "cannot describe instance types")
+		log.Panic(errW)
 	}
 
 	for _, instanceTypeInfo := range instanceTypesOutput.InstanceTypes {

@@ -14,7 +14,7 @@ import (
 // tfContext is the context of a terraform resource
 type tfContext struct {
 	Resource        map[string]interface{} // Json of the terraform plan resource
-	Mapping         map[string]interface{} // Mapping of the resource type
+	Mapping         *ResourceMapping       // Mapping of the resource type
 	ResourceAddress string                 // Address of the resource in tf plan
 	ParentContext   *tfContext             // Parent context
 }
@@ -39,43 +39,33 @@ func getString(key string, context tfContext) (*string, error) {
 func getSlice(key string, context tfContext) ([]interface{}, error) {
 	results := []interface{}{}
 
-	sliceMappingI := getMappingProperties(context.Mapping)[key]
-	if sliceMappingI == nil {
-		return nil, nil
-	}
-	sliceMapping, ok := sliceMappingI.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("Cannot get mapping for %v of resource type %v", key, context.ResourceAddress)
-	}
+	sliceMappings := (*context.Mapping.Properties)[key]
 
 	// Check we are well working on a list
-	t, ok := sliceMapping["type"]
-	if !ok || t != "list" {
-		return nil, fmt.Errorf("Cannot get slice for %v if resource '.type' is not 'list'", key)
-	}
+	for _, sliceMapping := range sliceMappings {
 
-	// get mapping of items of the list
-	mappingItemsI, ok := sliceMapping["item"]
-	if !ok {
-		return nil, fmt.Errorf("Cannot get items property of mapping for %v of resource type %v", key, context.ResourceAddress)
-	}
-	mappingItems, ok := mappingItemsI.([]interface{})
-	if !ok {
-		return nil, fmt.Errorf("Items is not a list for %v of resource type %v", key, context.ResourceAddress)
-	}
-	for _, itemMappingI := range mappingItems {
-		itemMapping := itemMappingI.(map[string]interface{})
-		context := tfContext{
-			Resource:        context.Resource,
-			Mapping:         itemMapping,
-			ResourceAddress: context.ResourceAddress + "." + key,
-			ParentContext:   &context,
+		if sliceMapping.ValueType != nil && *sliceMapping.ValueType != "list" {
+			return nil, fmt.Errorf("Cannot get slice for %v if resource '.type' is not 'list'", key)
 		}
-		itemResults, err := getSliceItems(context)
-		if err != nil {
-			return nil, err
+
+		// get mapping of items of the list
+		mappingItems := sliceMapping.Item
+		if mappingItems == nil {
+			return nil, fmt.Errorf("Items is not a list for %v of resource type %v", key, context.ResourceAddress)
 		}
-		results = append(results, itemResults...)
+		for _, itemMapping := range *mappingItems {
+			context := tfContext{
+				Resource:        context.Resource,
+				Mapping:         &itemMapping,
+				ResourceAddress: context.ResourceAddress + "." + key,
+				ParentContext:   &context,
+			}
+			itemResults, err := getSliceItems(context)
+			if err != nil {
+				return nil, err
+			}
+			results = append(results, itemResults...)
+		}
 	}
 
 	return results, nil
@@ -84,13 +74,10 @@ func getSlice(key string, context tfContext) ([]interface{}, error) {
 func getSliceItems(context tfContext) ([]interface{}, error) {
 	itemMapping := context.Mapping
 	results := []interface{}{}
-	pathsProperty := itemMapping["paths"]
-	paths, err := readPaths(pathsProperty)
+	paths, err := readPaths(itemMapping.Paths)
 	if err != nil {
 		return nil, fmt.Errorf("Cannot get paths for %v: %v", context.ResourceAddress, err)
 	}
-
-	itemMappingProperties := getMappingProperties(itemMapping)
 
 	for _, pathRaw := range paths {
 		path := pathRaw
@@ -114,7 +101,7 @@ func getSliceItems(context tfContext) ([]interface{}, error) {
 		for _, jsonResultsI := range jsonResults {
 			switch jsonResults := jsonResultsI.(type) {
 			case map[string]interface{}:
-				result, err := getItem(context, itemMappingProperties, jsonResults)
+				result, err := getItem(context, itemMapping, jsonResults)
 				if err != nil {
 					return nil, err
 				}
@@ -125,7 +112,7 @@ func getSliceItems(context tfContext) ([]interface{}, error) {
 					if !ok {
 						return nil, errors.Errorf("Cannot convert jsonResultI to map[string]interface{}: %v", jsonResultI)
 					}
-					result, err := getItem(context, itemMappingProperties, jsonResultI)
+					result, err := getItem(context, itemMapping, jsonResultI)
 					if err != nil {
 						return nil, err
 					}
@@ -139,9 +126,9 @@ func getSliceItems(context tfContext) ([]interface{}, error) {
 	return results, nil
 }
 
-func getItem(context tfContext, itemMappingProperties map[string]interface{}, jsonResultI map[string]interface{}) (interface{}, error) {
+func getItem(context tfContext, itemMappingProperties *ResourceMapping, jsonResultI map[string]interface{}) (interface{}, error) {
 	result := map[string]interface{}{}
-	for key := range itemMappingProperties {
+	for key := range *itemMappingProperties.Properties {
 		if key == "paths" {
 			continue
 		}
@@ -202,28 +189,14 @@ func readPaths(pathsProperty interface{}, pathTemplateValuesParams ...*map[strin
 
 func getValue(key string, context tfContext) (*valueWithUnit, error) {
 
-	propertyMappings := getPropertyMappings(key, context)
-	if propertyMappings == nil {
-		log.Debugf("No property mapping found for key %v of resource type %v", key, context.ResourceAddress)
-		return nil, nil
-	}
-
 	var valueFound interface{}
-	for _, propertyMapping := range propertyMappings {
-		pathProperty := propertyMapping["paths"]
-		paths, err := readPaths(pathProperty)
+	propertiesMappings := (*context.Mapping.Properties)[key]
+	for _, propertyMapping := range propertiesMappings {
+		paths, err := readPaths(propertyMapping.Paths)
 		if err != nil {
 			return nil, err
 		}
-		var unit *string
-		unitI := propertyMapping["unit"]
-		if unitI != nil {
-			unitStr, ok := unitI.(string)
-			if !ok {
-				return nil, fmt.Errorf("Cannot convert unit to string: %v", unitI)
-			}
-			unit = &unitStr
-		}
+		unit := propertyMapping.Unit
 
 		for _, pathRaw := range paths {
 			if valueFound != nil {
@@ -257,11 +230,11 @@ func getValue(key string, context tfContext) (*valueWithUnit, error) {
 		}
 
 		if valueFound != nil {
-			valueFound, err = applyRegex(valueFound, propertyMapping, context.ResourceAddress)
+			valueFound, err = applyRegex(valueFound, &propertyMapping, context.ResourceAddress)
 			if err != nil {
 				return nil, err
 			}
-			valueFound, err = applyReference(valueFound, propertyMapping, context.ResourceAddress)
+			valueFound, err = applyReference(valueFound, &propertyMapping, context.ResourceAddress)
 			if err != nil {
 				return nil, err
 			}
@@ -351,73 +324,58 @@ func resolvePlaceholder(expression string, context tfContext) (string, error) {
 }
 
 func getDefaultValue(key string, context tfContext) (*valueWithUnit, error) {
-	propertyMappings := getPropertyMappings(key, context)
-	if propertyMappings == nil {
+	propertyMappings, ok := (*context.Mapping.Properties)[key]
+	if !ok {
 		log.Debugf("No property mapping found for key %v of resource type %v", key, context.ResourceAddress)
 		return nil, nil
 	}
 
-	var valueFound interface{}
-	var unit *string
 	for _, propertyMapping := range propertyMappings {
-		if valueFound != nil {
-			break
-		}
-		defaultValue, ok := propertyMapping["default"]
-		if !ok {
-			continue
-		}
-		valueFound = defaultValue
-		unitI := propertyMapping["unit"]
-		if unitI != nil {
-			unitStr, ok := unitI.(string)
-			if !ok {
-				return nil, fmt.Errorf("Cannot convert unit to string: %v", unitI)
-			}
-			unit = &unitStr
-		}
+		if propertyMapping.Default != nil {
 
-		var err error
-		valueFound, err = applyRegex(valueFound, propertyMapping, context.ResourceAddress)
-		if err != nil {
-			return nil, err
+			valueFound := propertyMapping.Default
+			unit := propertyMapping.Unit
+			var err error
+			valueFound, err = applyRegex(valueFound, &propertyMapping, context.ResourceAddress)
+			if err != nil {
+				return nil, err
+			}
+			valueFound, err = applyReference(valueFound, &propertyMapping, context.ResourceAddress)
+			if err != nil {
+				return nil, err
+			}
+
+			if valueFound != nil {
+				return &valueWithUnit{
+					Value: valueFound,
+					Unit:  unit,
+				}, nil
+			}
+			return nil, nil
 		}
-		valueFound, err = applyReference(valueFound, propertyMapping, context.ResourceAddress)
-		if err != nil {
-			return nil, err
-		}
-	}
-	if valueFound != nil {
-		return &valueWithUnit{
-			Value: valueFound,
-			Unit:  unit,
-		}, nil
 	}
 	return nil, nil
 
 }
 
 func getVariable(name string, context tfContext, parentContext tfContext) (interface{}, error) {
-	variablesMapping := context.Mapping["variables"]
-	if variablesMapping == nil {
+	variablesMappings := context.Mapping.Variables
+	if variablesMappings == nil {
 		return nil, nil
 	}
-	if variables, ok := variablesMapping.(map[string]interface{}); ok {
-		variableContext := tfContext{
-			Resource:        context.Resource,
-			Mapping:         variables,
-			ResourceAddress: context.ResourceAddress + ".variables",
-			ParentContext:   &parentContext,
-		}
-		value, err := getValue(name, variableContext)
-		if err != nil {
-			return nil, err
-		}
-		if value == nil {
-			return nil, fmt.Errorf("Cannot get variable : %v", name)
-		}
-		return value.Value, nil
-	} else {
-		return nil, fmt.Errorf("Cannot convert variables to map[string]interface{}: %v", variablesMapping)
+	variableContext := tfContext{
+		Resource:        context.Resource,
+		Mapping:         variablesMappings,
+		ResourceAddress: context.ResourceAddress + ".variables",
+		ParentContext:   &parentContext,
 	}
+	value, err := getValue(name, variableContext)
+	if err != nil {
+		return nil, err
+	}
+	if value == nil {
+		return nil, fmt.Errorf("Cannot get variable : %v", name)
+	}
+	return value.Value, nil
+
 }

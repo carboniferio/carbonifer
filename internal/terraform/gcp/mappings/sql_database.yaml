@@ -4,11 +4,11 @@ compute_resource:
     type: resource
     properties:
       name:
-        paths: ".name"
+        - paths: ".name"
       address:
-        paths: ".address"
+        - paths: ".address"
       type:
-        paths: ".type"
+        - paths: ".type"
       vCPUs:
         - paths: ".values.settings[0].tier"
           reference:
@@ -21,7 +21,7 @@ compute_resource:
             json_file: gcp_sql_tiers
             property: "memoryMb"
       zone:
-        paths: ".values.zone"
+        - paths: ".values.zone"
       region:
         - paths: ".values.zone"
           regex:
@@ -29,16 +29,17 @@ compute_resource:
             group: 1
         - paths: ".values.region"
       replication_factor:
-        default: 1
-        paths: '.values.settings[0] | if .availability_type == "REGIONAL" then 2 else 1 end'
+        - paths: '.values.settings[0] | if .availability_type == "REGIONAL" then 2 else 1 end'
+        - default: 1
       storage:
-        type: list
-        item:
-          - paths: .values.settings[0]
-            size:
-              - paths: ".disk_size"
-                default: 10
-                unit: gb
-            type:
-              paths: 'if .disk_type | test("(?i)ssd$") then "ssd" elif .disk_type | test("(?i)hdd$") then "hdd" else null end'
-              default: ssd
+        - type: list
+          item:
+            - paths: .values.settings[0]
+              properties:
+                size:
+                  - paths: ".disk_size"
+                    default: 10
+                    unit: gb
+                type:
+                  - paths: 'if .disk_type | test("(?i)ssd$") then "ssd" elif .disk_type | test("(?i)hdd$") then "hdd" else null end'
+                    default: ssd

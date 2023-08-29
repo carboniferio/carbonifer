@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/carboniferio/carbonifer/internal/estimate"
@@ -59,7 +60,8 @@ Example usages:
 		// Read resources from terraform plan
 		resources, err := terraform.GetResources(tfPlan)
 		if err != nil {
-			log.Panic(err)
+			errW := errors.Wrap(err, "Failed to get resources from terraform plan")
+			log.Panic(errW)
 		}
 
 		// Estimate CO2 emissions

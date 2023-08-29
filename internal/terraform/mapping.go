@@ -6,36 +6,26 @@ import (
 	"path/filepath"
 
 	"github.com/carboniferio/carbonifer/internal/providers"
-	"github.com/ghodss/yaml"
+	"github.com/polkeli/yaml/v3" // TODO use go-yaml https://github.com/go-yaml/yaml/issues/100#issuecomment-1632853107
 )
 
-type MappingsFromFiles struct {
-	General         map[string]interface{} `yaml:"general"`
-	ComputeResource map[string]interface{} `yaml:"compute_resource"`
-}
-
-type mappings struct {
-	general         *GeneralConfig
-	computeResource *map[string]map[string]interface{}
-}
-
 // Mapping is the mapping of the terraform resources
-var mapping *mappings
+var globalMappings *Mappings
 
 // GetMapping returns the mapping of the terraform resources
-func getMapping(provider providers.Provider) (*mappings, error) {
-	if mapping != nil {
-		return mapping, nil
+func getMapping(provider providers.Provider) (*Mappings, error) {
+	if globalMappings != nil {
+		return globalMappings, nil
 	}
 	err := loadMapping(provider)
 	if err != nil {
 		return nil, err
 	}
-	return mapping, nil
+	return globalMappings, nil
 }
 
 func loadMapping(provider providers.Provider) error {
-	if mapping != nil {
+	if globalMappings != nil {
 		return nil
 	}
 	mappingFolder := fmt.Sprintf("internal/terraform/%s/mappings", provider)
@@ -44,9 +34,9 @@ func loadMapping(provider providers.Provider) error {
 		return err
 	}
 
-	mergedMappings := &MappingsFromFiles{
-		General:         make(map[string]interface{}),
-		ComputeResource: make(map[string]interface{}),
+	mergedMappings := &Mappings{
+		General:         &GeneralConfig{},
+		ComputeResource: &map[string]ResourceMapping{},
 	}
 
 	for _, file := range files {
@@ -57,70 +47,25 @@ func loadMapping(provider providers.Provider) error {
 		if err != nil {
 			return err
 		}
-		var currentMapping map[string]interface{}
+		var currentMapping Mappings
 		err = yaml.Unmarshal(yamlFile, &currentMapping)
 		if err != nil {
 			return err
 		}
 
-		if err != nil {
-			return err
+		if currentMapping.General != nil {
+			mergedMappings.General = currentMapping.General
 		}
 
-		generalI := currentMapping["general"]
-		if generalI != nil {
-			generalMapping, ok := generalI.(map[string]interface{})
-			if !ok {
-				return fmt.Errorf("general mapping is not a map[string]interface{}")
-			}
-			for k, v := range generalMapping {
-				mergedMappings.General[k] = v
-			}
-
-		}
-
-		computeMappingI := currentMapping["compute_resource"]
-		if computeMappingI != nil {
-			computeResourceMapping, ok := computeMappingI.(map[string]interface{})
-			if !ok {
-				return fmt.Errorf("compute_resource mapping is not a map[string]interface{}")
-			}
-			for k, v := range computeResourceMapping {
-				mergedMappings.ComputeResource[k] = v
+		if currentMapping.ComputeResource != nil {
+			for k, v := range *currentMapping.ComputeResource {
+				(*mergedMappings.ComputeResource)[k] = v
 			}
 		}
+
 	}
 
-	generalConfig, err := convertToGeneralConfig(mergedMappings.General)
-	if err != nil {
-		return err
-	}
-
-	computeResourceMapping, err := convertMapToMapOfMaps(mergedMappings.ComputeResource)
-	if err != nil {
-		return err
-	}
-
-	mapping = &mappings{
-		general:         generalConfig,
-		computeResource: &computeResourceMapping,
-	}
+	globalMappings = mergedMappings
 
 	return nil
-}
-
-func getMappingProperties(mapping map[string]interface{}) map[string]interface{} {
-	propertiesI, ok := mapping["properties"]
-	if !ok {
-		properties, err := convertInterfaceToMap(mapping)
-		if err != nil {
-			panic(err)
-		}
-		return properties
-	}
-	properties, err := convertInterfaceToMap(propertiesI)
-	if err != nil {
-		panic(err)
-	}
-	return properties
 }

@@ -81,10 +81,10 @@ var gpuDefaultMachine tfjson.StateResource = tfjson.StateResource{
 func TestGetResource(t *testing.T) {
 	mapping, err := getMapping(providers.GCP)
 	assert.NoError(t, err)
-	computeResourceMapping := *mapping.computeResource
+	computeResourceMapping := *mapping.ComputeResource
 	type args struct {
 		tfResource tfjson.StateResource
-		mapping    map[string]interface{}
+		mapping    ResourceMapping
 	}
 	tests := []struct {
 		name string
@@ -209,7 +209,7 @@ func TestGetResource(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			resource, _ := testutils.TfResourceToJSON(&tt.args.tfResource)
-			got, err := getComputeResource(*resource, tt.args.mapping, nil)
+			got, err := getComputeResource(*resource, &tt.args.mapping, nil)
 			assert.Len(t, got, 1)
 			assert.IsType(t, resources.ComputeResource{}, got[0])
 			gotResource := got[0].(resources.ComputeResource)

@@ -2,7 +2,6 @@ package terraform
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"regexp"
 
@@ -17,48 +16,24 @@ type storage struct {
 	IsSSD  bool
 }
 
-func applyReference(valueFound interface{}, propertyMapping map[string]interface{}, resourceAddress string) (interface{}, error) {
-	refI, ok := propertyMapping["reference"]
-	if !ok {
+func applyReference(valueFound interface{}, propertyMapping *PropertyDefinition, resourceAddress string) (interface{}, error) {
+	if propertyMapping == nil || propertyMapping.Reference == nil {
 		return valueFound, nil
 	}
-	refMap, err := convertInterfaceToMap(refI)
-	if err != nil {
-		return nil, err
-	}
-	reference := Reference{}
-	if jsonFile, ok := refMap["json_file"]; ok {
-		reference.JSONFile = jsonFile.(string)
-	}
-	if property, ok := refMap["property"]; ok {
-		reference.Property = property.(string)
-	}
-	if returnPath, ok := refMap["return_path"]; ok {
-		reference.ReturnPath = returnPath.(bool)
-	}
-	if propertyI, ok := refMap["paths"]; ok {
-		switch property := propertyI.(type) {
-		case []string:
-			reference.Paths = property
-		case []interface{}:
-			reference.Paths = utils.ConvertInterfaceListToStringList(property)
-		case string:
-			reference.Paths = []string{property}
-		default:
-			return nil, errors.New("Cannot convert paths to string or []string")
-		}
-	}
-	if jsonFile, ok := refMap["general"]; ok {
-		reference.General = jsonFile.(string)
-	}
+
+	reference := propertyMapping.Reference
 	valueTransformed, err := resolveReference(valueFound.(string), reference, resourceAddress)
 	return valueTransformed, err
 }
 
-func resolveReference(key string, reference Reference, resourceAddress string) (interface{}, error) {
+func resolveReference(key string, reference *Reference, resourceAddress string) (interface{}, error) {
 	if reference.JSONFile != "" {
-		filename := mapping.general.JSONData[reference.JSONFile]
-		byteValue := data.ReadDataFile(filename)
+		generalMappings := globalMappings.General
+		filename, ok := (*generalMappings.JSONData)[reference.JSONFile]
+		if !ok {
+			log.Fatalf("Cannot find file %v in general.json_data", reference.JSONFile)
+		}
+		byteValue := data.ReadDataFile(filename.(string))
 		var fileMap map[string]interface{}
 		err := json.Unmarshal([]byte(byteValue), &fileMap)
 		if err != nil {
@@ -81,13 +56,13 @@ func resolveReference(key string, reference Reference, resourceAddress string) (
 		return value, nil
 	}
 	if reference.General != "" {
-		for providerDiskType, diskType := range mapping.general.DiskTypes.Types {
+		for providerDiskType, diskType := range *globalMappings.General.DiskTypes.Types {
 			if providerDiskType == key {
 				return diskType, nil
 			}
 		}
-		if mapping.general.DiskTypes.Default != "" {
-			return mapping.general.DiskTypes.Default, nil
+		if globalMappings.General.DiskTypes.Default != nil {
+			return globalMappings.General.DiskTypes.Default, nil
 		}
 		return "ssd", nil
 	}
@@ -122,20 +97,11 @@ func resolveReference(key string, reference Reference, resourceAddress string) (
 	return key, nil
 }
 
-func applyRegex(valueFound interface{}, propertyMapping map[string]interface{}, resourceAddressw string) (interface{}, error) {
-	regexI, ok := propertyMapping["regex"]
-	if !ok {
+func applyRegex(valueFound interface{}, propertyMapping *PropertyDefinition, resourceAddressw string) (interface{}, error) {
+	if propertyMapping == nil || propertyMapping.Regex == nil {
 		return valueFound, nil
 	}
-	regexMap, err := convertInterfaceToMap(regexI)
-	if err != nil {
-		return nil, err
-	}
-
-	regex := Regex{
-		Pattern: regexMap["pattern"].(string),
-		Group:   int(regexMap["group"].(float64)),
-	}
+	regex := *propertyMapping.Regex
 	valueTransformed, err := resolveRegex(valueFound.(string), regex)
 	return valueTransformed, err
 }

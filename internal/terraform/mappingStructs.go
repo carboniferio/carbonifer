@@ -1,26 +1,36 @@
 package terraform
 
-// TODO try to use this while parsing the yaml
-type Resource struct {
-	Paths      []string                      `yaml:"paths"`
-	Type       string                        `yaml:"type"`
-	Variables  map[string]VariableConfig     `yaml:"variables,omitempty"`
-	Properties map[string]PropertyDefinition `yaml:"properties"`
+type Mappings struct {
+	General         *GeneralConfig              `yaml:"general,omitempty"`
+	ComputeResource *map[string]ResourceMapping `yaml:"compute_resource,omitempty"`
 }
 
-type VariableConfig struct {
-	Paths     []string  `yaml:"paths"`
-	Reference Reference `yaml:"reference"`
+type GeneralConfig struct {
+	JSONData         *map[string]interface{} `yaml:"json_data,omitempty"`
+	DiskTypes        *DiskTypes              `yaml:"disk_types,omitempty"`
+	IgnoredResources *[]string               `yaml:"ignored_resources,omitempty"`
+}
+
+type DiskTypes struct {
+	Default interface{}             `yaml:"default,omitempty"`
+	Types   *map[string]interface{} `yaml:"types,omitempty"`
+}
+
+type ResourceMapping struct {
+	Paths      []string                         `yaml:"paths"`
+	Type       string                           `yaml:"type"`
+	Variables  *ResourceMapping                 `yaml:"variables,omitempty"`
+	Properties *map[string][]PropertyDefinition `yaml:"properties"`
 }
 
 type PropertyDefinition struct {
-	Paths     interface{} `yaml:"paths"`
-	Unit      string      `yaml:"unit,omitempty"`
-	Default   interface{} `yaml:"default,omitempty"`
-	Type      string      `yaml:"type,omitempty"`
-	Reference *Reference  `yaml:"reference,omitempty"`
-	Regex     *Regex      `yaml:"regex,omitempty"`
-	Item      *Item       `yaml:"item,omitempty"`
+	Paths     []string           `yaml:"paths"`
+	Unit      *string            `yaml:"unit,omitempty"`
+	Default   interface{}        `yaml:"default,omitempty"`
+	ValueType *string            `yaml:"value_type,omitempty"`
+	Reference *Reference         `yaml:"reference,omitempty"`
+	Regex     *Regex             `yaml:"regex,omitempty"`
+	Item      *[]ResourceMapping `yaml:"item,omitempty"`
 }
 
 type Reference struct {
@@ -35,14 +45,4 @@ type Regex struct {
 	Pattern string `yaml:"pattern"`
 	Group   int    `yaml:"group"`
 	Type    string `yaml:"type,omitempty"`
-}
-
-type Item struct {
-	Count ItemDetail `yaml:"count"`
-	Type  ItemDetail `yaml:"type"`
-}
-
-type ItemDetail struct {
-	Paths string `yaml:"paths"`
-	Type  string `yaml:"type"`
 }
