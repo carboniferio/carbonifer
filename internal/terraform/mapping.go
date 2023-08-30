@@ -1,7 +1,6 @@
 package terraform
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 
@@ -13,29 +12,49 @@ import (
 var globalMappings *Mappings
 
 // GetMapping returns the mapping of the terraform resources
-func getMapping(provider providers.Provider) (*Mappings, error) {
+func getMapping() (*Mappings, error) {
 	if globalMappings != nil {
 		return globalMappings, nil
 	}
-	err := loadMapping(provider)
+	err := loadMappings()
 	if err != nil {
 		return nil, err
 	}
 	return globalMappings, nil
 }
 
-func loadMapping(provider providers.Provider) error {
-	if globalMappings != nil {
-		return nil
+func loadMappings() error {
+	mappingsPath := "internal/terraform/mappings"
+	files, err := os.ReadDir(mappingsPath)
+	if err != nil {
+		return err
 	}
-	mappingFolder := fmt.Sprintf("internal/terraform/%s/mappings", provider)
-	files, err := os.ReadDir(mappingFolder)
+
+	// Iterate over each entry
+	for _, file := range files {
+		// Check if it's a directory
+		if file.IsDir() {
+			// Get the relative path
+			relativePath := filepath.Join(mappingsPath, file.Name())
+
+			// Process the subfolder
+			err := loadMapping(relativePath)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func loadMapping(providerMappingFolder string) error {
+	files, err := os.ReadDir(providerMappingFolder)
 	if err != nil {
 		return err
 	}
 
 	mergedMappings := &Mappings{
-		General:         &GeneralConfig{},
+		General:         &map[providers.Provider]GeneralConfig{},
 		ComputeResource: &map[string]ResourceMapping{},
 	}
 
@@ -43,7 +62,7 @@ func loadMapping(provider providers.Provider) error {
 		if file.IsDir() {
 			continue
 		}
-		yamlFile, err := os.ReadFile(filepath.Join(mappingFolder, file.Name()))
+		yamlFile, err := os.ReadFile(filepath.Join(providerMappingFolder, file.Name()))
 		if err != nil {
 			return err
 		}
@@ -54,7 +73,9 @@ func loadMapping(provider providers.Provider) error {
 		}
 
 		if currentMapping.General != nil {
-			mergedMappings.General = currentMapping.General
+			for k, v := range *currentMapping.General {
+				(*mergedMappings.General)[k] = v
+			}
 		}
 
 		if currentMapping.ComputeResource != nil {

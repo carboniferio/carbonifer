@@ -1,7 +1,6 @@
 package terraform
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/carboniferio/carbonifer/internal/providers"
@@ -14,9 +13,10 @@ import (
 )
 
 var persistentDisk tfjson.StateResource = tfjson.StateResource{
-	Address: "google_compute_disk.disk1",
-	Type:    "google_compute_disk",
-	Name:    "disk1",
+	Address:      "google_compute_disk.disk1",
+	Type:         "google_compute_disk",
+	Name:         "disk1",
+	ProviderName: "google",
 	AttributeValues: map[string]interface{}{
 		"name": "disk1",
 		"type": "pd-standard",
@@ -26,9 +26,10 @@ var persistentDisk tfjson.StateResource = tfjson.StateResource{
 }
 
 var persistentDiskNoSize tfjson.StateResource = tfjson.StateResource{
-	Address: "google_compute_disk.disk2",
-	Type:    "google_compute_disk",
-	Name:    "disk2",
+	Address:      "google_compute_disk.disk2",
+	Type:         "google_compute_disk",
+	Name:         "disk2",
+	ProviderName: "google",
 	AttributeValues: map[string]interface{}{
 		"name": "disk2",
 		"type": "pd-standard",
@@ -37,9 +38,10 @@ var persistentDiskNoSize tfjson.StateResource = tfjson.StateResource{
 }
 
 var regionDisk tfjson.StateResource = tfjson.StateResource{
-	Address: "google_compute_region_disk.diskr",
-	Type:    "google_compute_region_disk",
-	Name:    "diskr",
+	Address:      "google_compute_region_disk.diskr",
+	Type:         "google_compute_region_disk",
+	Name:         "diskr",
+	ProviderName: "google",
 	AttributeValues: map[string]interface{}{
 		"name":          "diskr",
 		"type":          "pd-ssd",
@@ -49,9 +51,10 @@ var regionDisk tfjson.StateResource = tfjson.StateResource{
 }
 
 var gpuAttachedMachine tfjson.StateResource = tfjson.StateResource{
-	Address: "google_compute_instance.attachedgpu",
-	Type:    "google_compute_instance",
-	Name:    "attachedgpu",
+	Address:      "google_compute_instance.attachedgpu",
+	Type:         "google_compute_instance",
+	Name:         "attachedgpu",
+	ProviderName: "google",
 	AttributeValues: map[string]interface{}{
 		"name":         "attachedgpu",
 		"machine_type": "n1-standard-2",
@@ -67,9 +70,10 @@ var gpuAttachedMachine tfjson.StateResource = tfjson.StateResource{
 }
 
 var gpuDefaultMachine tfjson.StateResource = tfjson.StateResource{
-	Address: "google_compute_instance.defaultgpu",
-	Type:    "google_compute_instance",
-	Name:    "defaultgpu",
+	Address:      "google_compute_instance.defaultgpu",
+	Type:         "google_compute_instance",
+	Name:         "defaultgpu",
+	ProviderName: "google",
 	AttributeValues: map[string]interface{}{
 		"name":         "defaultgpu",
 		"machine_type": "a2-highgpu-1g",
@@ -79,7 +83,7 @@ var gpuDefaultMachine tfjson.StateResource = tfjson.StateResource{
 }
 
 func TestGetResource(t *testing.T) {
-	mapping, err := getMapping(providers.GCP)
+	mapping, err := getMapping()
 	assert.NoError(t, err)
 	computeResourceMapping := *mapping.ComputeResource
 	type args struct {
@@ -213,7 +217,6 @@ func TestGetResource(t *testing.T) {
 			assert.Len(t, got, 1)
 			assert.IsType(t, resources.ComputeResource{}, got[0])
 			gotResource := got[0].(resources.ComputeResource)
-			fmt.Println(gotResource.Specs.SsdStorage)
 			assert.Equal(t, tt.want, gotResource)
 			assert.NoError(t, err)
 		})

@@ -56,20 +56,28 @@ compute_resource:
       storage:
         - type: list
           item:
-            - paths: .values.disk[].initialize_params
+            - paths: 
+              - .values.disk[].initialize_params
+              - .values.boot_disk[].initialize_params
               properties:
                 size:
-                  - paths: ".size"
+                  - paths: 
+                    - ".size"
+                    - ".disk_size_gb"
                     default: 10
                     unit: gb
-                  - paths: ".image"
+                  - paths: 
+                    - ".image"
+                    - ".source_image"
                     default: 10
                     unit: gb
                     reference:
                       paths: '.prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values'
                       property: "disk_size_gb"
                 type:
-                  - paths: ".type"
+                  - paths: 
+                    - ".type"
+                    - ".disk_type"
                     default: pd-standard
                     reference:
                       general: disk_types
@@ -89,11 +97,11 @@ compute_resource:
       properties:
         template_config:
           - paths:
-            - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.source_instance_template.references[] | select(endswith("id") | not)'
+            - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.source_instance_template.references[] | select(endswith("id")) | gsub("\\.id$"; "")'
             reference:
               paths:
                 - .planned_values.root_module.resources[] | select(.address == "${key}")
-                - .planned_values.root_module.child_modules[].resources | map(select(.address == "${key}"))
+                - .planned_values.root_module.child_modules[] | select(.address == ("${key}" | split(".")[0:2] | join("."))) | .resources[] | select(.name == ("${key}" | split(".")[2]))
                 - .prior_state.values.root_module.resources[] | select(.address == "${key}")
               return_path: true
     properties:

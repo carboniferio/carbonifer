@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/itchyny/gojq"
@@ -22,7 +21,6 @@ func GetJSON(query string, json interface{}) ([]interface{}, error) {
 		}
 		if err, ok := v.(error); ok {
 			errMsg := err.Error()
-			fmt.Println(query)
 			if strings.Contains(errMsg, "annot iterate over: null") {
 				continue
 			} else {

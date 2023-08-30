@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/utils"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -17,6 +18,7 @@ type tfContext struct {
 	Mapping         *ResourceMapping       // Mapping of the resource type
 	ResourceAddress string                 // Address of the resource in tf plan
 	ParentContext   *tfContext             // Parent context
+	Provider        providers.Provider
 }
 
 func getString(key string, context tfContext) (*string, error) {
@@ -59,6 +61,7 @@ func getSlice(key string, context tfContext) ([]interface{}, error) {
 				Mapping:         &itemMapping,
 				ResourceAddress: context.ResourceAddress + "." + key,
 				ParentContext:   &context,
+				Provider:        context.Provider,
 			}
 			itemResults, err := getSliceItems(context)
 			if err != nil {
@@ -137,6 +140,7 @@ func getItem(context tfContext, itemMappingProperties *ResourceMapping, jsonResu
 			Mapping:         itemMappingProperties,
 			ResourceAddress: context.ResourceAddress,
 			ParentContext:   &context,
+			Provider:        context.Provider,
 		}
 		property, err := getValue(key, itemContext)
 		if err != nil {
@@ -153,18 +157,18 @@ type valueWithUnit struct {
 }
 
 func readPaths(pathsProperty interface{}, pathTemplateValuesParams ...*map[string]string) ([]string, error) {
-	var paths []string
+	paths := []string{}
 	if pathsProperty == nil {
 		return paths, nil
 	}
 
-	switch path := pathsProperty.(type) {
+	switch pathTyped := pathsProperty.(type) {
 	case string:
-		paths = []string{path}
+		paths = []string{pathTyped}
 	case []string:
-		paths = path
+		paths = append(paths, pathTyped...)
 	case []interface{}:
-		for _, pathI := range path {
+		for _, pathI := range pathTyped {
 			pathStr, ok := pathI.(string)
 			if !ok {
 				return nil, errors.Errorf("Cannot convert path to string: %T", pathI)
@@ -176,12 +180,12 @@ func readPaths(pathsProperty interface{}, pathTemplateValuesParams ...*map[strin
 	}
 
 	for _, pathTemplateValues := range pathTemplateValuesParams {
-		for path := range paths {
-			pathStr := paths[path]
+		for i, path := range paths {
+			pathStr := path
 			for key, value := range *pathTemplateValues {
 				pathStr = strings.ReplaceAll(pathStr, "${"+key+"}", value)
 			}
-			paths[path] = pathStr
+			paths[i] = pathStr
 		}
 	}
 	return paths, nil
@@ -221,20 +225,22 @@ func getValue(key string, context tfContext) (*valueWithUnit, error) {
 				}
 			}
 			if len(valueFounds) > 0 {
-				// TODO check if we can safely remove this
-				// if len(valueFounds) > 1 {
-				// 	return nil, fmt.Errorf("Found more than one value for property %v of resource type %v", key, context.ResourceAddress)
-				// }
+				if len(valueFounds) > 1 {
+					return nil, fmt.Errorf("Found more than one value for property %v of resource type %v", key, context.ResourceAddress)
+				}
+				if valueFounds[0] == nil {
+					continue
+				}
 				valueFound = valueFounds[0]
 			}
 		}
 
 		if valueFound != nil {
-			valueFound, err = applyRegex(valueFound, &propertyMapping, context.ResourceAddress)
+			valueFound, err = applyRegex(valueFound, &propertyMapping, &context)
 			if err != nil {
 				return nil, err
 			}
-			valueFound, err = applyReference(valueFound, &propertyMapping, context.ResourceAddress)
+			valueFound, err = applyReference(valueFound, &propertyMapping, &context)
 			if err != nil {
 				return nil, err
 			}
@@ -336,11 +342,11 @@ func getDefaultValue(key string, context tfContext) (*valueWithUnit, error) {
 			valueFound := propertyMapping.Default
 			unit := propertyMapping.Unit
 			var err error
-			valueFound, err = applyRegex(valueFound, &propertyMapping, context.ResourceAddress)
+			valueFound, err = applyRegex(valueFound, &propertyMapping, &context)
 			if err != nil {
 				return nil, err
 			}
-			valueFound, err = applyReference(valueFound, &propertyMapping, context.ResourceAddress)
+			valueFound, err = applyReference(valueFound, &propertyMapping, &context)
 			if err != nil {
 				return nil, err
 			}
@@ -368,6 +374,7 @@ func getVariable(name string, context tfContext, parentContext tfContext) (inter
 		Mapping:         variablesMappings,
 		ResourceAddress: context.ResourceAddress + ".variables",
 		ParentContext:   &parentContext,
+		Provider:        context.Provider,
 	}
 	value, err := getValue(name, variableContext)
 	if err != nil {

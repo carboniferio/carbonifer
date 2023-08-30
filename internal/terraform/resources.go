@@ -1,7 +1,6 @@
 package terraform
 
 import (
-	"encoding/json"
 	"fmt"
 	"regexp"
 	"strings"
@@ -35,7 +34,7 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 	resourcesMap := map[string]resources.Resource{}
 
 	// Get compute resources
-	mapping, err := getMapping(providers.GCP)
+	mapping, err := getMapping()
 	if err != nil {
 		errW := errors.Wrap(err, "Cannot get mapping")
 		return nil, errW
@@ -57,10 +56,15 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 		resource := resourceI.(map[string]interface{})
 		resourceAddress := resource["address"].(string)
 		resourceMap := resourcesMap[resourceAddress]
+		providerName := resource["provider_name"].(string)
+		provider, err := parseProvider(providerName)
+		if err != nil {
+			continue
+		}
 		if resourceMap == nil {
 			// That is an unsupported resource
 			resourceType := resource["type"].(string)
-			if checkIgnoredResource(resourceType) {
+			if checkIgnoredResource(resourceType, provider) {
 				continue
 			}
 			unsupportedResource := resources.UnsupportedResource{
@@ -79,8 +83,8 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 	return resourcesMap, nil
 }
 
-func checkIgnoredResource(resourceType string) bool {
-	ignoredResourceNames := globalMappings.General.IgnoredResources
+func checkIgnoredResource(resourceType string, provider providers.Provider) bool {
+	ignoredResourceNames := (*globalMappings.General)[provider].IgnoredResources
 	for _, ignoredResource := range *ignoredResourceNames {
 		if ignoredResource == resourceType {
 			return true
@@ -94,25 +98,6 @@ func checkIgnoredResource(resourceType string) bool {
 	}
 	return false
 }
-
-func convertToGeneralConfig(generalMapping map[string]interface{}) (*GeneralConfig, error) {
-	var generalConfig GeneralConfig
-
-	// Convert map to JSON
-	jsonData, err := json.Marshal(generalMapping)
-	if err != nil {
-		return nil, err
-	}
-
-	// Convert JSON to GeneralConfig struct
-	err = json.Unmarshal(jsonData, &generalConfig)
-	if err != nil {
-		return nil, err
-	}
-
-	return &generalConfig, nil
-}
-
 func getResourcesOfType(resourceType string, mapping *ResourceMapping) ([]resources.Resource, error) {
 	pathsProperty := mapping.Paths
 	paths, err := readPaths(pathsProperty)
@@ -131,10 +116,13 @@ func getResourcesOfType(resourceType string, mapping *ResourceMapping) ([]resour
 		}
 		log.Debugf("  Found %d resources of type '%s'", len(resourcesFound), resourceType)
 		for _, resourceI := range resourcesFound {
-			resourcesResult, err = getComputeResource(resourceI, mapping, resourcesResult)
+			resourcesResultGot, err := getComputeResource(resourceI, mapping, resourcesResult)
 			if err != nil {
 				errW := errors.Wrapf(err, "Cannot get compute resource for path %v", path)
 				return nil, errW
+			}
+			if resourcesResultGot != nil {
+				resourcesResult = resourcesResultGot
 			}
 
 		}
@@ -146,10 +134,19 @@ func getResourcesOfType(resourceType string, mapping *ResourceMapping) ([]resour
 func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping, resourcesResult []resources.Resource) ([]resources.Resource, error) {
 	resource := resourceI.(map[string]interface{})
 	resourceAddress := resource["address"].(string)
+	providerName, ok := resource["provider_name"].(string)
+	if !ok {
+		return nil, errors.Errorf("Cannot find provider name for resource %v", resourceAddress)
+	}
+	provider, err := parseProvider(providerName)
+	if err != nil {
+		return nil, nil
+	}
 	context := tfContext{
 		ResourceAddress: resourceAddress,
 		Mapping:         resourceMapping,
 		Resource:        resource,
+		Provider:        provider,
 	}
 	name, err := getString("name", context)
 	if err != nil {
@@ -362,33 +359,12 @@ func getStorage(storageMap map[string]interface{}) *storage {
 	return &storage
 }
 
-// func getPropertyMappings(key string, context tfContext) []map[string]interface{} {
-// 	resourcePropertiesMapping := (*context.Mapping).Properties
-// 	mappingProperty, ok := (*resourcePropertiesMapping)[key]
-// 	if !ok {
-// 		log.Fatalf("Cannot find property mapping %v of resource %v", key, context.ResourceAddress)
-// 	}
-// 	propertyMappingsI, ok := mappingPropertyI.([]interface{})
-// 	if !ok {
-// 		mappingPropertyUnique, ok := mappingPropertyI.(map[string]interface{})
-// 		if !ok {
-// 			mappingPropertyUniqueI, ok := mappingPropertyI.(map[interface{}]interface{})
-// 			if !ok {
-// 				log.Fatalf("Cannot find property mapping %v of resource %v", key, context.ResourceAddress)
-// 			}
-// 			var errConv error
-// 			mappingPropertyUnique, errConv = convertMapKeysToStrings(mappingPropertyUniqueI)
-// 			if errConv != nil {
-// 				log.Fatalf("Cannot convert property mapping %v of resource %v: %v", key, context.ResourceAddress, errConv)
-// 			}
-// 		}
-// 		propertyMappings = []map[string]interface{}{mappingPropertyUnique}
-// 	} else {
-// 		var errMapping error
-// 		propertyMappings, errMapping = convertInterfaceSlicesToMapSlice(propertyMappingsI)
-// 		if errMapping != nil {
-// 			log.Fatalf("Cannot convert property mapping %v of resource %v: %v", key, context.ResourceAddress, errMapping)
-// 		}
-// 	}
-// 	return propertyMappings
-// }
+func parseProvider(tfProviderName string) (providers.Provider, error) {
+	if strings.HasSuffix(tfProviderName, "google") {
+		return providers.ParseProvider("gcp")
+	}
+	if strings.HasSuffix(tfProviderName, "aws") {
+		return providers.ParseProvider("aws")
+	}
+	return providers.ParseProvider(tfProviderName)
+}

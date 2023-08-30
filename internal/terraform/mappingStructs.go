@@ -1,8 +1,10 @@
 package terraform
 
+import "github.com/carboniferio/carbonifer/internal/providers"
+
 type Mappings struct {
-	General         *GeneralConfig              `yaml:"general,omitempty"`
-	ComputeResource *map[string]ResourceMapping `yaml:"compute_resource,omitempty"`
+	General         *map[providers.Provider]GeneralConfig `yaml:"general,omitempty"`
+	ComputeResource *map[string]ResourceMapping           `yaml:"compute_resource,omitempty"`
 }
 
 type GeneralConfig struct {

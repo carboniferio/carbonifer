@@ -7,6 +7,7 @@ import (
 
 	"github.com/carboniferio/carbonifer/internal/data"
 	"github.com/carboniferio/carbonifer/internal/utils"
+	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
 )
@@ -16,19 +17,19 @@ type storage struct {
 	IsSSD  bool
 }
 
-func applyReference(valueFound interface{}, propertyMapping *PropertyDefinition, resourceAddress string) (interface{}, error) {
+func applyReference(valueFound interface{}, propertyMapping *PropertyDefinition, context *tfContext) (interface{}, error) {
 	if propertyMapping == nil || propertyMapping.Reference == nil {
 		return valueFound, nil
 	}
 
 	reference := propertyMapping.Reference
-	valueTransformed, err := resolveReference(valueFound.(string), reference, resourceAddress)
+	valueTransformed, err := resolveReference(valueFound.(string), reference, context)
 	return valueTransformed, err
 }
 
-func resolveReference(key string, reference *Reference, resourceAddress string) (interface{}, error) {
+func resolveReference(key string, reference *Reference, context *tfContext) (interface{}, error) {
+	generalMappings := (*globalMappings.General)[context.Provider]
 	if reference.JSONFile != "" {
-		generalMappings := globalMappings.General
 		filename, ok := (*generalMappings.JSONData)[reference.JSONFile]
 		if !ok {
 			log.Fatalf("Cannot find file %v in general.json_data", reference.JSONFile)
@@ -56,13 +57,13 @@ func resolveReference(key string, reference *Reference, resourceAddress string) 
 		return value, nil
 	}
 	if reference.General != "" {
-		for providerDiskType, diskType := range *globalMappings.General.DiskTypes.Types {
+		for providerDiskType, diskType := range *generalMappings.DiskTypes.Types {
 			if providerDiskType == key {
 				return diskType, nil
 			}
 		}
-		if globalMappings.General.DiskTypes.Default != nil {
-			return globalMappings.General.DiskTypes.Default, nil
+		if generalMappings.DiskTypes.Default != nil {
+			return generalMappings.DiskTypes.Default, nil
 		}
 		return "ssd", nil
 	}
@@ -77,12 +78,13 @@ func resolveReference(key string, reference *Reference, resourceAddress string) 
 		for _, path := range paths {
 			referencedItems, err := utils.GetJSON(path, *TfPlan)
 			if err != nil {
-				return nil, err
+				errW := errors.Wrapf(err, "Cannot find referenced path in terraform plan: '%v'", path)
+				return nil, errW
 			}
-			if referencedItems != nil {
+			for _, referencedItem := range referencedItems {
 				if reference.Property != "" {
-					for _, referencedItem := range referencedItems {
-						value := referencedItem.(map[string]interface{})[reference.Property]
+					value := referencedItem.(map[string]interface{})[reference.Property]
+					if value != nil {
 						return value, nil
 					}
 				} else if reference.ReturnPath {
@@ -97,7 +99,7 @@ func resolveReference(key string, reference *Reference, resourceAddress string) 
 	return key, nil
 }
 
-func applyRegex(valueFound interface{}, propertyMapping *PropertyDefinition, resourceAddressw string) (interface{}, error) {
+func applyRegex(valueFound interface{}, propertyMapping *PropertyDefinition, context *tfContext) (interface{}, error) {
 	if propertyMapping == nil || propertyMapping.Regex == nil {
 		return valueFound, nil
 	}
