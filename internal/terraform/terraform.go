@@ -20,7 +20,7 @@ import (
 
 var terraformExec *tfexec.Terraform
 
-func getTerraformExec() (*tfexec.Terraform, error) {
+func GetTerraformExec() (*tfexec.Terraform, error) {
 	if terraformExec == nil {
 		log.Debugf("Finding or installing terraform exec")
 		// Check if terraform is already installed
@@ -92,7 +92,7 @@ func installTerraform() string {
 }
 
 func terraformInit() (*tfexec.Terraform, *context.Context, error) {
-	tf, err := getTerraformExec()
+	tf, err := GetTerraformExec()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -263,7 +263,7 @@ func terraformShow(fileName string) (*map[string]interface{}, error) {
 }
 
 func RunTerraformConsole(command string) (*string, error) {
-	tfExec, err := getTerraformExec()
+	tfExec, err := GetTerraformExec()
 	if err != nil {
 		return nil, err
 	}

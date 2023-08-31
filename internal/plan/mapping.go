@@ -29,7 +29,7 @@ func loadMappings() error {
 		General:         &map[providers.Provider]GeneralConfig{},
 		ComputeResource: &map[string]ResourceMapping{},
 	}
-	mappingsPath := "internal/terraform/mappings"
+	mappingsPath := "internal/plan/mappings"
 	files, err := os.ReadDir(mappingsPath)
 	if err != nil {
 		return err

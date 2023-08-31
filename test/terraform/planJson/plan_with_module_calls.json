@@ -1,0 +1,58 @@
+{
+  "format_version": "0.1",
+  "terraform_version": "0.12.24",
+  "configuration": {
+    "provider_config": {
+      "aws": {
+        "name": "aws",
+        "expressions": {
+          "region": {
+            "references": [
+              "module.module2.module1_region"
+            ]
+          }
+        }
+      }
+    },
+    "root_module": {
+      "module_calls": {
+        "module2": {
+          "source": "../module2",
+          "module": {
+            "outputs": {
+              "module1_region": {
+                "expression": {
+                  "references": [
+                    "module.module1.region"
+                  ]
+                }
+              }
+            },
+            "module_calls": {
+              "module1": {
+                "source": "../module1",
+                "module": {
+                  "outputs": {
+                    "region": {
+                      "expression": {
+                        "references": [
+                          "var.region"
+                        ]
+                      }
+                    }
+                  },
+                  "variables": {
+                    "region": {
+                      "default": "region_from_module_calls"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "variables": {}
+}
