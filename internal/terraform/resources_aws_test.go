@@ -13,8 +13,6 @@ import (
 )
 
 func TestGetResource_DiskFromAMI(t *testing.T) {
-	// TODO REmove
-	t.Setenv("AWS_REGION", "eu-west-3")
 
 	testutils.SkipWithCreds(t)
 

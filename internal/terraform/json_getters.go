@@ -33,7 +33,7 @@ func getString(key string, context *tfContext) (*string, error) {
 	}
 	stringValue, ok := value.Value.(string)
 	if !ok {
-		return nil, fmt.Errorf("Cannot convert value to string: %v", value.Value)
+		return nil, fmt.Errorf("Cannot convert value to string: %v : %T", value.Value, value.Value)
 	}
 	return &stringValue, nil
 }
@@ -249,6 +249,15 @@ func getValue(key string, context *tfContext) (*valueWithUnit, error) {
 				if err != nil {
 					return nil, err
 				}
+			}
+		}
+
+		// if value is an expression (map[string]interface{}), resolve it
+		valueFoundMap, ok := valueFound.(map[string]interface{})
+		if ok {
+			valueFound, err = getValueOfExpression(valueFoundMap, context)
+			if err != nil {
+				return nil, err
 			}
 		}
 

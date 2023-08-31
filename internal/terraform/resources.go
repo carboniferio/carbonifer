@@ -71,9 +71,8 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 				Identification: &resources.ResourceIdentification{
 					Name:         resource["name"].(string),
 					ResourceType: resourceType,
-					// TODO get provider from Terraform plan
-					Provider: providers.GCP,
-					Count:    1,
+					Provider:     provider,
+					Count:        1,
 				},
 			}
 			resourcesMap[resourceAddress] = unsupportedResource
@@ -153,24 +152,22 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	}
 	name, err := getString("name", context)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Cannot get name for resource %v", resourceAddress)
 	}
 	region, err := getString("region", context)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Cannot get region for resource %v", resourceAddress)
 	}
 	if region == nil {
 		region = getDefaultRegion()
+		if region == nil {
+			return nil, errors.Errorf("Cannot find default region for resource %v", resourceAddress)
+		}
 	}
-	if region == nil {
-		return nil, errors.Errorf("Cannot find region for resource %v", resourceAddress)
-	}
-
-	// TODO case of region as variable defined in called module
 
 	resourceType, err := getString("type", context)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Cannot get type for resource %v", resourceAddress)
 	}
 
 	index := resource["index"]
@@ -196,13 +193,13 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	// Add vCPUs
 	vcpus, err := getValue("vCPUs", context)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Cannot get vCPUs for %v", resourceAddress)
 	}
 	if vcpus != nil && vcpus.Value != nil {
 
 		intValue, err := utils.ParseToInt(vcpus.Value)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrapf(err, "Cannot parse vCPUs for %v", resourceAddress)
 		}
 		computeResource.Specs.VCPUs = int32(intValue)
 
@@ -211,12 +208,12 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	// Add memory
 	memory, err := getValue("memory", context)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Cannot get memory for %v", resourceAddress)
 	}
 	if memory != nil && memory.Value != nil {
 		intValue, err := utils.ParseToInt(memory.Value)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrapf(err, "Cannot parse memory for %v", resourceAddress)
 		}
 		computeResource.Specs.MemoryMb = int32(intValue)
 		unit := strings.ToLower(*memory.Unit)
@@ -241,7 +238,7 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	// Add GPUs
 	gpus, err := getSlice("guest_accelerator", context)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Cannot get GPUs for %v", resourceAddress)
 	}
 	for _, gpuI := range gpus {
 		gpu := gpuI.(map[string]interface{})
@@ -255,7 +252,7 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	// Add CPU type
 	cpuType, err := getString("cpu_platform", context)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Cannot get CPU platform for %v", resourceAddress)
 	}
 	if cpuType != nil {
 		computeResource.Specs.CPUType = *cpuType
@@ -264,12 +261,12 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	// Add replication factor
 	replicationFactor, err := getValue("replication_factor", context)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Cannot get replication factor for %v", resourceAddress)
 	}
 	if replicationFactor != nil && replicationFactor.Value != nil {
 		intValue, err := utils.ParseToInt(replicationFactor.Value)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrapf(err, "Cannot parse replication factor for %v", resourceAddress)
 		}
 		computeResource.Specs.ReplicationFactor = int32(intValue)
 	}
@@ -277,12 +274,12 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	// Add count (case of autoscaling group)
 	count, err := getValue("count", context)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Cannot get count for %v", resourceAddress)
 	}
 	if count != nil && count.Value != nil {
 		intValue, err := utils.ParseToInt(count.Value)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrapf(err, "Cannot parse count for %v", resourceAddress)
 		}
 		computeResource.Identification.Count = int64(intValue)
 	} else {
@@ -292,13 +289,13 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	// Add storage
 	storages, err := getSlice("storage", context)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Cannot get storages for %v", resourceAddress)
 	}
 
-	for _, storageI := range storages {
+	for i, storageI := range storages {
 		storage, err := getStorage(storageI.(map[string]interface{}))
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrapf(err, "Cannot get storage[%v] for %v", i, resourceAddress)
 		}
 		size := storage.SizeGb
 		if storage.IsSSD {
