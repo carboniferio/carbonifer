@@ -214,6 +214,7 @@ func TestGetResource(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			resource, _ := testutils.TfResourceToJSON(&tt.args.tfResource)
 			got, err := getComputeResource(*resource, &tt.args.mapping, nil)
+			assert.NoError(t, err)
 			assert.Len(t, got, 1)
 			assert.IsType(t, resources.ComputeResource{}, got[0])
 			gotResource := got[0].(resources.ComputeResource)

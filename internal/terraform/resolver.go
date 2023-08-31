@@ -17,13 +17,12 @@ type storage struct {
 	IsSSD  bool
 }
 
-func applyReference(valueFound interface{}, propertyMapping *PropertyDefinition, context *tfContext) (interface{}, error) {
+func applyReference(valueFound string, propertyMapping *PropertyDefinition, context *tfContext) (interface{}, error) {
 	if propertyMapping == nil || propertyMapping.Reference == nil {
 		return valueFound, nil
 	}
-
 	reference := propertyMapping.Reference
-	valueTransformed, err := resolveReference(valueFound.(string), reference, context)
+	valueTransformed, err := resolveReference(valueFound, reference, context)
 	return valueTransformed, err
 }
 
@@ -62,10 +61,11 @@ func resolveReference(key string, reference *Reference, context *tfContext) (int
 				return diskType, nil
 			}
 		}
-		if generalMappings.DiskTypes.Default != nil {
-			return generalMappings.DiskTypes.Default, nil
+		defaultDiskType := generalMappings.DiskTypes.Default
+		if defaultDiskType != nil {
+			return defaultDiskType, nil
 		}
-		return "ssd", nil
+		return SSD, nil
 	}
 	if reference.Paths != nil {
 		templatePlaceholders := map[string]string{
@@ -96,15 +96,18 @@ func resolveReference(key string, reference *Reference, context *tfContext) (int
 		}
 		return nil, nil
 	}
+	if reference.ReturnPath {
+		return key, nil
+	}
 	return key, nil
 }
 
-func applyRegex(valueFound interface{}, propertyMapping *PropertyDefinition, context *tfContext) (interface{}, error) {
+func applyRegex(valueFound string, propertyMapping *PropertyDefinition, context *tfContext) (interface{}, error) {
 	if propertyMapping == nil || propertyMapping.Regex == nil {
 		return valueFound, nil
 	}
 	regex := *propertyMapping.Regex
-	valueTransformed, err := resolveRegex(valueFound.(string), regex)
+	valueTransformed, err := resolveRegex(valueFound, regex)
 	return valueTransformed, err
 }
 

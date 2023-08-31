@@ -85,16 +85,19 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 
 func checkIgnoredResource(resourceType string, provider providers.Provider) bool {
 	ignoredResourceNames := (*globalMappings.General)[provider].IgnoredResources
-	for _, ignoredResource := range *ignoredResourceNames {
-		if ignoredResource == resourceType {
-			return true
-		}
-		// Case of regex
-		regex := regexp.MustCompile(ignoredResource)
-		if regex.MatchString(resourceType) {
-			return true
-		}
+	if ignoredResourceNames != nil {
+		for _, ignoredResource := range *ignoredResourceNames {
+			if ignoredResource == resourceType {
+				return true
+			}
+			// Case of regex
+			regex := regexp.MustCompile(ignoredResource)
+			if regex.MatchString(resourceType) {
+				return true
+			}
 
+		}
+		return false
 	}
 	return false
 }
@@ -142,7 +145,7 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	if err != nil {
 		return nil, nil
 	}
-	context := tfContext{
+	context := &tfContext{
 		ResourceAddress: resourceAddress,
 		Mapping:         resourceMapping,
 		Resource:        resource,
@@ -156,8 +159,14 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	if err != nil {
 		return nil, err
 	}
+	if region == nil {
+		region = getDefaultRegion()
+	}
+	if region == nil {
+		return nil, errors.Errorf("Cannot find region for resource %v", resourceAddress)
+	}
 
-	// TODO case of region missing (aws)
+	// TODO case of region as variable defined in called module
 
 	resourceType, err := getString("type", context)
 	if err != nil {
@@ -174,7 +183,7 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 		Identification: &resources.ResourceIdentification{
 			Name:         *name,
 			ResourceType: *resourceType,
-			Provider:     providers.GCP,
+			Provider:     provider,
 			Region:       *region,
 		},
 		Specs: &resources.ComputeResourceSpecs{
@@ -287,7 +296,10 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	}
 
 	for _, storageI := range storages {
-		storage := getStorage(storageI.(map[string]interface{}))
+		storage, err := getStorage(storageI.(map[string]interface{}))
+		if err != nil {
+			return nil, err
+		}
 		size := storage.SizeGb
 		if storage.IsSSD {
 			computeResource.Specs.SsdStorage = computeResource.Specs.SsdStorage.Add(size)
@@ -321,7 +333,7 @@ func getGPU(gpu map[string]interface{}) ([]string, error) {
 	return gpuTypes, nil
 }
 
-func getStorage(storageMap map[string]interface{}) *storage {
+func getStorage(storageMap map[string]interface{}) (*storage, error) {
 	storageSize := storageMap["size"].(*valueWithUnit)
 	storageSizeGb, err := decimal.NewFromString(fmt.Sprintf("%v", storageSize.Value))
 	if err != nil {
@@ -347,8 +359,19 @@ func getStorage(storageMap map[string]interface{}) *storage {
 
 	isSSD := false
 	if storageType != nil {
-		storageTypeValue := storageType.Value.(string)
-		if strings.ToLower(storageTypeValue) == "ssd" {
+		diskType, ok := storageType.Value.(*DiskType)
+		if !ok {
+			diskTypeStr, ok := storageType.Value.(string)
+			if !ok {
+				return nil, errors.Errorf("Cannot find storage type '%v': %T", storageType.Value, storageType.Value)
+			}
+			diskTypeParsed, err := ParseDiskType(diskTypeStr)
+			if err != nil {
+				return nil, errors.Wrapf(err, "Cannot parse disk type '%v'", diskTypeStr)
+			}
+			diskType = &diskTypeParsed
+		}
+		if *diskType == SSD {
 			isSSD = true
 		}
 	}
@@ -356,7 +379,7 @@ func getStorage(storageMap map[string]interface{}) *storage {
 		SizeGb: storageSizeGb,
 		IsSSD:  isSSD,
 	}
-	return &storage
+	return &storage, nil
 }
 
 func parseProvider(tfProviderName string) (providers.Provider, error) {

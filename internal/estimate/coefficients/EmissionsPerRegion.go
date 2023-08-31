@@ -1,9 +1,9 @@
 package coefficients
 
 import (
-	"errors"
-	"fmt"
 	"strings"
+
+	"github.com/pkg/errors"
 
 	"github.com/carboniferio/carbonifer/internal/data"
 	"github.com/carboniferio/carbonifer/internal/providers"
@@ -42,7 +42,7 @@ func RegionEmission(provider providers.Provider, region string) (*Emissions, err
 	}
 	emissions, ok := EmissionsPerRegion[region]
 	if !ok {
-		return nil, errors.New(fmt.Sprint("Region does not exist: ", region))
+		return nil, errors.Errorf("Region does not exist: '%v'", region)
 	}
 	return &emissions, nil
 }

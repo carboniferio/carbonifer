@@ -21,7 +21,7 @@ type tfContext struct {
 	Provider        providers.Provider
 }
 
-func getString(key string, context tfContext) (*string, error) {
+func getString(key string, context *tfContext) (*string, error) {
 	value, err := getValue(key, context)
 	if err != nil {
 		return nil, err
@@ -38,7 +38,7 @@ func getString(key string, context tfContext) (*string, error) {
 	return &stringValue, nil
 }
 
-func getSlice(key string, context tfContext) ([]interface{}, error) {
+func getSlice(key string, context *tfContext) ([]interface{}, error) {
 	results := []interface{}{}
 
 	sliceMappings := (*context.Mapping.Properties)[key]
@@ -60,7 +60,7 @@ func getSlice(key string, context tfContext) ([]interface{}, error) {
 				Resource:        context.Resource,
 				Mapping:         &itemMapping,
 				ResourceAddress: context.ResourceAddress + "." + key,
-				ParentContext:   &context,
+				ParentContext:   context,
 				Provider:        context.Provider,
 			}
 			itemResults, err := getSliceItems(context)
@@ -85,7 +85,7 @@ func getSliceItems(context tfContext) ([]interface{}, error) {
 	for _, pathRaw := range paths {
 		path := pathRaw
 		if strings.Contains(pathRaw, "${") {
-			path, err = resolvePlaceholders(path, *context.ParentContext)
+			path, err = resolvePlaceholders(path, context.ParentContext)
 			if err != nil {
 				return nil, err
 			}
@@ -142,7 +142,7 @@ func getItem(context tfContext, itemMappingProperties *ResourceMapping, jsonResu
 			ParentContext:   &context,
 			Provider:        context.Provider,
 		}
-		property, err := getValue(key, itemContext)
+		property, err := getValue(key, &itemContext)
 		if err != nil {
 			return nil, err
 		}
@@ -191,7 +191,7 @@ func readPaths(pathsProperty interface{}, pathTemplateValuesParams ...*map[strin
 	return paths, nil
 }
 
-func getValue(key string, context tfContext) (*valueWithUnit, error) {
+func getValue(key string, context *tfContext) (*valueWithUnit, error) {
 
 	var valueFound interface{}
 	propertiesMappings := (*context.Mapping.Properties)[key]
@@ -236,13 +236,19 @@ func getValue(key string, context tfContext) (*valueWithUnit, error) {
 		}
 
 		if valueFound != nil {
-			valueFound, err = applyRegex(valueFound, &propertyMapping, &context)
-			if err != nil {
-				return nil, err
+			valueFoundStr, ok := valueFound.(string)
+			if ok {
+				valueFound, err = applyRegex(valueFoundStr, &propertyMapping, context)
+				if err != nil {
+					return nil, err
+				}
 			}
-			valueFound, err = applyReference(valueFound, &propertyMapping, &context)
-			if err != nil {
-				return nil, err
+			valueFoundStr, ok = valueFound.(string)
+			if ok {
+				valueFound, err = applyReference(valueFoundStr, &propertyMapping, context)
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 
@@ -268,7 +274,7 @@ func getValue(key string, context tfContext) (*valueWithUnit, error) {
 	return nil, nil
 }
 
-func resolvePlaceholders(input string, context tfContext) (string, error) {
+func resolvePlaceholders(input string, context *tfContext) (string, error) {
 	placeholderPattern := `\${([^}]+)}`
 
 	// Compile the regular expression
@@ -302,24 +308,25 @@ func resolvePlaceholders(input string, context tfContext) (string, error) {
 	return resolvedString, nil
 }
 
-func resolvePlaceholder(expression string, context tfContext) (string, error) {
+func resolvePlaceholder(expression string, context *tfContext) (string, error) {
 	result := ""
 	if strings.HasPrefix(expression, "this.") {
-		thisProperty := strings.TrimPrefix(expression, "this.")
-		value, err := getValue(thisProperty, *context.ParentContext)
+		thisProperty := strings.TrimPrefix(expression, "this")
+		resource := context.Resource
+		value, err := utils.GetJSON(thisProperty, resource)
 		if err != nil {
 			return "", errors.Wrapf(err, "Cannot get value for variable %s", expression)
 		}
 		if value == nil {
 			return "", errors.Errorf("No value found for variable %s", expression)
 		}
-		return fmt.Sprintf("%v", value.Value), err
+		return fmt.Sprintf("%v", value[0]), err
 	} else if strings.HasPrefix(expression, "config.") {
 		configProperty := strings.TrimPrefix(expression, "config.")
 		value := viper.GetFloat64(configProperty)
 		return fmt.Sprintf("%v", value), nil
 	}
-	variable, err := getVariable(expression, context, context)
+	variable, err := getVariable(expression, context)
 	if err != nil {
 		return "", err
 	}
@@ -329,7 +336,7 @@ func resolvePlaceholder(expression string, context tfContext) (string, error) {
 	return result, nil
 }
 
-func getDefaultValue(key string, context tfContext) (*valueWithUnit, error) {
+func getDefaultValue(key string, context *tfContext) (*valueWithUnit, error) {
 	propertyMappings, ok := (*context.Mapping.Properties)[key]
 	if !ok {
 		log.Debugf("No property mapping found for key %v of resource type %v", key, context.ResourceAddress)
@@ -342,13 +349,19 @@ func getDefaultValue(key string, context tfContext) (*valueWithUnit, error) {
 			valueFound := propertyMapping.Default
 			unit := propertyMapping.Unit
 			var err error
-			valueFound, err = applyRegex(valueFound, &propertyMapping, &context)
-			if err != nil {
-				return nil, err
+			valueFoundStr, ok := valueFound.(string)
+			if ok {
+				valueFound, err = applyRegex(valueFoundStr, &propertyMapping, context)
+				if err != nil {
+					return nil, err
+				}
 			}
-			valueFound, err = applyReference(valueFound, &propertyMapping, &context)
-			if err != nil {
-				return nil, err
+			valueFoundStr, ok = valueFound.(string)
+			if ok {
+				valueFound, err = applyReference(valueFoundStr, &propertyMapping, context)
+				if err != nil {
+					return nil, err
+				}
 			}
 
 			if valueFound != nil {
@@ -364,7 +377,7 @@ func getDefaultValue(key string, context tfContext) (*valueWithUnit, error) {
 
 }
 
-func getVariable(name string, context tfContext, parentContext tfContext) (interface{}, error) {
+func getVariable(name string, context *tfContext) (interface{}, error) {
 	variablesMappings := context.Mapping.Variables
 	if variablesMappings == nil {
 		return nil, nil
@@ -373,10 +386,10 @@ func getVariable(name string, context tfContext, parentContext tfContext) (inter
 		Resource:        context.Resource,
 		Mapping:         variablesMappings,
 		ResourceAddress: context.ResourceAddress + ".variables",
-		ParentContext:   &parentContext,
+		ParentContext:   context.ParentContext,
 		Provider:        context.Provider,
 	}
-	value, err := getValue(name, variableContext)
+	value, err := getValue(name, &variableContext)
 	if err != nil {
 		return nil, err
 	}

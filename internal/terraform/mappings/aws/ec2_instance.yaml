@@ -1,0 +1,74 @@
+compute_resource:
+  aws_instance: 
+    paths: 
+      - .planned_values.root_module.resources[] | select(.type == "aws_instance")
+    type: resource
+    variables:
+      properties:
+        ami:
+          - paths:
+            - '.prior_state.values.root_module.resources[] | select(.values.image_id == "${this.values.ami}")'
+            reference:
+              return_path: true
+        provider_region:
+          - paths:
+            - '.configuration'
+            property: "region"
+    properties:
+      name:
+        - paths: ".name"
+      address:
+        - paths: ".address"
+      type:
+        - paths: ".type"
+      vCPUs:
+        - paths: ".values.instance_type"
+          reference:
+            json_file: aws_instances
+            property: "VCPU"
+      memory:
+        - paths: ".values.instance_type"
+          unit: mb
+          reference:
+            json_file: aws_instances
+            property: "MemoryMb"
+            zone:
+      zone:
+        - paths: ".values.availability_zone"
+      region:
+        - paths: ".values.availability_zone"
+          regex:
+            pattern: '^(.+-\d+)[a-z]+'
+            group: 1
+      replication_factor:
+        - default: 1
+      storage:
+        - type: list
+          item:
+            - paths: '.prior_state.values.root_module.resources[] | select(.values.image_id == "${this.values.ami}") | .values.block_device_mappings[].ebs | select(length > 0)'
+              properties:
+                size:
+                  - paths: ".volume_size"
+                    default: 8
+                    unit: gb
+                type:
+                  - paths: ".volume_type"
+                    default: standard
+                    reference:
+                      general: disk_types 
+            - paths: '.values.ebs_block_device[] | select(length > 0)'
+              properties:
+                size:
+                  - paths: ".volume_size"
+                    unit: gb
+                  - paths: ".snapshot_id"
+                    reference:
+                      paths: .prior_state.values.root_module.resources[] | select(.values.id == "${key}") | .values
+                      property: "volume_size"
+                  - default: 8
+                    unit: gb
+                type:
+                  - paths: ".volume_type"
+                    default: standard
+                    reference:
+                      general: disk_types

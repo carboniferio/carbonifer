@@ -1,7 +1,6 @@
 package terraform
 
 import (
-	"log"
 	"path"
 	"testing"
 
@@ -14,11 +13,13 @@ import (
 )
 
 func TestGetResource_DiskFromAMI(t *testing.T) {
+	// TODO REmove
+	t.Setenv("AWS_REGION", "eu-west-3")
 
 	testutils.SkipWithCreds(t)
 
 	// reset
-	ResetTerraformExec()
+	resetTerraformExec()
 
 	wd := path.Join(testutils.RootDir, "test/terraform/aws_ec2")
 	viper.Set("workdir", wd)
@@ -36,8 +37,8 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 				VCPUs:             int32(2),
 				MemoryMb:          int32(8192),
 				ReplicationFactor: 1,
-				HddStorage:        decimal.NewFromInt(20),
-				SsdStorage:        decimal.NewFromInt(90),
+				HddStorage:        decimal.NewFromInt(80),
+				SsdStorage:        decimal.NewFromInt(30),
 			},
 		},
 		"aws_ebs_volume.ebs_volume": resources.ComputeResource{
@@ -49,14 +50,13 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 				Count:        1,
 			},
 			Specs: &resources.ComputeResourceSpecs{
-				HddStorage: decimal.Zero,
-				SsdStorage: decimal.NewFromInt(100),
+				ReplicationFactor: 1,
+				HddStorage:        decimal.Zero,
+				SsdStorage:        decimal.NewFromInt(100),
 			},
 		},
 	}
-	log.Default().Println(wantResources)
-
-	tfPlan, err := TerraformPlan()
+	tfPlan, err := terraformPlan()
 	assert.NoError(t, err)
 	gotResources, err := GetResources(tfPlan)
 	assert.NoError(t, err)

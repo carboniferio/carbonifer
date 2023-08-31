@@ -6,6 +6,7 @@ import (
 
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/polkeli/yaml/v3" // TODO use go-yaml https://github.com/go-yaml/yaml/issues/100#issuecomment-1632853107
+	"golang.org/x/exp/maps"
 )
 
 // Mapping is the mapping of the terraform resources
@@ -24,6 +25,10 @@ func getMapping() (*Mappings, error) {
 }
 
 func loadMappings() error {
+	globalMappings = &Mappings{
+		General:         &map[providers.Provider]GeneralConfig{},
+		ComputeResource: &map[string]ResourceMapping{},
+	}
 	mappingsPath := "internal/terraform/mappings"
 	files, err := os.ReadDir(mappingsPath)
 	if err != nil {
@@ -86,7 +91,8 @@ func loadMapping(providerMappingFolder string) error {
 
 	}
 
-	globalMappings = mergedMappings
+	maps.Copy(*globalMappings.General, *mergedMappings.General)
+	maps.Copy(*globalMappings.ComputeResource, *mergedMappings.ComputeResource)
 
 	return nil
 }

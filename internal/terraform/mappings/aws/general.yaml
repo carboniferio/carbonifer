@@ -1,0 +1,16 @@
+general:
+  aws:
+    disk_types:
+      default: ssd
+      types:
+        standard: hdd
+        gp2: ssd
+        gp3: ssd
+        io1: ssd
+        io2: ssd
+        st1: hdd
+        sc1: hdd
+    json_data:
+      aws_instances : "aws_instances.json"
+    ignored_resources: 
+      - "aws_vpc"

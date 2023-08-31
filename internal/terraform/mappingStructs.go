@@ -14,8 +14,8 @@ type GeneralConfig struct {
 }
 
 type DiskTypes struct {
-	Default interface{}             `yaml:"default,omitempty"`
-	Types   *map[string]interface{} `yaml:"types,omitempty"`
+	Default *DiskType             `yaml:"default,omitempty"`
+	Types   *map[string]*DiskType `yaml:"types,omitempty"`
 }
 
 type ResourceMapping struct {
