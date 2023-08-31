@@ -4,7 +4,7 @@
 // Build Date:
 // Built By:
 
-package terraform
+package plan
 
 import (
 	"fmt"

@@ -1,4 +1,4 @@
-package terraform
+package plan
 
 import (
 	"path"
@@ -6,6 +6,7 @@ import (
 
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
+	"github.com/carboniferio/carbonifer/internal/terraform"
 	"github.com/carboniferio/carbonifer/internal/testutils"
 	"github.com/shopspring/decimal"
 	"github.com/spf13/viper"
@@ -17,7 +18,7 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 	testutils.SkipWithCreds(t)
 
 	// reset
-	resetTerraformExec()
+	terraform.ResetTerraformExec()
 
 	wd := path.Join(testutils.RootDir, "test/terraform/aws_ec2")
 	viper.Set("workdir", wd)
@@ -54,7 +55,7 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 			},
 		},
 	}
-	tfPlan, err := terraformPlan()
+	tfPlan, err := terraform.TerraformPlan()
 	assert.NoError(t, err)
 	gotResources, err := GetResources(tfPlan)
 	assert.NoError(t, err)

@@ -1,4 +1,4 @@
-package terraform
+package plan
 
 import (
 	"encoding/json"

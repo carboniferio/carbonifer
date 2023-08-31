@@ -1,6 +1,7 @@
-package terraform
+package plan
 
 import (
+	"github.com/carboniferio/carbonifer/internal/terraform"
 	"github.com/pkg/errors"
 )
 
@@ -25,7 +26,7 @@ func getValueOfExpression(expression map[string]interface{}, context *tfContext)
 			return nil, errors.Errorf("Reference is not a string: %v : %T", reference, reference)
 		}
 
-		valueFromConsole, err := runTerraformConsole(reference)
+		valueFromConsole, err := terraform.RunTerraformConsole(reference)
 		if err != nil {
 			continue
 		}

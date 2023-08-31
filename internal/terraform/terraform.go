@@ -50,7 +50,7 @@ func getTerraformExec() (*tfexec.Terraform, error) {
 	return terraformExec, nil
 }
 
-func resetTerraformExec() {
+func ResetTerraformExec() {
 	terraformExec = nil
 }
 
@@ -127,7 +127,7 @@ func CarboniferPlan(input string) (*map[string]interface{}, error) {
 	}
 	// If the path points to a directory, run plan
 	viper.Set("workdir", input)
-	tfPlan, err := terraformPlan()
+	tfPlan, err := TerraformPlan()
 	if err != nil {
 		if e, ok := err.(*ProviderAuthError); ok {
 			log.Warnf("Skipping Authentication error: %v", e)
@@ -139,7 +139,7 @@ func CarboniferPlan(input string) (*map[string]interface{}, error) {
 
 }
 
-func terraformPlan() (*map[string]interface{}, error) {
+func TerraformPlan() (*map[string]interface{}, error) {
 	tf, ctx, err := terraformInit()
 	if err != nil {
 		return nil, err
@@ -262,7 +262,7 @@ func terraformShow(fileName string) (*map[string]interface{}, error) {
 	return &tfPlanJSON, nil
 }
 
-func runTerraformConsole(command string) (*string, error) {
+func RunTerraformConsole(command string) (*string, error) {
 	tfExec, err := getTerraformExec()
 	if err != nil {
 		return nil, err

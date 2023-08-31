@@ -1,4 +1,4 @@
-package terraform
+package plan
 
 import "github.com/carboniferio/carbonifer/internal/providers"
 
