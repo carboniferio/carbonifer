@@ -1,0 +1,47 @@
+compute_resource:
+  google_compute_disk:
+    paths:
+      - .planned_values.root_module.resources[] | select(.type == "google_compute_disk")
+      - .planned_values.root_module.resources[] | select(.type == "google_compute_region_disk")
+    type: resource
+    properties:
+      name:
+        - paths: ".name"
+      address:
+        - paths: ".address"
+      type:
+        - paths: ".type"
+      zone:
+        - paths: ".values.zone"
+        - paths: ".values.replica_zones[0]"
+      region:
+        - paths: ".values.zone"
+          regex:
+            pattern: "^(.*)-.*$"
+            group: 1
+        - paths: ".values.replica_zones[0]"
+          regex:
+            pattern: "^(.*)-.*$"
+            group: 1
+      replication_factor:
+        - paths: '.values.replica_zones | length | if . == 0 then 1 else . end'
+        - default: 1
+      storage:
+        - type: list
+          item:
+            - paths: ".values"
+              properties:
+                size:
+                  - paths: ".size"
+                    unit: gb
+                  - paths: ".image"
+                    unit: gb
+                    reference:
+                      paths: .prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values
+                      property: "disk_size_gb"
+                  - default: 10
+                    unit: gb
+                type:
+                  - paths: ".type"
+                    reference:
+                      general: disk_types

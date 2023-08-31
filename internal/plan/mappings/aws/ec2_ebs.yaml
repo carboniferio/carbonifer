@@ -1,0 +1,42 @@
+compute_resource:
+  aws_ebs_volume:
+    paths:
+      - .planned_values.root_module.resources[] | select(.type == "aws_ebs_volume")
+    type: resource
+    properties:
+      name:
+        - paths: ".name"
+      address:
+        - paths: ".address"
+      type:
+        - paths: ".type"
+      zone:
+        - paths: ".values.availability_zone"
+      region:
+        - paths: ".values.availability_zone"
+          regex:
+            pattern: '^(.+-\d+)[a-z]+'
+            group: 1
+      replication_factor:
+        - default: 1
+      storage:
+        - type: list
+          item:
+            - paths: ".values"
+              properties:
+                size:
+                  - paths: ".size"
+                    unit: gb
+                  - paths: ".snapshot_id"
+                    reference:
+                      paths: .prior_state.values.root_module.resources[] | select(.values.id == "${key}") | .values
+                      property: "volume_size"
+                  - default: 8
+                    unit: gb
+                type:
+                  - paths: ".type"
+                    reference:
+                      general: disk_types
+                  - default: standard
+                    reference:
+                      general: disk_types

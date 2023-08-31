@@ -10,6 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Coefficients is a struct that contains the coefficients for the energy estimation
 type Coefficients struct {
 	CPUMinWh       decimal.Decimal `json:"cpu_min_wh"`
 	CPUMaxWh       decimal.Decimal `json:"cpu_max_wh"`
@@ -20,6 +21,7 @@ type Coefficients struct {
 	PueAverage     decimal.Decimal `json:"pue_average"`
 }
 
+// CoefficientsProviders is a struct that contains the coefficients for the energy estimation per provider
 type CoefficientsProviders struct {
 	AWS   Coefficients `json:"AWS"`
 	GCP   Coefficients `json:"GCP"`
@@ -28,6 +30,7 @@ type CoefficientsProviders struct {
 
 var coefficientsPerProviders *CoefficientsProviders
 
+// GetEnergyCoefficients returns the coefficients for the energy estimation
 func GetEnergyCoefficients() *CoefficientsProviders {
 	if coefficientsPerProviders == nil {
 		energyCoefFile := data.ReadDataFile("energy_coefficients.json")
@@ -39,11 +42,12 @@ func GetEnergyCoefficients() *CoefficientsProviders {
 	return coefficientsPerProviders
 }
 
+// GetByProvider returns the coefficients for the energy estimation of a provider
 func (cps *CoefficientsProviders) GetByProvider(provider providers.Provider) Coefficients {
-	return coefficientsPerProviders.GetByProviderName(provider.String())
+	return coefficientsPerProviders.getByProviderName(provider.String())
 }
 
-func (cps *CoefficientsProviders) GetByProviderName(name string) Coefficients {
+func (cps *CoefficientsProviders) getByProviderName(name string) Coefficients {
 	r := reflect.ValueOf(cps)
 	coefficients := reflect.Indirect(r).FieldByName(name)
 	return coefficients.Interface().(Coefficients)

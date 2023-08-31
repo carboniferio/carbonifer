@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Get the carbon emissions of a GCP resource
+// EstimateSupportedResource gets the carbon emissions of a GCP resource
 func EstimateSupportedResource(resource resources.Resource) *estimation.EstimationResource {
 
 	var computeResource resources.ComputeResource = resource.(resources.ComputeResource)

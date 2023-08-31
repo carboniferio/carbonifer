@@ -8,7 +8,6 @@ import (
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	_ "github.com/carboniferio/carbonifer/internal/testutils"
-	"github.com/carboniferio/carbonifer/internal/utils"
 	"github.com/shopspring/decimal"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
@@ -74,7 +73,7 @@ var resourceGCPInstanceGroup = resources.ComputeResource{
 }
 
 func TestEstimateResource(t *testing.T) {
-	avg_cpu_use := viper.GetFloat64("provider.gcp.avg_cpu_use")
+	avgCPUUse := viper.GetFloat64("provider.gcp.avg_cpu_use")
 	type args struct {
 		resource resources.ComputeResource
 	}
@@ -90,7 +89,7 @@ func TestEstimateResource(t *testing.T) {
 				Resource:        &resourceGCPComputeBasic,
 				Power:           decimal.NewFromFloat(7.600784000).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(0.448446256).RoundFloor(10),
-				AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
+				AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
 				Count:           decimal.NewFromInt(1),
 			},
 		},
@@ -101,7 +100,7 @@ func TestEstimateResource(t *testing.T) {
 				Resource:        &resourceGCPComputeCPUType,
 				Power:           decimal.NewFromFloat(9.5565660741),
 				CarbonEmissions: decimal.NewFromFloat(0.5638373983),
-				AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
+				AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
 				Count:           decimal.NewFromInt(1),
 			},
 		},
@@ -112,7 +111,7 @@ func TestEstimateResource(t *testing.T) {
 				Resource:        &resourceGCPInstanceGroup,
 				Power:           decimal.NewFromFloat(7.600784000).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(0.448446256).RoundFloor(10),
-				AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
+				AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
 				Count:           decimal.NewFromInt(3),
 			},
 		},
@@ -126,7 +125,7 @@ func TestEstimateResource(t *testing.T) {
 }
 
 func TestEstimateResourceKilo(t *testing.T) {
-	avg_cpu_use := viper.GetFloat64("provider.gcp.avg_cpu_use")
+	avgCPUUse := viper.GetFloat64("provider.gcp.avg_cpu_use")
 	viper.Set("unit.carbon", "kg")
 	viper.Set("unit.time", "m")
 	type args struct {
@@ -144,7 +143,7 @@ func TestEstimateResourceKilo(t *testing.T) {
 				Resource:        &resourceGCPComputeBasic,
 				Power:           decimal.NewFromFloat(5472.56448).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(232.4745391104).RoundFloor(10),
-				AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
+				AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
 				Count:           decimal.NewFromInt(1),
 			},
 		},
@@ -155,7 +154,7 @@ func TestEstimateResourceKilo(t *testing.T) {
 				Resource:        &resourceGCPComputeCPUType,
 				Power:           decimal.NewFromFloat(6880.7275733647).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(292.2933073165).RoundFloor(10),
-				AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
+				AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
 				Count:           decimal.NewFromInt(1),
 			},
 		},
@@ -211,7 +210,7 @@ func EqualsTotal(t *testing.T, expected *estimation.EstimationTotal, actual *est
 }
 
 func TestEstimateResources(t *testing.T) {
-	avg_cpu_use := viper.GetFloat64("provider.gcp.avg_cpu_use")
+	avgCPUUse := viper.GetFloat64("provider.gcp.avg_cpu_use")
 	viper.Set("unit.carbon", "g")
 	viper.Set("unit.time", "h")
 	type args struct {
@@ -223,25 +222,25 @@ func TestEstimateResources(t *testing.T) {
 			Resource:        &resourceGCPComputeBasic,
 			Power:           decimal.NewFromFloat(7.600784).Round(10),
 			CarbonEmissions: decimal.NewFromFloat(0.448446256).Round(10),
-			AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
+			AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
 			Count:           decimal.NewFromInt(1),
 		},
 		{
 			Resource:        &resourceGCPComputeCPUType,
 			Power:           decimal.NewFromFloat(9.5565660741),
 			CarbonEmissions: decimal.NewFromFloat(0.5638373983),
-			AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
+			AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
 			Count:           decimal.NewFromInt(1),
 		},
 		{
 			Resource:        &resourceGCPInstanceGroup,
 			Power:           decimal.NewFromFloat(7.600784).Round(10),
 			CarbonEmissions: decimal.NewFromFloat(0.448446256).Round(10),
-			AverageCPUUsage: decimal.NewFromFloat(avg_cpu_use),
+			AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
 			Count:           decimal.NewFromInt(3),
 		},
 	}
-	utils.SortEstimations(&expectedResources)
+	SortEstimations(&expectedResources)
 
 	tests := []struct {
 		name string
@@ -278,7 +277,7 @@ func TestEstimateResources(t *testing.T) {
 			assert.Equal(t, got.Info.UnitCarbonEmissionsTime, tt.want.Info.UnitCarbonEmissionsTime)
 			assert.Equal(t, got.Info.UnitTime, tt.want.Info.UnitTime)
 			assert.Equal(t, got.Info.UnitWattTime, tt.want.Info.UnitWattTime)
-			utils.SortEstimations(&got.Resources)
+			SortEstimations(&got.Resources)
 			for i, gotResource := range got.Resources {
 				wantResource := tt.want.Resources[i]
 				EqualsEstimationResource(t, &wantResource, &gotResource)

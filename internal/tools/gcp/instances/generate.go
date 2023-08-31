@@ -13,14 +13,12 @@ import (
 	"google.golang.org/api/compute/v1"
 
 	"github.com/carboniferio/carbonifer/internal/providers/gcp"
-	tools_gcp "github.com/carboniferio/carbonifer/internal/tools/gcp"
+	toolsgcp "github.com/carboniferio/carbonifer/internal/tools/gcp"
 )
 
-const DEFAULT_ZONE = "us-central1-a"
+var cpuTypes map[string]machineFamily
 
-var cpuTypes map[string]MachineFamily
-
-type MachineFamily struct {
+type machineFamily struct {
 	Name         string   `json:"Name"`
 	CPUTypes     []string `json:"CPU types"`
 	Architecture string   `json:"Architecture"`
@@ -34,7 +32,7 @@ func getCPUTypes(machineType string) []string {
 			log.Fatal(err)
 		}
 
-		cpuTypes = make(map[string]MachineFamily)
+		cpuTypes = make(map[string]machineFamily)
 		byteValue, _ := io.ReadAll(jsonFile)
 		err = json.Unmarshal(byteValue, &cpuTypes)
 		if err != nil {
@@ -71,7 +69,7 @@ func getMachineTypesForZone(client *compute.Service, project string, zone string
 			Name:     machineType.Name,
 			Vcpus:    int32(machineType.GuestCpus),
 			MemoryMb: int32(machineType.MemoryMb),
-			CpuTypes: getCPUTypes(machineType.Name),
+			CPUTypes: getCPUTypes(machineType.Name),
 			GPUTypes: getGPUs(machineType),
 		}
 	}
@@ -142,7 +140,7 @@ func retrieveData() *map[string]map[string]gcp.MachineType {
 		log.Fatalf("Error creating Compute Engine client: %v", err)
 	}
 
-	project := tools_gcp.GetProjectId()
+	project := toolsgcp.GetProjectID()
 
 	machineTypesByZone := make(map[string]map[string]gcp.MachineType)
 	zones, err := client.Zones.List(project).Do()

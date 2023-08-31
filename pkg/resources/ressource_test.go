@@ -1,9 +1,10 @@
 package resources
 
 import (
-	"github.com/carboniferio/carbonifer/pkg/providers"
 	"reflect"
 	"testing"
+
+	"github.com/carboniferio/carbonifer/pkg/providers"
 )
 
 func TestGenericResource_IsSupported(t *testing.T) {

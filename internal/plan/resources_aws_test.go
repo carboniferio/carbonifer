@@ -1,11 +1,9 @@
-package plan_test
+package plan
 
 import (
-	"log"
 	"path"
 	"testing"
 
-	"github.com/carboniferio/carbonifer/internal/plan"
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/carboniferio/carbonifer/internal/terraform"
@@ -38,8 +36,8 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 				VCPUs:             int32(2),
 				MemoryMb:          int32(8192),
 				ReplicationFactor: 1,
-				HddStorage:        decimal.NewFromInt(20),
-				SsdStorage:        decimal.NewFromInt(90),
+				HddStorage:        decimal.NewFromInt(80),
+				SsdStorage:        decimal.NewFromInt(30),
 			},
 		},
 		"aws_ebs_volume.ebs_volume": resources.ComputeResource{
@@ -51,16 +49,15 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 				Count:        1,
 			},
 			Specs: &resources.ComputeResourceSpecs{
-				HddStorage: decimal.Zero,
-				SsdStorage: decimal.NewFromInt(100),
+				ReplicationFactor: 1,
+				HddStorage:        decimal.Zero,
+				SsdStorage:        decimal.NewFromInt(100),
 			},
 		},
 	}
-	log.Default().Println(wantResources)
-
 	tfPlan, err := terraform.TerraformPlan()
 	assert.NoError(t, err)
-	gotResources, err := plan.GetResources(tfPlan)
+	gotResources, err := GetResources(tfPlan)
 	assert.NoError(t, err)
 	for _, res := range gotResources {
 		if res.GetIdentification().ResourceType == "aws_instance" {

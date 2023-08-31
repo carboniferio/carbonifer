@@ -5,4 +5,3 @@ module "globals" {
 provider "google" {
   region = module.globals.common_region
 }
-

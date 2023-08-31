@@ -41,5 +41,18 @@
     "cpuTypes": [
       "Cascade Lake"
     ]
+  },
+  "n1-standard-2": {
+    "name": "n1-standard-2",
+    "vcpus": 2,
+    "gpus": null,
+    "memoryMb": 7680,
+    "cpuTypes": [
+      "Skylake",
+      "Broadwell",
+      "Haswell",
+      "Sandy Bridge",
+      "Ivy Bridge"
+    ]
   }
 }

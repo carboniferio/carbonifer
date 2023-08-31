@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/viper"
@@ -14,6 +15,7 @@ import (
 //go:embed data/*
 var data embed.FS
 
+// ReadDataFile reads a file from the data directory
 func ReadDataFile(filename string) []byte {
 	dataPath := viper.GetString("data.path")
 	if dataPath != "" {
@@ -26,20 +28,19 @@ func ReadDataFile(filename string) []byte {
 				log.Fatal(err)
 			}
 			return data
-		} else {
-			return readEmbeddedFile(filename)
 		}
-	} else {
-		// Otherwise, read from the embedded file
 		return readEmbeddedFile(filename)
+
 	}
+	return readEmbeddedFile(filename)
 }
 
 func readEmbeddedFile(filename string) []byte {
 	log.Debugf("  reading datafile '%v' embedded", filename)
 	data, err := fs.ReadFile(data, "data/"+filename)
 	if err != nil {
-		log.Fatal(err)
+		errW := errors.Wrap(err, "cannot read embedded data file")
+		log.Fatal(errW)
 	}
 	return data
 }

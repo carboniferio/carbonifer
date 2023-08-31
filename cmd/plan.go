@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 Carbonifer contact@carbonifer.io
-*/
 package cmd
 
 import (
@@ -8,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/carboniferio/carbonifer/internal/estimate"
@@ -18,7 +16,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var test_planCmdHasRun = false
+var testPlanCmdHasRun = false
 
 // planCmd represents the plan command
 var planCmd = &cobra.Command{
@@ -38,7 +36,7 @@ Example usages:
 	carbonifer plan /path/to/terraform/plan.tfplan`,
 	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		test_planCmdHasRun = true
+		testPlanCmdHasRun = true
 		log.Debug("Running command 'plan'")
 
 		workdir, err := os.Getwd()
@@ -63,7 +61,8 @@ Example usages:
 		// Read resources from terraform plan
 		resources, err := plan.GetResources(tfPlan)
 		if err != nil {
-			log.Fatal(err)
+			errW := errors.Wrap(err, "Failed to get resources from terraform plan")
+			log.Panic(errW)
 		}
 
 		// Estimate CO2 emissions
@@ -72,7 +71,7 @@ Example usages:
 		// Generate report
 		reportText := ""
 		if viper.Get("out.format") == "json" {
-			reportText = output.GenerateReportJson(estimations)
+			reportText = output.GenerateReportJSON(estimations)
 		} else {
 			reportText = output.GenerateReportText(estimations)
 		}
@@ -81,6 +80,7 @@ Example usages:
 		outFile := viper.Get("out.file").(string)
 		if outFile == "" {
 			log.Debug("output : stdout")
+			cmd.SetOut(os.Stdout)
 			cmd.Println(reportText)
 		} else {
 			log.Debug("output :", outFile)

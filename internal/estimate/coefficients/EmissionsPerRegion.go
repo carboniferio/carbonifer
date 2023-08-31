@@ -1,9 +1,9 @@
 package coefficients
 
 import (
-	"errors"
-	"fmt"
 	"strings"
+
+	"github.com/pkg/errors"
 
 	"github.com/carboniferio/carbonifer/internal/data"
 	"github.com/carboniferio/carbonifer/internal/providers"
@@ -13,8 +13,17 @@ import (
 	"github.com/yunabe/easycsv"
 )
 
+// EmissionsPerRegion is a map of regions to their emissions
 var EmissionsPerRegion map[string]Emissions
 
+// Emissions is the emissions of a region
+type Emissions struct {
+	Region              string
+	Location            string
+	GridCarbonIntensity decimal.Decimal
+}
+
+// RegionEmission returns the emissions of a region
 func RegionEmission(provider providers.Provider, region string) (*Emissions, error) {
 	var dataFile string
 	switch provider {
@@ -33,29 +42,23 @@ func RegionEmission(provider providers.Provider, region string) (*Emissions, err
 	}
 	emissions, ok := EmissionsPerRegion[region]
 	if !ok {
-		return nil, errors.New(fmt.Sprint("Region does not exist: ", region))
+		return nil, errors.Errorf("Region does not exist: '%v'", region)
 	}
 	return &emissions, nil
 }
 
-type EmissionsCSV struct {
+type emissionsCSV struct {
 	Region              string  `name:"Region"`
 	Location            string  `name:"Location"`
 	GridCarbonIntensity float64 `name:"Grid carbon intensity (gCO2eq / kWh)"`
 }
 
-type Emissions struct {
-	Region              string
-	Location            string
-	GridCarbonIntensity decimal.Decimal
-}
-
 // Source: Google
 func loadEmissionsPerRegion(dataFile string) map[string]Emissions {
 	// Read the CSV records
-	var records []EmissionsCSV
+	var records []emissionsCSV
 	regionEmissionFile := data.ReadDataFile(dataFile)
-	log.Debugf("reading GCP region/grid emissions from: %v", regionEmissionFile)
+	log.Debugf("reading GCP region/grid emissions from: %v", dataFile)
 	if err := easycsv.NewReader(strings.NewReader(string(regionEmissionFile))).ReadAll(&records); err != nil {
 		log.Fatal(err)
 	}

@@ -1,11 +1,12 @@
 package estimate
 
 import (
+	"reflect"
+	"testing"
+
 	"github.com/carboniferio/carbonifer/pkg/providers"
 	"github.com/carboniferio/carbonifer/pkg/resources"
 	"github.com/shopspring/decimal"
-	"reflect"
-	"testing"
 )
 
 func TestGetEstimation(t *testing.T) {

@@ -1,4 +1,4 @@
-package tools_gcp
+package toolsgcp
 
 import (
 	"context"
@@ -9,7 +9,8 @@ import (
 	"google.golang.org/api/option"
 )
 
-func GetProjectId() string {
+// GetProjectID returns the project ID of the current GCP project
+func GetProjectID() string {
 	ctx := context.Background()
 
 	// Get the default client using the default credentials

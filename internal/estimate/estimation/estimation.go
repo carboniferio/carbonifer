@@ -8,6 +8,7 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// EstimationReport is the struct that contains the estimation report
 type EstimationReport struct {
 	Info                 EstimationInfo
 	Resources            []EstimationResource
@@ -15,6 +16,7 @@ type EstimationReport struct {
 	Total                EstimationTotal
 }
 
+// EstimationResource is the struct that contains the estimation of a resource
 type EstimationResource struct {
 	Resource        resources.Resource
 	Power           decimal.Decimal `json:"PowerPerInstance"`
@@ -23,12 +25,14 @@ type EstimationResource struct {
 	Count           decimal.Decimal
 }
 
+// EstimationTotal is the struct that contains the total estimation
 type EstimationTotal struct {
 	Power           decimal.Decimal
 	CarbonEmissions decimal.Decimal
 	ResourcesCount  decimal.Decimal
 }
 
+// EstimationInfo is the struct that contains the info of the estimation
 type EstimationInfo struct {
 	UnitTime                string
 	UnitWattTime            string
@@ -37,6 +41,7 @@ type EstimationInfo struct {
 	InfoByProvider          map[providers.Provider]InfoByProvider
 }
 
+// InfoByProvider is the struct that contains the info of the estimation by provider
 type InfoByProvider struct {
 	AverageCPUUsage float64
 	AverageGPUUsage float64
