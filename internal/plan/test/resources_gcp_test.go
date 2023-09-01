@@ -1,8 +1,9 @@
-package plan
+package plan_test
 
 import (
 	"testing"
 
+	"github.com/carboniferio/carbonifer/internal/plan"
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/carboniferio/carbonifer/internal/testutils"
@@ -83,12 +84,12 @@ var gpuDefaultMachine tfjson.StateResource = tfjson.StateResource{
 }
 
 func TestGetResource(t *testing.T) {
-	mapping, err := getMapping()
+	mapping, err := plan.GetMapping()
 	assert.NoError(t, err)
 	computeResourceMapping := *mapping.ComputeResource
 	type args struct {
 		tfResource tfjson.StateResource
-		mapping    ResourceMapping
+		mapping    plan.ResourceMapping
 	}
 	tests := []struct {
 		name string
@@ -213,7 +214,7 @@ func TestGetResource(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			resource, _ := testutils.TfResourceToJSON(&tt.args.tfResource)
-			got, err := getComputeResource(*resource, &tt.args.mapping, nil)
+			got, err := plan.GetComputeResource(*resource, &tt.args.mapping, nil)
 			assert.NoError(t, err)
 			assert.Len(t, got, 1)
 			assert.IsType(t, resources.ComputeResource{}, got[0])

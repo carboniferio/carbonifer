@@ -1,0 +1,75 @@
+compute_resource:
+  aws_db_instance: 
+    paths: 
+      - .planned_values.root_module.resources[] | select(.type == "aws_db_instance")
+    type: resource
+    variables:
+      properties:
+        replicate_source_db:
+          - paths:
+            - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.replicate_source_db?.references[]? | select(endswith("id")) | gsub("\\.id$"; "")'
+            reference:
+              paths:
+                - .planned_values.root_module.resources[] | select(.address == "${key}")
+                - .planned_values.root_module.child_modules[] | select(.address == ("${key}" | split(".")[0:2] | join("."))) | .resources[] | select(.name == ("${key}" | split(".")[2]))
+                - .prior_state.values.root_module.resources[] | select(.address == "${key}")
+              return_path: true
+    properties:
+      name:
+        - paths: ".name"
+      address:
+        - paths: ".address"
+      type:
+        - paths: ".type"
+      zone:
+        - paths: ".values.availability_zone"
+      region:
+        - paths: ".values.availability_zone"
+          regex:
+            pattern: '^(.+-\d+)[a-z]+'
+            group: 1
+        - paths: ".configuration.provider_config.aws.expressions.region"
+      replication_factor:
+        - paths: '.values| if .multi_az then 2 else 1 end'
+      vCPUs:
+        - paths: ".values.instance_class"
+          regex:
+            pattern: '^db\.(.+)'
+            group: 1
+          reference:
+            json_file: aws_instances
+            property: "VCPU"
+      memory:
+        - paths: ".values.instance_class"
+          unit: mb
+          regex:
+            pattern: '^db\.(.+)'
+            group: 1
+          reference:
+            json_file: aws_instances
+            property: "MemoryMb"
+      storage:
+        - type: list
+          item:
+            - paths: 
+              - '.values | select(.allocated_storage)'
+              - '${replicate_source_db}.values | select(.allocated_storage)'
+              properties:
+                size:
+                  - paths: ".allocated_storage"
+                    unit: gb
+                type:
+                  - paths: ".storage_type"
+                    default: gp2
+                    reference:
+                      general: disk_types
+            - paths: '.prior_state.values.root_module.resources[] | select(.values.db_snapshot_identifier == "${this.values.snapshot_identifier}")'
+              properties:
+                size:
+                  - paths: ".values.allocated_storage"
+                    unit: gb
+                type:
+                  - paths: "values.storage_type"
+                    default: gp2
+                    reference:
+                      general: disk_types

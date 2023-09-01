@@ -43,6 +43,7 @@ Data resources:
 |---|---|---|
 | `aws_instance`| No GPU | |
 | `aws_ebs_volume`| if size set, or if snapshot declared as data resource | |
+| `aws_db_instance` | | |
 
 Data resources:
 
@@ -50,6 +51,7 @@ Data resources:
 |---|---|---|
 | `aws_ami`| `ebs.volume_size` can be set, otherwise get it from image only if AWS credentials are provided| |
 | `aws_ebs_snapshot`| `volume_size` can be set, otherwise get it from image only if AWS credentials are provided| |
+| `aws_db_snapshot`|  get it only if AWS credentials are provided| |
 
 
 _more to be implemented_

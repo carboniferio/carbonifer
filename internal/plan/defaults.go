@@ -9,7 +9,12 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 )
 
+var defaultRegion *string
+
 func getDefaultRegion() *string {
+	if defaultRegion != nil {
+		return defaultRegion
+	}
 	var region interface{}
 	if region == nil {
 		if os.Getenv("AWS_DEFAULT_REGION") != "" {

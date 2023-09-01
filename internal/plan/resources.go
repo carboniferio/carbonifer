@@ -34,7 +34,7 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 	resourcesMap := map[string]resources.Resource{}
 
 	// Get compute resources
-	mapping, err := getMapping()
+	mapping, err := GetMapping()
 	if err != nil {
 		errW := errors.Wrap(err, "Cannot get mapping")
 		return nil, errW
@@ -118,7 +118,7 @@ func getResourcesOfType(resourceType string, mapping *ResourceMapping) ([]resour
 		}
 		log.Debugf("  Found %d resources of type '%s'", len(resourcesFound), resourceType)
 		for _, resourceI := range resourcesFound {
-			resourcesResultGot, err := getComputeResource(resourceI, mapping, resourcesResult)
+			resourcesResultGot, err := GetComputeResource(resourceI, mapping, resourcesResult)
 			if err != nil {
 				errW := errors.Wrapf(err, "Cannot get compute resource for path %v", path)
 				return nil, errW
@@ -133,7 +133,7 @@ func getResourcesOfType(resourceType string, mapping *ResourceMapping) ([]resour
 
 }
 
-func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping, resourcesResult []resources.Resource) ([]resources.Resource, error) {
+func GetComputeResource(resourceI interface{}, resourceMapping *ResourceMapping, resourcesResult []resources.Resource) ([]resources.Resource, error) {
 	resource := resourceI.(map[string]interface{})
 	resourceAddress := resource["address"].(string)
 	providerName, ok := resource["provider_name"].(string)
@@ -293,6 +293,9 @@ func getComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	}
 
 	for i, storageI := range storages {
+		if storageI == nil {
+			continue
+		}
 		storage, err := getStorage(storageI.(map[string]interface{}))
 		if err != nil {
 			return nil, errors.Wrapf(err, "Cannot get storage[%v] for %v", i, resourceAddress)
@@ -331,7 +334,19 @@ func getGPU(gpu map[string]interface{}) ([]string, error) {
 }
 
 func getStorage(storageMap map[string]interface{}) (*storage, error) {
-	storageSize := storageMap["size"].(*valueWithUnit)
+	storageSize, ok := storageMap["size"].(*valueWithUnit)
+	if !ok {
+		// It can happen there is no size but type as been set by default. In this case, we ignore the storage
+		// Can be fixed in the mapping by selecting only if the size property is set (example '.values | select(.allocated_storage)')
+		log.Warnf("Cannot find storage size in storageMap '%v': %T", storageMap, storageMap)
+		return nil, nil
+	}
+	if storageSize == nil {
+		return nil, errors.Errorf("Storage size is nil '%v': %T", storageSize, storageSize)
+	}
+	if storageSize.Value == nil {
+		return nil, errors.Errorf("Storage size value is nil '%v': %T", storageSize, storageSize)
+	}
 	storageSizeGb, err := decimal.NewFromString(fmt.Sprintf("%v", storageSize.Value))
 	if err != nil {
 		log.Fatal(err)
