@@ -1,9 +1,10 @@
-package plan
+package plan_test
 
 import (
 	"path"
 	"testing"
 
+	"github.com/carboniferio/carbonifer/internal/plan"
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/carboniferio/carbonifer/internal/resources"
 	"github.com/carboniferio/carbonifer/internal/terraform"
@@ -54,17 +55,29 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 				SsdStorage:        decimal.NewFromInt(100),
 			},
 		},
+		"aws_network_interface.foo": resources.UnsupportedResource{
+			Identification: &resources.ResourceIdentification{
+				Name:         "foo",
+				ResourceType: "aws_network_interface",
+				Provider:     providers.AWS,
+				Count:        1,
+			},
+		},
+		"aws_subnet.my_subnet": resources.UnsupportedResource{
+			Identification: &resources.ResourceIdentification{
+				Name:         "my_subnet",
+				ResourceType: "aws_subnet",
+				Provider:     providers.AWS,
+				Count:        1,
+			},
+		},
 	}
 	tfPlan, err := terraform.TerraformPlan()
 	assert.NoError(t, err)
-	gotResources, err := GetResources(tfPlan)
+	gotResources, err := plan.GetResources(tfPlan)
 	assert.NoError(t, err)
 	for _, res := range gotResources {
-		if res.GetIdentification().ResourceType == "aws_instance" {
-			assert.Equal(t, wantResources["aws_instance.foo"], res)
-		}
-		if res.GetIdentification().ResourceType == "aws_ebs_volume" {
-			assert.Equal(t, wantResources["aws_ebs_volume.ebs_volume"], res)
-		}
+		assert.Equal(t, wantResources[res.GetAddress()], res)
+
 	}
 }

@@ -13,7 +13,7 @@ import (
 var globalMappings *Mappings
 
 // GetMapping returns the mapping of the terraform resources
-func getMapping() (*Mappings, error) {
+func GetMapping() (*Mappings, error) {
 	if globalMappings != nil {
 		return globalMappings, nil
 	}

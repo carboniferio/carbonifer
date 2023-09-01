@@ -85,7 +85,7 @@ func getSliceItems(context tfContext) ([]interface{}, error) {
 	for _, pathRaw := range paths {
 		path := pathRaw
 		if strings.Contains(pathRaw, "${") {
-			path, err = resolvePlaceholders(path, context.ParentContext)
+			path, err = resolvePlaceholders(pathRaw, context.ParentContext)
 			if err != nil {
 				return nil, err
 			}
@@ -98,7 +98,7 @@ func getSliceItems(context tfContext) ([]interface{}, error) {
 		if len(jsonResults) == 0 && TfPlan != nil {
 			jsonResults, err = utils.GetJSON(path, *TfPlan)
 			if err != nil {
-				return nil, errors.Wrapf(err, "Cannot get item: %v", path)
+				return nil, errors.Wrapf(err, "Cannot get item in full plan: %v", path)
 			}
 		}
 		for _, jsonResultsI := range jsonResults {
@@ -108,7 +108,9 @@ func getSliceItems(context tfContext) ([]interface{}, error) {
 				if err != nil {
 					return nil, err
 				}
-				results = append(results, result)
+				if result != nil {
+					results = append(results, result)
+				}
 			case []interface{}:
 				for _, jsonResultI := range jsonResults {
 					jsonResultI, ok := jsonResultI.(map[string]interface{})
@@ -119,7 +121,9 @@ func getSliceItems(context tfContext) ([]interface{}, error) {
 					if err != nil {
 						return nil, err
 					}
-					results = append(results, result)
+					if result != nil {
+						results = append(results, result)
+					}
 				}
 			default:
 				return nil, errors.Errorf("Not an map or an array of maps: %T", jsonResultsI)
@@ -146,7 +150,9 @@ func getItem(context tfContext, itemMappingProperties *ResourceMapping, jsonResu
 		if err != nil {
 			return nil, err
 		}
-		result[key] = property
+		if property != nil {
+			result[key] = property
+		}
 	}
 	return result, nil
 }
@@ -198,7 +204,7 @@ func getValue(key string, context *tfContext) (*valueWithUnit, error) {
 	for _, propertyMapping := range propertiesMappings {
 		paths, err := readPaths(propertyMapping.Paths)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrapf(err, "Cannot get paths for %v", context.ResourceAddress)
 		}
 		unit := propertyMapping.Unit
 
@@ -208,25 +214,27 @@ func getValue(key string, context *tfContext) (*valueWithUnit, error) {
 			}
 			path := pathRaw
 			if strings.Contains(pathRaw, "${") {
+				fmt.Println("pathRaw: ", pathRaw)
 				path, err = resolvePlaceholders(path, context)
 				if err != nil {
-					return nil, err
+					return nil, errors.Wrapf(err, "Cannot resolve placeholders for %v", path)
 				}
+				fmt.Println("path: ", path)
 			}
 			valueFounds, err := utils.GetJSON(path, context.Resource)
 			if err != nil {
-				return nil, err
+				return nil, errors.Wrapf(err, "Cannot get value for %v", path)
 			}
 			if len(valueFounds) == 0 && TfPlan != nil {
 				// Try to resolve it against the whole plan
 				valueFounds, err = utils.GetJSON(path, *TfPlan)
 				if err != nil {
-					return nil, err
+					return nil, errors.Wrapf(err, "Cannot get value in the whole plan for %v", path)
 				}
 			}
 			if len(valueFounds) > 0 {
 				if len(valueFounds) > 1 {
-					return nil, fmt.Errorf("Found more than one value for property %v of resource type %v", key, context.ResourceAddress)
+					return nil, errors.Errorf("Found more than one value for property %v of resource type %v", key, context.ResourceAddress)
 				}
 				if valueFounds[0] == nil {
 					continue
@@ -240,14 +248,14 @@ func getValue(key string, context *tfContext) (*valueWithUnit, error) {
 			if ok {
 				valueFound, err = applyRegex(valueFoundStr, &propertyMapping, context)
 				if err != nil {
-					return nil, err
+					return nil, errors.Wrapf(err, "Cannot apply regex for %v", valueFoundStr)
 				}
 			}
 			valueFoundStr, ok = valueFound.(string)
 			if ok {
 				valueFound, err = applyReference(valueFoundStr, &propertyMapping, context)
 				if err != nil {
-					return nil, err
+					return nil, errors.Wrapf(err, "Cannot apply reference for %v", valueFoundStr)
 				}
 			}
 		}
@@ -257,7 +265,7 @@ func getValue(key string, context *tfContext) (*valueWithUnit, error) {
 		if ok {
 			valueFound, err = getValueOfExpression(valueFoundMap, context)
 			if err != nil {
-				return nil, err
+				return nil, errors.Wrapf(err, "Cannot get value of expression for %v", valueFoundMap)
 			}
 		}
 
@@ -272,7 +280,7 @@ func getValue(key string, context *tfContext) (*valueWithUnit, error) {
 	if valueFound == nil {
 		defaultValue, err := getDefaultValue(key, context)
 		if err != nil {
-			return nil, err
+			return nil, errors.Wrapf(err, "Cannot get default value for %v", key)
 		}
 
 		if defaultValue != nil {
@@ -303,7 +311,13 @@ func resolvePlaceholders(input string, context *tfContext) (string, error) {
 		if err != nil {
 			return input, err
 		}
-		resolvedExpressions[placeholder] = resolved
+		if resolved == nil {
+			// It's ok to not find a value for a placeholder
+			resolvedExpressions[placeholder] = ".not_found"
+		} else {
+			resolvedExpressions[placeholder] = *resolved
+		}
+
 	}
 
 	// Replace placeholders in the input string with resolved expressions
@@ -317,32 +331,37 @@ func resolvePlaceholders(input string, context *tfContext) (string, error) {
 	return resolvedString, nil
 }
 
-func resolvePlaceholder(expression string, context *tfContext) (string, error) {
-	result := ""
+func resolvePlaceholder(expression string, context *tfContext) (*string, error) {
 	if strings.HasPrefix(expression, "this.") {
 		thisProperty := strings.TrimPrefix(expression, "this")
 		resource := context.Resource
 		value, err := utils.GetJSON(thisProperty, resource)
 		if err != nil {
-			return "", errors.Wrapf(err, "Cannot get value for variable %s", expression)
+			return nil, errors.Wrapf(err, "Cannot get value for variable %s", expression)
 		}
-		if value == nil {
-			return "", errors.Errorf("No value found for variable %s", expression)
+		if len(value) == 0 {
+			return nil, nil
 		}
-		return fmt.Sprintf("%v", value[0]), err
+		if value[0] == nil {
+			return nil, nil
+		}
+		valueStr := fmt.Sprintf("%v", value[0])
+		return &valueStr, err
 	} else if strings.HasPrefix(expression, "config.") {
 		configProperty := strings.TrimPrefix(expression, "config.")
 		value := viper.GetFloat64(configProperty)
-		return fmt.Sprintf("%v", value), nil
+		valueStr := fmt.Sprintf("%v", value)
+		return &valueStr, nil
 	}
 	variable, err := getVariable(expression, context)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	if variable != nil {
-		result = fmt.Sprintf("%v", variable)
+		valueStr := fmt.Sprintf("%v", variable)
+		return &valueStr, nil
 	}
-	return result, nil
+	return nil, nil
 }
 
 func getDefaultValue(key string, context *tfContext) (*valueWithUnit, error) {
@@ -400,10 +419,10 @@ func getVariable(name string, context *tfContext) (interface{}, error) {
 	}
 	value, err := getValue(name, &variableContext)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "Cannot get variable %v", name)
 	}
 	if value == nil {
-		return nil, fmt.Errorf("Cannot get variable : %v", name)
+		return nil, nil
 	}
 	return value.Value, nil
 
