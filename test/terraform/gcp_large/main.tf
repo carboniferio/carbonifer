@@ -1,8 +1,5 @@
 provider "google" {
-  #project     = "carbonifer-sandbox"
   region      = var.region
-  credentials = file("/Users/olivier/carbonifer/carbonifer-study/accounts/carbonifer-sandbox-c59717d85f65.json")
-  //access_token = "foo"
 }
 
 module "network" {
