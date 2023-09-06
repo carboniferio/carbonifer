@@ -16,8 +16,6 @@ import (
 
 func TestGetResource_ChildModules(t *testing.T) {
 
-	testutils.SkipWithCreds(t)
-
 	// reset
 	terraform.ResetTerraformExec()
 
