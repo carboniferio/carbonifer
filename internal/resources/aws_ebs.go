@@ -1,9 +1,5 @@
 package resources
 
-import (
-	"fmt"
-)
-
 type EbsDataResource struct {
 	Identification *ResourceIdentification
 	DataImageSpecs []*DataImageSpecs
@@ -15,7 +11,7 @@ func (r EbsDataResource) GetIdentification() *ResourceIdentification {
 }
 
 func (r EbsDataResource) GetAddress() string {
-	return fmt.Sprintf("data.%v.%v", r.GetIdentification().ResourceType, r.GetIdentification().Name)
+	return r.Identification.Address
 }
 
 func (r EbsDataResource) GetKey() string {

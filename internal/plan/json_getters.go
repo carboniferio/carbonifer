@@ -90,16 +90,9 @@ func getSliceItems(context tfContext) ([]interface{}, error) {
 				return nil, err
 			}
 		}
-		jsonResults, err := utils.GetJSON(path, context.Resource)
+		jsonResults, err := getJSON(path, context.Resource)
 		if err != nil {
 			return nil, errors.Wrapf(err, "Cannot get item: %v", path)
-		}
-		// if no result, try to get it from the whole plan
-		if len(jsonResults) == 0 && TfPlan != nil {
-			jsonResults, err = utils.GetJSON(path, *TfPlan)
-			if err != nil {
-				return nil, errors.Wrapf(err, "Cannot get item in full plan: %v", path)
-			}
 		}
 		for _, jsonResultsI := range jsonResults {
 			switch jsonResults := jsonResultsI.(type) {
@@ -214,23 +207,14 @@ func getValue(key string, context *tfContext) (*valueWithUnit, error) {
 			}
 			path := pathRaw
 			if strings.Contains(pathRaw, "${") {
-				fmt.Println("pathRaw: ", pathRaw)
 				path, err = resolvePlaceholders(path, context)
 				if err != nil {
 					return nil, errors.Wrapf(err, "Cannot resolve placeholders for %v", path)
 				}
-				fmt.Println("path: ", path)
 			}
-			valueFounds, err := utils.GetJSON(path, context.Resource)
+			valueFounds, err := getJSON(path, context.Resource)
 			if err != nil {
 				return nil, errors.Wrapf(err, "Cannot get value for %v", path)
-			}
-			if len(valueFounds) == 0 && TfPlan != nil {
-				// Try to resolve it against the whole plan
-				valueFounds, err = utils.GetJSON(path, *TfPlan)
-				if err != nil {
-					return nil, errors.Wrapf(err, "Cannot get value in the whole plan for %v", path)
-				}
 			}
 			if len(valueFounds) > 0 {
 				if len(valueFounds) > 1 {

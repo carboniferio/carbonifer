@@ -21,19 +21,27 @@ var TfPlan *map[string]interface{}
 func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource, error) {
 	TfPlan = tfplan
 
+	plannedResources := []interface{}{}
+
 	// Get resources from Terraform plan
-	plannedResourcesResult, err := utils.GetJSON(".planned_values.root_module.resources", *TfPlan)
+	jqPath := ".planned_values | .. | objects | select(has(\"resources\")) | .resources[]"
+	plannedResourcesResult, err := utils.GetJSON(jqPath, *TfPlan)
+
 	if err != nil {
 		return nil, err
 	}
-	if len(plannedResourcesResult) == 0 {
-		return nil, errors.New("No resources found in Terraform plan")
+	if len(plannedResourcesResult) > 0 {
+		for _, plannedResourceI := range plannedResourcesResult {
+			plannedResource, ok := plannedResourceI.(map[string]interface{})
+			if !ok {
+				return nil, errors.Errorf("Cannot parse planned resource %v", plannedResourceI)
+			}
+			plannedResources = append(plannedResources, plannedResource)
+		}
 	}
-	plannedResources := plannedResourcesResult[0].([]interface{})
-	log.Debugf("Reading resources from Terraform plan: %d resources", len(plannedResources))
-	resourcesMap := map[string]resources.Resource{}
 
 	// Get compute resources
+	resourcesMap := map[string]resources.Resource{}
 	mapping, err := GetMapping()
 	if err != nil {
 		errW := errors.Wrap(err, "Cannot get mapping")
@@ -69,6 +77,7 @@ func GetResources(tfplan *map[string]interface{}) (map[string]resources.Resource
 			}
 			unsupportedResource := resources.UnsupportedResource{
 				Identification: &resources.ResourceIdentification{
+					Address:      resourceAddress,
 					Name:         resource["name"].(string),
 					ResourceType: resourceType,
 					Provider:     provider,
@@ -111,7 +120,7 @@ func getResourcesOfType(resourceType string, mapping *ResourceMapping) ([]resour
 	resourcesResult := []resources.Resource{}
 	for _, path := range paths {
 		log.Debugf("  Reading resources of type '%s' from path '%s'", resourceType, path)
-		resourcesFound, err := utils.GetJSON(path, *TfPlan)
+		resourcesFound, err := getJSON(path, *TfPlan)
 		if err != nil {
 			errW := errors.Wrapf(err, "Cannot find resource for path %v", path)
 			return nil, errW
@@ -182,6 +191,7 @@ func GetComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 			ResourceType: *resourceType,
 			Provider:     provider,
 			Region:       *region,
+			Address:      resourceAddress,
 		},
 		Specs: &resources.ComputeResourceSpecs{
 			HddStorage:        decimal.Zero,

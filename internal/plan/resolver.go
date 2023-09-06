@@ -6,7 +6,6 @@ import (
 	"regexp"
 
 	"github.com/carboniferio/carbonifer/internal/data"
-	"github.com/carboniferio/carbonifer/internal/utils"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
@@ -76,7 +75,7 @@ func resolveReference(key string, reference *Reference, context *tfContext) (int
 			return nil, err
 		}
 		for _, path := range paths {
-			referencedItems, err := utils.GetJSON(path, *TfPlan)
+			referencedItems, err := getJSON(path, *TfPlan)
 			if err != nil {
 				errW := errors.Wrapf(err, "Cannot find referenced path in terraform plan: '%v'", path)
 				return nil, errW

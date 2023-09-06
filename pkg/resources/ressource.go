@@ -13,6 +13,7 @@ import (
 
 // GenericResource is a struct that contains the information of a generic resource
 type GenericResource struct {
+	Address           string
 	Name              string
 	Region            string
 	Provider          providers.Provider
@@ -43,12 +44,13 @@ func (g GenericResource) GetIdentification() *resources.ResourceIdentification {
 		Provider:     internalProvider.Provider(g.Provider),
 		Region:       g.Region,
 		Count:        1,
+		Address:      g.Address,
 	}
 }
 
 // GetAddress returns the address of the resource
 func (g GenericResource) GetAddress() string {
-	return fmt.Sprintf("%v.%v", g.GetIdentification().ResourceType, g.GetIdentification().Name)
+	return g.Address
 }
 
 // Storage is the struct that contains the storage of a resource

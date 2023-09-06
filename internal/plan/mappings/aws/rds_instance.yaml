@@ -1,7 +1,7 @@
 compute_resource:
   aws_db_instance: 
     paths: 
-      - .planned_values.root_module.resources[] | select(.type == "aws_db_instance")
+      - select(.type == "aws_db_instance")
     type: resource
     variables:
       properties:
@@ -10,8 +10,8 @@ compute_resource:
             - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.replicate_source_db?.references[]? | select(endswith("id")) | gsub("\\.id$"; "")'
             reference:
               paths:
-                - .planned_values.root_module.resources[] | select(.address == "${key}")
-                - .planned_values.root_module.child_modules[] | select(.address == ("${key}" | split(".")[0:2] | join("."))) | .resources[] | select(.name == ("${key}" | split(".")[2]))
+                - select(.address == "${key}")
+                - select(.address == ("${key}" | split(".")[0:2] | join("."))) | .resources[] | select(.name == ("${key}" | split(".")[2]))
                 - .prior_state.values.root_module.resources[] | select(.address == "${key}")
               return_path: true
     properties:

@@ -1,7 +1,5 @@
 package resources
 
-import "fmt"
-
 // DataImageSpecs is the struct that contains the specs of a data image
 type DataImageSpecs struct {
 	DiskSizeGb float64
@@ -22,7 +20,7 @@ func (r DataImageResource) GetIdentification() *ResourceIdentification {
 
 // GetAddress returns the address of the resource
 func (r DataImageResource) GetAddress() string {
-	return fmt.Sprintf("data.%v.%v", r.GetIdentification().ResourceType, r.GetIdentification().Name)
+	return r.Identification.Address
 }
 
 // GetKey returns the key of the resource

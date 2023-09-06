@@ -1,8 +1,6 @@
 package resources
 
 import (
-	"fmt"
-
 	"github.com/carboniferio/carbonifer/internal/providers"
 	"github.com/shopspring/decimal"
 )
@@ -26,6 +24,7 @@ type ResourceIdentification struct {
 	Provider     providers.Provider
 	Region       string
 	Count        int64
+	Address      string
 }
 
 // ComputeResource is the struct that contains the info of a compute resource
@@ -46,7 +45,7 @@ func (r ComputeResource) GetIdentification() *ResourceIdentification {
 
 // GetAddress returns the address of the resource
 func (r ComputeResource) GetAddress() string {
-	return fmt.Sprintf("%v.%v", r.GetIdentification().ResourceType, r.GetIdentification().Name)
+	return r.Identification.Address
 }
 
 // UnsupportedResource is the struct that contains the info of an unsupported resource
@@ -66,7 +65,7 @@ func (r UnsupportedResource) GetIdentification() *ResourceIdentification {
 
 // GetAddress returns the address of the resource
 func (r UnsupportedResource) GetAddress() string {
-	return fmt.Sprintf("%v.%v", r.GetIdentification().ResourceType, r.GetIdentification().Name)
+	return r.Identification.Address
 }
 
 // Resource is the interface that contains the info of a resource

@@ -1,13 +1,13 @@
 compute_resource:
   aws_instance: 
     paths: 
-      - .planned_values.root_module.resources[] | select(.type == "aws_instance")
+      - select(.type == "aws_instance")
     type: resource
     variables:
       properties:
         ami:
           - paths:
-            - '.prior_state.values.root_module.resources[] | select(.values.image_id == "${this.values.ami}")'
+            - select(.values.image_id == "${this.values.ami}")
             reference:
               return_path: true
         provider_region:

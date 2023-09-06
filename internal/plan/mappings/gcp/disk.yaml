@@ -1,8 +1,8 @@
 compute_resource:
   google_compute_disk:
     paths:
-      - .planned_values.root_module.resources[] | select(.type == "google_compute_disk")
-      - .planned_values.root_module.resources[] | select(.type == "google_compute_region_disk")
+      -  select(.type == "google_compute_disk")
+      -  select(.type == "google_compute_region_disk")
     type: resource
     properties:
       name:
