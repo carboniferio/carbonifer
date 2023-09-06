@@ -9,6 +9,7 @@ import (
 
 func TestGenericResource_IsSupported(t *testing.T) {
 	type fields struct {
+		Address  string
 		Name     string
 		Region   string
 		Provider providers.Provider
@@ -40,6 +41,7 @@ func TestGenericResource_IsSupported(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			g := GenericResource{
+				Address:  tt.fields.Address,
 				Name:     tt.fields.Name,
 				Region:   tt.fields.Region,
 				Provider: tt.fields.Provider,

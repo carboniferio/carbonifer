@@ -104,6 +104,7 @@ func TestGetResource(t *testing.T) {
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
+					Address:      "google_compute_disk.disk1",
 					Name:         "disk1",
 					ResourceType: "google_compute_disk",
 					Provider:     providers.GCP,
@@ -125,6 +126,7 @@ func TestGetResource(t *testing.T) {
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
+					Address:      "google_compute_disk.disk2",
 					Name:         "disk2",
 					ResourceType: "google_compute_disk",
 					Provider:     providers.GCP,
@@ -146,6 +148,7 @@ func TestGetResource(t *testing.T) {
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
+					Address:      "google_compute_region_disk.diskr",
 					Name:         "diskr",
 					ResourceType: "google_compute_region_disk",
 					Provider:     providers.GCP,
@@ -167,6 +170,7 @@ func TestGetResource(t *testing.T) {
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
+					Address:      "google_compute_instance.attachedgpu",
 					Name:         "attachedgpu",
 					ResourceType: "google_compute_instance",
 					Provider:     providers.GCP,
@@ -194,6 +198,7 @@ func TestGetResource(t *testing.T) {
 			},
 			want: resources.ComputeResource{
 				Identification: &resources.ResourceIdentification{
+					Address:      "google_compute_instance.defaultgpu",
 					Name:         "defaultgpu",
 					ResourceType: "google_compute_instance",
 					Provider:     providers.GCP,

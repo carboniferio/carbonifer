@@ -1,8 +1,8 @@
 compute_resource:
   google_compute_instance_group_manager:
     paths:
-      - .planned_values.root_module.resources[] | select(.type == "google_compute_instance_group_manager")
-      - .planned_values.root_module.resources[] | select(.type == "google_compute_region_instance_group_manager")
+      - select(.type == "google_compute_instance_group_manager")
+      - select(.type == "google_compute_region_instance_group_manager")
     type: resource
     variables:
       properties:
@@ -11,8 +11,7 @@ compute_resource:
               - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.version[0].instance_template.references[] | select(endswith("id")) | gsub("\\.id$"; "")'
             reference:
               paths:
-                - .planned_values.root_module.resources[] | select(.address == "${key}")
-                - .planned_values.root_module.child_modules[].resources | map(select(.address == "${key}"))
+                - select(.address == "${key}")
                 - .prior_state.values.root_module.resources[] | select(.address == "${key}")
               return_path: true
         autoscaler:
@@ -20,8 +19,8 @@ compute_resource:
             - '(.configuration.root_module.resources[] | select(.expressions.target?.references[]? == "${this.address}") | .address)'
             reference:
               paths:
-                - .planned_values.root_module.resources[] | select(.address == "${key}")
-                - .planned_values.root_module.child_modules[].resources | map(select(.address == "${key}"))
+                - select(.address == "${key}")
+                -  map(select(.address == "${key}"))
                 - .prior_state.values.root_module.resources[] | select(.address == "${key}")
               return_path: true
     properties:

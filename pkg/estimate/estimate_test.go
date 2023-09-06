@@ -23,6 +23,7 @@ func TestGetEstimation(t *testing.T) {
 			name: "e2-standard-2",
 			args: args{
 				resource: resources.GenericResource{
+					Address:  "google_compute_instance.e2-standard-2",
 					Name:     "e2-standard-2",
 					Region:   "europe-west4",
 					Provider: providers.GCP,
@@ -41,6 +42,7 @@ func TestGetEstimation(t *testing.T) {
 			},
 			want: EstimationReport{
 				Resource: resources.GenericResource{
+					Address:  "google_compute_instance.e2-standard-2",
 					Name:     "e2-standard-2",
 					Region:   "europe-west4",
 					Provider: providers.GCP,

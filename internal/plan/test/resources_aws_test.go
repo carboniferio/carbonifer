@@ -28,6 +28,7 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 		"aws_instance.foo": resources.ComputeResource{
 			Identification: &resources.ResourceIdentification{
 				Name:         "foo",
+				Address:      "aws_instance.foo",
 				ResourceType: "aws_instance",
 				Provider:     providers.AWS,
 				Region:       "eu-west-3",
@@ -43,6 +44,7 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 		},
 		"aws_ebs_volume.ebs_volume": resources.ComputeResource{
 			Identification: &resources.ResourceIdentification{
+				Address:      "aws_ebs_volume.ebs_volume",
 				Name:         "ebs_volume",
 				ResourceType: "aws_ebs_volume",
 				Provider:     providers.AWS,
@@ -57,6 +59,7 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 		},
 		"aws_network_interface.foo": resources.UnsupportedResource{
 			Identification: &resources.ResourceIdentification{
+				Address:      "aws_network_interface.foo",
 				Name:         "foo",
 				ResourceType: "aws_network_interface",
 				Provider:     providers.AWS,
@@ -65,6 +68,7 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 		},
 		"aws_subnet.my_subnet": resources.UnsupportedResource{
 			Identification: &resources.ResourceIdentification{
+				Address:      "aws_subnet.my_subnet",
 				Name:         "my_subnet",
 				ResourceType: "aws_subnet",
 				Provider:     providers.AWS,

@@ -1,7 +1,7 @@
 compute_resource:
   aws_ebs_volume:
     paths:
-      - .planned_values.root_module.resources[] | select(.type == "aws_ebs_volume")
+      - select(.type == "aws_ebs_volume")
     type: resource
     properties:
       name:

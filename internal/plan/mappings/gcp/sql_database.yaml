@@ -1,6 +1,6 @@
 compute_resource:
   google_sql_database_instance:
-    paths: .planned_values.root_module.resources[] | select(.type == "google_sql_database_instance")
+    paths: select(.type == "google_sql_database_instance")
     type: resource
     properties:
       name:
