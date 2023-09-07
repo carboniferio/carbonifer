@@ -16,6 +16,8 @@ import (
 
 func TestGetResource_ChildModules(t *testing.T) {
 
+	t.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "")
+
 	// reset
 	terraform.ResetTerraformExec()
 
