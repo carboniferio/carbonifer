@@ -15,6 +15,7 @@ import (
 
 var resourceGCPComputeBasic = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
+		Address:      "google_compute_instance.machine-name-1",
 		Name:         "machine-name-1",
 		ResourceType: "type-1",
 		Provider:     providers.GCP,
@@ -29,6 +30,7 @@ var resourceGCPComputeBasic = resources.ComputeResource{
 
 var resourceGCPComputeCPUType = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
+		Address:      "google_compute_instance.machine-name-2",
 		Name:         "machine-name-2",
 		ResourceType: "type-1",
 		Provider:     providers.GCP,
@@ -44,8 +46,9 @@ var resourceGCPComputeCPUType = resources.ComputeResource{
 	},
 }
 
-var resourceAWSComputeBasic = resources.ComputeResource{
+var resourceUnsupportedComputeBasic = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
+		Address:      "unsupported.machine-name-3",
 		Name:         "machine-name-3",
 		ResourceType: "type-1",
 		Provider:     providers.AZURE,
@@ -60,6 +63,7 @@ var resourceAWSComputeBasic = resources.ComputeResource{
 
 var resourceGCPInstanceGroup = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
+		Address:      "google_compute_instance_group.machine-group-1",
 		Name:         "machine-group-1",
 		ResourceType: "type-1",
 		Provider:     providers.GCP,
@@ -178,7 +182,7 @@ func TestEstimateResourceUnsupported(t *testing.T) {
 	}{
 		{
 			name: "gcp_basic",
-			args: args{resourceAWSComputeBasic},
+			args: args{resourceUnsupportedComputeBasic},
 			want: &providers.UnsupportedProviderError{Provider: "AZURE"},
 		},
 	}
