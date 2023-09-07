@@ -16,6 +16,8 @@ import (
 
 func TestGetResource_ChildModules(t *testing.T) {
 
+	testutils.SkipWithCreds(t)
+
 	t.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "")
 
 	// reset
