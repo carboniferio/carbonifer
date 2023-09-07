@@ -15,13 +15,12 @@ import (
 )
 
 func TestGetResource_ChildModules(t *testing.T) {
-
 	testutils.SkipWithCreds(t)
-
-	t.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "")
 
 	// reset
 	terraform.ResetTerraformExec()
+
+	t.Setenv("GOOGLE_OAUTH_ACCESS_TOKEN", "")
 
 	wd := path.Join(testutils.RootDir, "test/terraform/gcp_large")
 	viper.Set("workdir", wd)
