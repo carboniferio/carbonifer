@@ -6,12 +6,10 @@ import (
 	"github.com/carboniferio/carbonifer/internal/utils"
 )
 
-const allResourcesQuery = ".planned_values | .. | objects | select(has(\"resources\")) | .resources[]"
-
 func getJSON(query string, json interface{}) ([]interface{}, error) {
 
-	if strings.HasPrefix(query, "select(") {
-		results, err := utils.GetJSON(allResourcesQuery+" | "+query, *TfPlan)
+	if strings.Contains(query, "all_select(") {
+		results, err := utils.GetJSON(query, *TfPlan)
 		if len(results) > 0 && err == nil {
 			return results, nil
 		}

@@ -33,6 +33,7 @@ type PropertyDefinition struct {
 	Reference *Reference         `yaml:"reference,omitempty"`
 	Regex     *Regex             `yaml:"regex,omitempty"`
 	Item      *[]ResourceMapping `yaml:"item,omitempty"`
+	Validator *string            `yaml:"validator,omitempty"`
 }
 
 type Reference struct {

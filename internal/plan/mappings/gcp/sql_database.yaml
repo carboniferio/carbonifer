@@ -1,6 +1,6 @@
 compute_resource:
   google_sql_database_instance:
-    paths: select(.type == "google_sql_database_instance")
+    paths: cbf::all_select("type";  "google_sql_database_instance")
     type: resource
     properties:
       name:

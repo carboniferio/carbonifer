@@ -121,3 +121,17 @@ func resolveRegex(value string, regex Regex) (string, error) {
 	return "", fmt.Errorf("No match found for regex %v in value %v", regex.Pattern, value)
 
 }
+
+func applyValidator(valueFound interface{}, propertyMapping *PropertyDefinition, context *tfContext) error {
+	if propertyMapping == nil || propertyMapping.Validator == nil {
+		return nil
+	}
+	validator := propertyMapping.Validator
+	err := resolveValidator(valueFound, validator, context)
+	return err
+}
+
+func resolveValidator(value interface{}, validator *string, context *tfContext) error {
+	_, err := getJSON(*validator, value)
+	return errors.Wrapf(err, "Cannot validate '%v' value of %v", value, context.ResourceAddress)
+}
