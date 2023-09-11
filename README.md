@@ -10,6 +10,8 @@ Reading Terraform files, `carbonifer plan` will estimate future Carbon Emissions
 
 ## Scope
 
+This tool currently estimates usage emissions, not embodied emissions (manufacturing, transport, recycling...). It is not a full LCA (Life Cycle Assessment) tool.
+
 This tool can analyze Infrastructure as Code definitions such as:
 
 - [Terraform](https://www.terraform.io/) files
@@ -24,6 +26,7 @@ It can estimate Carbon Emissions of:
     - [X] Machines with GPUs
     - [x] Cloud SQL
     - [x] Instance Group (including regional and Autoscaler)
+    - [x] Google Kubernetes Engine (GKE) cluster
 - Amazon Web Services
   - [x] EC2 (including inline root, elastic, and ephemeral block storages)
   - [x] EBS Volumes
@@ -324,10 +327,10 @@ Those calculations and estimations are detailed in the [Methodology document](do
 
 We are currently supporting only
 
-- resources with a significative power usage (basically anything which has CPU, GPU, memory or disk)
+- resources with a significative power usage (basically anything that has CPU, GPU, memory or disk)
 - resources that can be estimated beforehand (we discard for now data transfer)
 
-Because this is just an estimation, the actual power usage and carbon emission should probably differ depending on the actual usage of the resource (CPU %), and actual grid energy mix (could be weather dependent), ... But that should be enough to take decisions about the choice of provider/region, instance type...
+Because this is just an estimation, the actual power usage and carbon emission should probably differ depending on the actual usage of the resource (CPU %), and actual grid energy mix (could be weather dependent), ... But that should be enough to make decisions about the choice of provider/region, instance type...
 
 See the [Scope](doc/scope.md) document for more details.
 

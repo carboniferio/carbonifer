@@ -1,6 +1,6 @@
 compute_resource:
   google_compute_instance:
-    paths: 'select(.type == "google_compute_instance")'
+    paths: 'cbf::all_select("type";  "google_compute_instance")'
     type: resource
     properties:
       name:
@@ -91,16 +91,16 @@ compute_resource:
                   - default: ssd
   google_compute_instance_from_template:
     paths:
-      - select(.type == "google_compute_instance_from_template")
+      - cbf::all_select("type";  "google_compute_instance_from_template")
     type: resource
     variables:
       properties:
         template_config:
           - paths:
-            - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.source_instance_template.references[] | select(endswith("id")) | gsub("\\.id$"; "")'
+            - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.source_instance_template.references[] | select(endswith(".id") or endswith(".name")) | gsub("\\.(id|name)$"; "")'
             reference:
               paths:
-                - select(.address == "${key}")
+                - cbf::all_select("address";  "${key}")
                 - .planned_values.root_module.child_modules[] | select(.address == ("${key}" | split(".")[0:2] | join("."))) | .resources[] | select(.name == ("${key}" | split(".")[2]))
                 - .prior_state.values.root_module.resources[] | select(.address == "${key}")
               return_path: true

@@ -1,7 +1,6 @@
 package plan_test
 
 import (
-	"log"
 	"path"
 	"testing"
 
@@ -272,7 +271,6 @@ func TestGetResources_DiskImage(t *testing.T) {
 		assert.Equal(t, len(wantResources), len(resourceList))
 		for i, resource := range resourceList {
 			wantResource := wantResources[i]
-			log.Println(resource.(resources.ComputeResource).Specs.HddStorage)
 			assert.EqualValues(t, wantResource, resource)
 		}
 	}

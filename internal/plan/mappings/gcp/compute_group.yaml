@@ -1,17 +1,17 @@
 compute_resource:
   google_compute_instance_group_manager:
     paths:
-      - select(.type == "google_compute_instance_group_manager")
-      - select(.type == "google_compute_region_instance_group_manager")
+      - cbf::all_select("type";  "google_compute_instance_group_manager")
+      - cbf::all_select("type";  "google_compute_region_instance_group_manager")
     type: resource
     variables:
       properties:
         template_config:
           - paths:
-              - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.version[0].instance_template.references[] | select(endswith("id")) | gsub("\\.id$"; "")'
+              - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.version[0].instance_template.references[] | select(endswith(".id") or endswith(".name")) | gsub("\\.(id|name)$"; "")'
             reference:
               paths:
-                - select(.address == "${key}")
+                - cbf::all_select("address";  "${key}")
                 - .prior_state.values.root_module.resources[] | select(.address == "${key}")
               return_path: true
         autoscaler:
@@ -19,7 +19,7 @@ compute_resource:
             - '(.configuration.root_module.resources[] | select(.expressions.target?.references[]? == "${this.address}") | .address)'
             reference:
               paths:
-                - select(.address == "${key}")
+                - cbf::all_select("address";  "${key}")
                 -  map(select(.address == "${key}"))
                 - .prior_state.values.root_module.resources[] | select(.address == "${key}")
               return_path: true
@@ -35,12 +35,23 @@ compute_resource:
           reference:
             json_file: gcp_machines_types
             property: "vcpus"
+        - paths: "${template_config}.values.machine_type"
+          regex:
+            pattern: ".*custom-([0-9]+)-.*"
+            group: 1
+            value_type: integer
       memory:
         - paths: "${template_config}.values.machine_type"
           unit: mb
           reference:
             json_file: gcp_machines_types
             property: "memoryMb"
+        - paths: "${template_config}.values.machine_type"
+          unit: mb
+          regex:
+            pattern: ".*custom-[0-9]+-([0-9]+).*"
+            group: 1
+            value_type: integer
       zone:
         - paths: ".values.zone"
       region:

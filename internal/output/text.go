@@ -35,7 +35,7 @@ func GenerateReportText(report estimation.EstimationReport) string {
 	for _, resource := range report.UnsupportedResources {
 		table.Append([]string{
 			resource.GetIdentification().ResourceType,
-			resource.GetIdentification().Name,
+			resource.GetIdentification().Address,
 			"",
 			"unsupported",
 		})

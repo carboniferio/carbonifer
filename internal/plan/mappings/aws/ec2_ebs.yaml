@@ -1,7 +1,7 @@
 compute_resource:
   aws_ebs_volume:
     paths:
-      - select(.type == "aws_ebs_volume")
+      - cbf::all_select("type";  "aws_ebs_volume")
     type: resource
     properties:
       name:

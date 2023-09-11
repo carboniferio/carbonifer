@@ -253,6 +253,11 @@ func getValue(key string, context *tfContext) (*valueWithUnit, error) {
 			}
 		}
 
+		err = applyValidator(valueFound, &propertyMapping, context)
+		if err != nil {
+			return nil, err
+		}
+
 		if valueFound != nil {
 			return &valueWithUnit{
 				Value: valueFound,
@@ -374,6 +379,10 @@ func getDefaultValue(key string, context *tfContext) (*valueWithUnit, error) {
 				if err != nil {
 					return nil, err
 				}
+			}
+			err = applyValidator(valueFound, &propertyMapping, context)
+			if err != nil {
+				return nil, err
 			}
 
 			if valueFound != nil {

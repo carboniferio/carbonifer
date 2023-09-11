@@ -5,6 +5,8 @@ Those are just "estimations" and will probably differ from the actual energy use
 
 In summary, for each resource, Carbonifer calculate an [Energy Estimate](#energy-estimate) (Watt per Hour) used by it, and multiply it by the [Carbon Intensity](#carbon-intensity) of the underlying data center.
 
+This tool currently estimates usage emissions, not embodied emissions (manufacturing, transport, recycling...). It is not a full LCA (Life Cycle Assessment) tool.
+
 ```text
 Estimated Carbon Emissions (gCO2eq/h) = Energy Estimate (Wh) x Carbon Intensity (gCO2eq/Wh)
 ```

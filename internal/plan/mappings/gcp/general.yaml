@@ -10,3 +10,4 @@ general:
     ignored_resources:
       - ".*_template"
       - "google_compute_autoscaler"
+      - "google_container_node_pool"

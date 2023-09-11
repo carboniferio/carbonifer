@@ -1,0 +1,154 @@
+compute_resource:
+  google_container_cluster:
+    paths:
+      - cbf::all_select("type";  "google_container_cluster")
+    type: resource
+    variables:
+      properties:
+        node_pool:
+          - paths:
+              - '.configuration.root_module.resources[] | select(any(.expressions.cluster.references[]?; . == "${this.address}")) | .address'
+            reference:
+              paths:
+                - cbf::all_select("address";  "${key}") | .values
+                - .prior_state.values.root_module.resources[] | select(.address == "${key}") | .values
+              return_path: true
+          - default: '.values.node_pool[0]'
+        nb_zones :
+          - paths: 
+            - ".values.node_locations | length"
+            - "${node_pool}.node_locations | length"
+    properties:
+      name:
+        - paths: ".name"
+      address:
+        - paths: ".address"
+      type:
+        - paths: ".type"
+      vCPUs:
+        - paths: 
+          - ".values.node_config[].machine_type"
+          - "${node_pool}.node_config[].machine_type"
+          reference:
+            json_file: gcp_machines_types
+            property: "vcpus"
+        - paths: 
+          - ".values.node_config[].machine_type"
+          - "${node_pool}.node_config[].machine_type"
+          regex:
+            pattern: ".*custom-([0-9]+)-.*"
+            group: 1
+            value_type: integer
+        - paths: 
+          - ".values.cluster_autoscaling[0] | select(.enabled != false) | .resource_limits[] | select(.resource_type == \"cpu\" and .maximum != null) | ((.minimum // 1) + (${config.provider.gcp.avg_autoscaler_size_percent} * (.maximum - (.minimum // 1))))"
+          - ".values.cluster_autoscaling[0] | select(.enabled == false) | .resource_limits[] | select(.resource_type == \"cpu\") | (.minimum // 1)"
+          validator : "if . == null then error(\"The number of vCPUs of nodes must set. Does it have a minimum and a maxium value? \") else . end"
+      memory:
+        - paths: 
+          - ".values.node_config[].machine_type"
+          - "${node_pool}.node_config[].machine_type"
+          unit: mb
+          reference:
+            json_file: gcp_machines_types
+            property: "memoryMb"
+        - paths: 
+          - ".values.node_config[].machine_type"
+          - "${node_pool}.node_config[].machine_type"
+          unit: mb
+          regex:
+            pattern: ".*custom-[0-9]+-([0-9]+).*"
+            group: 1
+            value_type: integer
+        - paths: 
+          - ".values.cluster_autoscaling[0] | select(.enabled != false) | .resource_limits[] | select(.resource_type == \"memory\" and .maximum != null) | ((.minimum // 1) + (${config.provider.gcp.avg_autoscaler_size_percent} * (.maximum - (.minimum // 1))))"
+          - ".values.cluster_autoscaling[0] | select(.enabled == false) | .resource_limits[] | select(.resource_type == \"memory\") | (.minimum // 1)"
+          validator : "if . == null then error(\"The memory size of nodes must be set. Does it have a minimum and a maxium value? \") else . end"
+          unit: gb
+      zone:
+        - paths: 
+          - ".values.node_locations"
+          - "${node_pool}.node_locations"
+      region:
+        - paths: 
+          - ".values.location"
+          - ".values.node_locations[0]"
+          - "${node_pool}.location"
+          - "${node_pool}.node_locations[0]"
+          regex:
+            pattern: "^([^-]+-[^-]+)(-.*)?$"
+            group: 1
+      count:
+        - paths: 
+          - "${node_pool}.autoscaling[0] | select(.total_max_node_count != null) |(.total_min_node_count // 1) + (${config.provider.gcp.avg_autoscaler_size_percent} * (.total_max_node_count - (.total_min_node_count // 1)))"
+          - "(if ${nb_zones} == 0 then 1 else ${nb_zones} end) * (${node_pool}.autoscaling[0] | select(.max_node_count != null) | (.min_node_count // 1) + (${config.provider.gcp.avg_autoscaler_size_percent} * (.max_node_count - (.min_node_count // 1))))"
+          - "(( (${node_pool}.node_locations ) // .values.node_locations // [\"dummy_region\"]) | length) * (${node_pool}.autoscaling[0] | select(.max_node_count != null) | (.min_node_count // 1) + (${config.provider.gcp.avg_autoscaler_size_percent} * (.max_node_count - (.min_node_count // 1))))"
+          - "${node_pool}.node_count"
+          - ".values.initial_node_count"
+      guest_accelerator:
+        - type: list
+          item:
+            - paths: 
+              - ".values.node_config[]?.guest_accelerator"
+              - "${node_pool}.node_config[].guest_accelerator"
+              properties:
+                count:
+                  - paths: ".count"
+                    type: integer
+                type:
+                  - paths: ".type"
+                    type: string
+            - paths: ".values.cluster_autoscaling[0] | select(.enabled != false) | .resource_limits[] | select(.resource_type != \"memory\" and .resource_type != \"cpu\")"
+              properties:
+                count:
+                  - paths: "(.minimum // 1) + (${config.provider.gcp.avg_autoscaler_size_percent} * (.maximum - (.minimum // 1)))"
+                    validator : "if . <= 0 then error(\"The number of GPU of nodes must be bigger than zero. Does it have a minimum and a maxium value? \") else . end"
+                    type: integer
+                type:
+                  - paths: ".resource_type"
+                    type: string
+      storage:
+        - type: list
+          item:
+            - paths: 
+              - .values.node_config[]
+              - ${node_pool}.node_config[]
+              - .values.cluster_autoscaling[0].auto_provisioning_defaults
+              properties:
+                size:
+                  - paths: 
+                    - ".disk_size_gb"
+                    - ".disk_size"
+                    unit: gb
+                  - default: 10
+                type:
+                  - paths: ".disk_type"
+                    default: pd-standard
+                    reference:
+                      general: disk_types
+            - paths: 
+              - .values.node_config[]
+              - ${node_pool}.node_config[]
+              properties:
+                size:
+                  - paths: "(.local_ssd_count? // 0 )* 375"
+                    unit: gb
+                type: 
+                  - default : ssd
+            - paths: 
+              - .values.node_config[].ephemeral_storage_local_ssd_config
+              - ${node_pool}.node_config[].ephemeral_storage_local_ssd_config
+              properties:
+                size:
+                  - paths: "(.local_ssd_count? // 0 )* 375"
+                    unit: gb
+                type: 
+                  - default : ssd
+            - paths: 
+              - .values.node_config[].local_nvme_ssd_block_config
+              - ${node_pool}.node_config[].local_nvme_ssd_block_config
+              properties:
+                size:
+                  - paths: "(.local_ssd_count? // 0 )* 375"
+                    unit: gb
+                type: 
+                  - default : ssd

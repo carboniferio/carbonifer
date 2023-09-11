@@ -30,6 +30,7 @@ Not all resource types need to be supported if their energy use is negligible or
 | `google_compute_disk`| `size` needs to be set, otherwise get it from image| |
 | `google_compute_region_disk` | `size` needs to be set, otherwise get it from image| |
 | `google_sql_database_instance`  | | Custom machine also supported |
+| `google_container_cluster`  | | With default or referenced pool (`google_container_node_pool`) |
 
 Data resources:
 

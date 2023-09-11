@@ -1,13 +1,13 @@
 compute_resource:
   aws_instance: 
     paths: 
-      - select(.type == "aws_instance")
+      - cbf::all_select("type";  "aws_instance")
     type: resource
     variables:
       properties:
         ami:
           - paths:
-            - select(.values.image_id == "${this.values.ami}")
+            - cbf::all_select("values.image_id";  "${this.values.ami}")
             reference:
               return_path: true
         provider_region:
