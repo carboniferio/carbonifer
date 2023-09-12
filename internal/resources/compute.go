@@ -7,24 +7,24 @@ import (
 
 // ComputeResourceSpecs is the struct that contains the specs of a compute resource
 type ComputeResourceSpecs struct {
-	GpuTypes          []string
-	HddStorage        decimal.Decimal
-	SsdStorage        decimal.Decimal
-	MemoryMb          int32
-	VCPUs             int32
-	CPUType           string
-	ReplicationFactor int32
+	GpuTypes   []string
+	HddStorage decimal.Decimal
+	SsdStorage decimal.Decimal
+	MemoryMb   int32
+	VCPUs      int32
+	CPUType    string
 }
 
 // ResourceIdentification is the struct that contains the identification of a resource
 type ResourceIdentification struct {
 	// Indentification
-	Name         string
-	ResourceType string
-	Provider     providers.Provider
-	Region       string
-	Count        int64
-	Address      string
+	Name              string
+	ResourceType      string
+	Provider          providers.Provider
+	Region            string
+	Count             int64
+	ReplicationFactor int32
+	Address           string
 }
 
 // ComputeResource is the struct that contains the info of a compute resource

@@ -26,7 +26,7 @@ func estimateWattHour(resource *resources.ComputeResource) decimal.Decimal {
 		storageInWh,
 		gpuEstimationInWh,
 	)
-	replicationFactor := resource.Specs.ReplicationFactor
+	replicationFactor := resource.Identification.ReplicationFactor
 	if replicationFactor == 0 {
 		replicationFactor = 1
 	}

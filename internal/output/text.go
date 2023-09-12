@@ -17,7 +17,7 @@ func GenerateReportText(report estimation.EstimationReport) string {
 	tableString.WriteString("\n  Average estimation of CO2 emissions per instance: \n\n")
 
 	table := tablewriter.NewWriter(tableString)
-	table.SetHeader([]string{"resource type", "address", "count", "emissions per instance"})
+	table.SetHeader([]string{"resource", "count", "replicas", "emissions per instance"})
 
 	// Default sort
 	estimations := report.Resources
@@ -25,23 +25,23 @@ func GenerateReportText(report estimation.EstimationReport) string {
 
 	for _, resource := range report.Resources {
 		table.Append([]string{
-			resource.Resource.GetIdentification().ResourceType,
 			resource.Resource.GetAddress(),
-			fmt.Sprintf("%v", resource.Count),
+			fmt.Sprintf("%v", resource.Resource.GetIdentification().Count),
+			fmt.Sprintf("%v", resource.Resource.GetIdentification().ReplicationFactor),
 			fmt.Sprintf(" %v %v", resource.CarbonEmissions.StringFixed(4), report.Info.UnitCarbonEmissionsTime),
 		})
 	}
 
 	for _, resource := range report.UnsupportedResources {
 		table.Append([]string{
-			resource.GetIdentification().ResourceType,
 			resource.GetIdentification().Address,
+			"",
 			"",
 			"unsupported",
 		})
 	}
 
-	table.SetFooter([]string{"", "Total", report.Total.ResourcesCount.String(), fmt.Sprintf(" %v %v", report.Total.CarbonEmissions.StringFixed(4), report.Info.UnitCarbonEmissionsTime)})
+	table.SetFooter([]string{"Total", report.Total.ResourcesCount.String(), "", fmt.Sprintf(" %v %v", report.Total.CarbonEmissions.StringFixed(4), report.Info.UnitCarbonEmissionsTime)})
 
 	// Format
 	table.SetAutoFormatHeaders(false)
