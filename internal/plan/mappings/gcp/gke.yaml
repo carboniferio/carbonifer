@@ -16,6 +16,8 @@ compute_resource:
           - default: '.values.node_pool[0]'
         nb_zones :
           - paths: 
+            - 'if .values | has("location") then if .values.location | test("[^-]+-[^-]+-[^-]+") then 1 elif .values.location | test("[^-]+-[^-]+") then 3 else null end else null end'
+            - 'if ${node_pool}.location != null then if ${node_pool}.location | test("[^-]+-[^-]+-[^-]+") then 1 elif ${node_pool}.location | test("[^-]+-[^-]+") then 3 else null end else null end'
             - ".values.node_locations | length"
             - "${node_pool}.node_locations | length"
     properties:
@@ -79,11 +81,15 @@ compute_resource:
             group: 1
       count:
         - paths: 
-          - "${node_pool}.autoscaling[0] | select(.total_max_node_count != null) |(.total_min_node_count // 1) + (${config.provider.gcp.avg_autoscaler_size_percent} * (.total_max_node_count - (.total_min_node_count // 1)))"
-          - "(if ${nb_zones} == 0 then 1 else ${nb_zones} end) * (${node_pool}.autoscaling[0] | select(.max_node_count != null) | (.min_node_count // 1) + (${config.provider.gcp.avg_autoscaler_size_percent} * (.max_node_count - (.min_node_count // 1))))"
-          - "(( (${node_pool}.node_locations ) // .values.node_locations // [\"dummy_region\"]) | length) * (${node_pool}.autoscaling[0] | select(.max_node_count != null) | (.min_node_count // 1) + (${config.provider.gcp.avg_autoscaler_size_percent} * (.max_node_count - (.min_node_count // 1))))"
+          - "(${node_pool}.autoscaling[0] | select(.total_max_node_count != null) | (.total_min_node_count // 1) + (${config.provider.gcp.avg_autoscaler_size_percent} * (.total_max_node_count - (.total_min_node_count // 1))))"
+          - "(${node_pool}.autoscaling[0] | select(.max_node_count != null) | (.min_node_count // 1) + (${config.provider.gcp.avg_autoscaler_size_percent} * (.max_node_count - (.min_node_count // 1))))"
           - "${node_pool}.node_count"
+          - "${node_pool}.initial_node_count"
           - ".values.initial_node_count"
+      replication_factor:
+        - paths: 
+          - "${node_pool}.autoscaling[0] | select(.total_max_node_count != null) | 1" # If total_max_node_count is set, we consider there is a count of 1 and number of nodes is managed by total_max_node_count and total_min_node_count
+          - (if ${nb_zones} == null or ${nb_zones} == 0 or ${nb_zones} >= 3 then 3 else ${nb_zones} end) 
       guest_accelerator:
         - type: list
           item:
