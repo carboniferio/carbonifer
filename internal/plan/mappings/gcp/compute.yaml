@@ -13,7 +13,7 @@ compute_resource:
         - paths: ".values.machine_type"
           reference:
             json_file: gcp_machines_types
-            property: "vcpus"
+            property: ".vcpus"
         - paths: ".values.machine_type"
           regex:
             pattern: ".*custom-([0-9]+)-.*"
@@ -24,7 +24,7 @@ compute_resource:
           unit: mb
           reference:
             json_file: gcp_machines_types
-            property: "memoryMb"
+            property: ".memoryMb"
         - paths: ".values.machine_type"
           unit: mb
           regex:
@@ -73,7 +73,7 @@ compute_resource:
                     unit: gb
                     reference:
                       paths: '.prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values'
-                      property: "disk_size_gb"
+                      property: ".disk_size_gb"
                 type:
                   - paths: 
                     - ".type"
@@ -115,13 +115,13 @@ compute_resource:
         - paths: "${template_config}.values.machine_type"
           reference:
             json_file: gcp_machines_types
-            property: "vcpus"
+            property: ".vcpus"
       memory:
         - paths: "${template_config}.values.machine_type"
           unit: mb
           reference:
             json_file: gcp_machines_types
-            property: "memoryMb"
+            property: ".memoryMb"
       zone:
         - paths: ".values.zone"
       region:
@@ -156,7 +156,7 @@ compute_resource:
                     unit: gb
                     reference:
                       paths: .prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values
-                      property: "disk_size_gb"
+                      property: ".disk_size_gb"
                   - default: 10
                 type:
                   - paths: ".disk_type"

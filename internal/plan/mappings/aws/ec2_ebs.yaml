@@ -30,7 +30,7 @@ compute_resource:
                   - paths: ".snapshot_id"
                     reference:
                       paths: .prior_state.values.root_module.resources[] | select(.values.id == "${key}") | .values
-                      property: "volume_size"
+                      property: ".volume_size"
                   - default: 8
                     unit: gb
                 type:

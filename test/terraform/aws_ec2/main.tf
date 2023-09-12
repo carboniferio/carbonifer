@@ -36,7 +36,7 @@ resource "aws_ebs_volume" "ebs_volume" {
 
 resource "aws_instance" "foo" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "m4.large"
+  instance_type = "m5d.xlarge"
 
   network_interface {
     network_interface_id = aws_network_interface.foo.id

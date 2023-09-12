@@ -6,6 +6,7 @@ import (
 	"regexp"
 
 	"github.com/carboniferio/carbonifer/internal/data"
+	"github.com/carboniferio/carbonifer/internal/utils"
 	"github.com/pkg/errors"
 	"github.com/shopspring/decimal"
 	log "github.com/sirupsen/logrus"
@@ -44,12 +45,21 @@ func resolveReference(key string, reference *Reference, context *tfContext) (int
 			log.Debugf("Cannot find key %v in file %v", key, reference.JSONFile)
 			return nil, nil
 		}
+
 		var value interface{}
 		property := reference.Property
 		if property != "" {
-			value, ok = item.(map[string]interface{})[reference.Property]
-			if !ok {
-				log.Fatalf("Cannot find property %v in file %v", reference.Property, reference.JSONFile)
+			valueArray, err := utils.GetJSON(reference.Property, item)
+			if err != nil {
+				return nil, errors.Wrapf(err, "Cannot find property %v in file %v", reference.Property, reference.JSONFile)
+			}
+			if len(valueArray) != 0 {
+				if valueArray[0] == nil {
+					return nil, fmt.Errorf("Cannot find property %v in file %v", reference.Property, reference.JSONFile)
+				}
+				value = valueArray[0]
+			} else {
+				return nil, fmt.Errorf("Cannot find property %v in file %v", reference.Property, reference.JSONFile)
 			}
 		}
 		return value, nil
@@ -82,10 +92,16 @@ func resolveReference(key string, reference *Reference, context *tfContext) (int
 			}
 			for _, referencedItem := range referencedItems {
 				if reference.Property != "" {
-					value := referencedItem.(map[string]interface{})[reference.Property]
-					if value != nil {
-						return value, nil
+					value, err := utils.GetJSON(reference.Property, referencedItem)
+					if err != nil {
+						return nil, errors.Wrapf(err, "Cannot find property %v in path %v", reference.Property, path)
 					}
+					if len(value) != 0 {
+						if value[0] != nil {
+							return value[0], nil
+						}
+					}
+
 				} else if reference.ReturnPath {
 					return path, nil
 				} else {

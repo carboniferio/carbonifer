@@ -14,6 +14,8 @@ compute_resource:
           - paths:
             - '.configuration'
             property: "region"
+        instance_type:
+          - paths: '.values.instance_type'
     properties:
       name:
         - paths: ".name"
@@ -25,13 +27,13 @@ compute_resource:
         - paths: ".values.instance_type"
           reference:
             json_file: aws_instances
-            property: "VCPU"
+            property: ".VCPU"
       memory:
         - paths: ".values.instance_type"
           unit: mb
           reference:
             json_file: aws_instances
-            property: "MemoryMb"
+            property: ".MemoryMb"
             zone:
       zone:
         - paths: ".values.availability_zone"
@@ -65,7 +67,7 @@ compute_resource:
                   - paths: ".snapshot_id"
                     reference:
                       paths: .prior_state.values.root_module.resources[] | select(.values.id == "${key}") | .values
-                      property: "volume_size"
+                      property: ".volume_size"
                   - default: 8
                     unit: gb
                 type:
@@ -73,3 +75,17 @@ compute_resource:
                     default: standard
                     reference:
                       general: disk_types
+            - paths: '.values.ephemeral_block_device[] | select(length > 0)'
+              properties:
+                size:
+                  - paths: '"${instance_type}"'
+                    unit: gb
+                    reference:
+                      json_file: aws_instances
+                      property: ".InstanceStorage.SizePerDiskGB"
+                type:
+                  - paths: '"${instance_type}"'
+                    default: standard
+                    reference:
+                      json_file: aws_instances
+                      property: ".InstanceStorage.Type"

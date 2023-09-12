@@ -13,13 +13,13 @@ compute_resource:
         - paths: ".values.settings[0].tier"
           reference:
             json_file: gcp_sql_tiers
-            property: "vcpus"
+            property: ".vcpus"
       memory:
         - paths: ".values.settings[0].tier"
           unit: mb
           reference:
             json_file: gcp_sql_tiers
-            property: "memoryMb"
+            property: ".memoryMb"
       zone:
         - paths: ".values.zone"
       region:

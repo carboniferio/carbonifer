@@ -36,8 +36,8 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 				ReplicationFactor: 1,
 			},
 			Specs: &resources.ComputeResourceSpecs{
-				VCPUs:    int32(2),
-				MemoryMb: int32(8192),
+				VCPUs:    int32(4),
+				MemoryMb: int32(16384),
 
 				HddStorage: decimal.NewFromInt(80),
 				SsdStorage: decimal.NewFromInt(30),
