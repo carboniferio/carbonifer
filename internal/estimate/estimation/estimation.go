@@ -22,7 +22,7 @@ type EstimationResource struct {
 	Power           decimal.Decimal `json:"PowerPerInstance"`
 	CarbonEmissions decimal.Decimal `json:"CarbonEmissionsPerInstance"`
 	AverageCPUUsage decimal.Decimal
-	Count           decimal.Decimal
+	TotalCount      decimal.Decimal `json:"TotalCount"` // Count * ReplicationFactor
 }
 
 // EstimationTotal is the struct that contains the total estimation

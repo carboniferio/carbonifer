@@ -68,12 +68,19 @@ func EstimateSupportedResource(resource resources.Resource) *estimation.Estimati
 		resource.GetIdentification().Count,
 	)
 
+	if resource.GetIdentification().Name == "my_cluster_autoscaled" {
+		log.Println("my_cluster_autoscaled")
+	}
+
+	count := int64(computeResource.Identification.Count)
+	replicationFactor := int64(computeResource.Identification.ReplicationFactor)
+
 	est := &estimation.EstimationResource{
 		Resource:        &computeResource,
 		Power:           avgWatt.RoundFloor(10),
 		CarbonEmissions: carbonEmissionPerTime.RoundFloor(10),
 		AverageCPUUsage: decimal.NewFromFloat(viper.GetFloat64("provider.gcp.avg_cpu_use")).RoundFloor(10),
-		Count:           decimal.NewFromInt(int64(computeResource.Identification.Count)),
+		TotalCount:      decimal.NewFromInt(count * replicationFactor),
 	}
 	return est
 }

@@ -37,9 +37,9 @@ func EstimateResources(resourceList map[string]resources.Resource) estimation.Es
 			unsupportedResources = append(unsupportedResources, resource)
 		}
 
-		estimationTotal.Power = estimationTotal.Power.Add(estimationResource.Power.Mul(estimationResource.Count))
-		estimationTotal.CarbonEmissions = estimationTotal.CarbonEmissions.Add(estimationResource.CarbonEmissions.Mul(estimationResource.Count))
-		estimationTotal.ResourcesCount = estimationTotal.ResourcesCount.Add(estimationResource.Count)
+		estimationTotal.Power = estimationTotal.Power.Add(estimationResource.Power.Mul(estimationResource.TotalCount))
+		estimationTotal.CarbonEmissions = estimationTotal.CarbonEmissions.Add(estimationResource.CarbonEmissions.Mul(estimationResource.TotalCount))
+		estimationTotal.ResourcesCount = estimationTotal.ResourcesCount.Add(estimationResource.TotalCount)
 	}
 
 	return estimation.EstimationReport{
@@ -94,5 +94,6 @@ func estimateNotSupported(resource resources.UnsupportedResource) *estimation.Es
 		Power:           decimal.Zero,
 		CarbonEmissions: decimal.Zero,
 		AverageCPUUsage: decimal.Zero,
+		TotalCount:      decimal.Zero,
 	}
 }

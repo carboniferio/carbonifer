@@ -33,7 +33,7 @@ func GetEstimation(resource resources.GenericResource) (EstimationReport, error)
 		Power:           estimation.Power.Truncate(10),
 		CarbonEmissions: estimation.CarbonEmissions.Truncate(10),
 		AverageCPUUsage: estimation.AverageCPUUsage.Truncate(10),
-		Count:           estimation.Count.Truncate(10),
+		Count:           estimation.TotalCount.Truncate(10),
 	}, nil
 }
 
@@ -56,12 +56,11 @@ func toInternalComputeResource(resource resources.GenericResource) internalResou
 	return internalResources.ComputeResource{
 		Identification: resource.GetIdentification(),
 		Specs: &internalResources.ComputeResourceSpecs{
-			GpuTypes:          resource.GPUTypes,
-			HddStorage:        resource.Storage.HddStorage,
-			SsdStorage:        resource.Storage.SsdStorage,
-			MemoryMb:          resource.MemoryMb,
-			VCPUs:             resource.VCPUs,
-			ReplicationFactor: resource.ReplicationFactor,
+			GpuTypes:   resource.GPUTypes,
+			HddStorage: resource.Storage.HddStorage,
+			SsdStorage: resource.Storage.SsdStorage,
+			MemoryMb:   resource.MemoryMb,
+			VCPUs:      resource.VCPUs,
 		},
 	}
 }

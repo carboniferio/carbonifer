@@ -39,12 +39,13 @@ func (g GenericResource) IsSupported() bool {
 // GetIdentification returns the identification of the resource
 func (g GenericResource) GetIdentification() *resources.ResourceIdentification {
 	return &resources.ResourceIdentification{
-		Name:         g.Name,
-		ResourceType: "compute",
-		Provider:     internalProvider.Provider(g.Provider),
-		Region:       g.Region,
-		Count:        1,
-		Address:      g.Address,
+		Name:              g.Name,
+		ResourceType:      "compute",
+		Provider:          internalProvider.Provider(g.Provider),
+		Region:            g.Region,
+		Count:             1,
+		ReplicationFactor: 1,
+		Address:           g.Address,
 	}
 }
 

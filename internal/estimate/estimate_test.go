@@ -15,12 +15,13 @@ import (
 
 var resourceGCPComputeBasic = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
-		Address:      "google_compute_instance.machine-name-1",
-		Name:         "machine-name-1",
-		ResourceType: "type-1",
-		Provider:     providers.GCP,
-		Region:       "europe-west9",
-		Count:        1,
+		Address:           "google_compute_instance.machine-name-1",
+		Name:              "machine-name-1",
+		ResourceType:      "type-1",
+		Provider:          providers.GCP,
+		Region:            "europe-west9",
+		ReplicationFactor: 1,
+		Count:             1,
 	},
 	Specs: &resources.ComputeResourceSpecs{
 		VCPUs:    2,
@@ -30,12 +31,13 @@ var resourceGCPComputeBasic = resources.ComputeResource{
 
 var resourceGCPComputeCPUType = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
-		Address:      "google_compute_instance.machine-name-2",
-		Name:         "machine-name-2",
-		ResourceType: "type-1",
-		Provider:     providers.GCP,
-		Region:       "europe-west9",
-		Count:        1,
+		Address:           "google_compute_instance.machine-name-2",
+		Name:              "machine-name-2",
+		ResourceType:      "type-1",
+		Provider:          providers.GCP,
+		Region:            "europe-west9",
+		ReplicationFactor: 1,
+		Count:             1,
 	},
 	Specs: &resources.ComputeResourceSpecs{
 		VCPUs:      2,
@@ -48,12 +50,13 @@ var resourceGCPComputeCPUType = resources.ComputeResource{
 
 var resourceUnsupportedComputeBasic = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
-		Address:      "unsupported.machine-name-3",
-		Name:         "machine-name-3",
-		ResourceType: "type-1",
-		Provider:     providers.AZURE,
-		Region:       "europe-west9",
-		Count:        1,
+		Address:           "unsupported.machine-name-3",
+		Name:              "machine-name-3",
+		ResourceType:      "type-1",
+		Provider:          providers.AZURE,
+		Region:            "europe-west9",
+		ReplicationFactor: 1,
+		Count:             1,
 	},
 	Specs: &resources.ComputeResourceSpecs{
 		VCPUs:    2,
@@ -63,12 +66,13 @@ var resourceUnsupportedComputeBasic = resources.ComputeResource{
 
 var resourceGCPInstanceGroup = resources.ComputeResource{
 	Identification: &resources.ResourceIdentification{
-		Address:      "google_compute_instance_group.machine-group-1",
-		Name:         "machine-group-1",
-		ResourceType: "type-1",
-		Provider:     providers.GCP,
-		Region:       "europe-west9",
-		Count:        3,
+		Address:           "google_compute_instance_group.machine-group-1",
+		Name:              "machine-group-1",
+		ResourceType:      "type-1",
+		Provider:          providers.GCP,
+		Region:            "europe-west9",
+		ReplicationFactor: 1,
+		Count:             3,
 	},
 	Specs: &resources.ComputeResourceSpecs{
 		VCPUs:    2,
@@ -94,7 +98,7 @@ func TestEstimateResource(t *testing.T) {
 				Power:           decimal.NewFromFloat(7.600784000).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(0.448446256).RoundFloor(10),
 				AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
-				Count:           decimal.NewFromInt(1),
+				TotalCount:      decimal.NewFromInt(1),
 			},
 		},
 		{
@@ -105,7 +109,7 @@ func TestEstimateResource(t *testing.T) {
 				Power:           decimal.NewFromFloat(9.5565660741),
 				CarbonEmissions: decimal.NewFromFloat(0.5638373983),
 				AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
-				Count:           decimal.NewFromInt(1),
+				TotalCount:      decimal.NewFromInt(1),
 			},
 		},
 		{
@@ -116,7 +120,7 @@ func TestEstimateResource(t *testing.T) {
 				Power:           decimal.NewFromFloat(7.600784000).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(0.448446256).RoundFloor(10),
 				AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
-				Count:           decimal.NewFromInt(3),
+				TotalCount:      decimal.NewFromInt(3),
 			},
 		},
 	}
@@ -148,7 +152,7 @@ func TestEstimateResourceKilo(t *testing.T) {
 				Power:           decimal.NewFromFloat(5472.56448).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(232.4745391104).RoundFloor(10),
 				AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
-				Count:           decimal.NewFromInt(1),
+				TotalCount:      decimal.NewFromInt(1),
 			},
 		},
 		{
@@ -159,7 +163,7 @@ func TestEstimateResourceKilo(t *testing.T) {
 				Power:           decimal.NewFromFloat(6880.7275733647).RoundFloor(10),
 				CarbonEmissions: decimal.NewFromFloat(292.2933073165).RoundFloor(10),
 				AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
-				Count:           decimal.NewFromInt(1),
+				TotalCount:      decimal.NewFromInt(1),
 			},
 		},
 	}
@@ -202,7 +206,7 @@ func EqualsEstimationResource(t *testing.T, expected *estimation.EstimationResou
 	assert.Equal(t, expected.Power.String(), actual.Power.String())
 	assert.Equal(t, expected.CarbonEmissions.String(), actual.CarbonEmissions.String())
 	assert.Equal(t, expected.AverageCPUUsage.String(), actual.AverageCPUUsage.String())
-	assert.Equal(t, expected.Count.String(), actual.Count.String())
+	assert.Equal(t, expected.TotalCount.String(), actual.TotalCount.String())
 
 }
 
@@ -227,21 +231,21 @@ func TestEstimateResources(t *testing.T) {
 			Power:           decimal.NewFromFloat(7.600784).Round(10),
 			CarbonEmissions: decimal.NewFromFloat(0.448446256).Round(10),
 			AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
-			Count:           decimal.NewFromInt(1),
+			TotalCount:      decimal.NewFromInt(1),
 		},
 		{
 			Resource:        &resourceGCPComputeCPUType,
 			Power:           decimal.NewFromFloat(9.5565660741),
 			CarbonEmissions: decimal.NewFromFloat(0.5638373983),
 			AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
-			Count:           decimal.NewFromInt(1),
+			TotalCount:      decimal.NewFromInt(1),
 		},
 		{
 			Resource:        &resourceGCPInstanceGroup,
 			Power:           decimal.NewFromFloat(7.600784).Round(10),
 			CarbonEmissions: decimal.NewFromFloat(0.448446256).Round(10),
 			AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
-			Count:           decimal.NewFromInt(3),
+			TotalCount:      decimal.NewFromInt(3),
 		},
 	}
 	SortEstimations(&expectedResources)

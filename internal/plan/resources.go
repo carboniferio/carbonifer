@@ -194,9 +194,8 @@ func GetComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 			Address:      resourceAddress,
 		},
 		Specs: &resources.ComputeResourceSpecs{
-			HddStorage:        decimal.Zero,
-			SsdStorage:        decimal.Zero,
-			ReplicationFactor: 1,
+			HddStorage: decimal.Zero,
+			SsdStorage: decimal.Zero,
 		},
 	}
 
@@ -278,7 +277,9 @@ func GetComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 		if err != nil {
 			return nil, errors.Wrapf(err, "Cannot parse replication factor for %v", resourceAddress)
 		}
-		computeResource.Specs.ReplicationFactor = int32(intValue)
+		computeResource.Identification.ReplicationFactor = int32(intValue)
+	} else {
+		computeResource.Identification.ReplicationFactor = 1
 	}
 
 	// Add count (case of autoscaling group)

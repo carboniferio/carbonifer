@@ -95,18 +95,21 @@ Download the latest release from [releases page](https://github.com/carboniferio
 ```bash
 $ carbonifer plan
 
- ------------------------------ ---------------- ------- ------------------------ 
-  resource type                  name             count   emissions per instance  
- ------------------------------ ---------------- ------- ------------------------ 
-  google_sql_database_instance   instance         1        2.1716 gCO2eq/h        
-  google_compute_disk            first            1        0.0449 gCO2eq/h        
-  google_compute_instance        first            1        43.2803 gCO2eq/h       
-  google_compute_instance        second           1        0.4489 gCO2eq/h        
-  google_compute_region_disk     regional-first   1        0.0898 gCO2eq/h        
-  google_compute_subnetwork      first                    unsupported             
-  google_compute_network         vpc_network              unsupported             
- ------------------------------ ---------------- ------- ------------------------ 
-                                 Total            5        46.0356 gCO2eq/h       
+ Average estimation of CO2 emissions per instance: 
+
+ ------------------------------------------- ------- ---------- ------------------------ 
+  resource                                    count   replicas   emissions per instance  
+ ------------------------------------------- ------- ---------- ------------------------ 
+  google_compute_disk.first                   1       1           0.0422 gCO2eq/h        
+  google_compute_instance.first               1       1           33.5977 gCO2eq/h       
+  google_compute_instance.second              1       1           0.4248 gCO2eq/h        
+  google_compute_region_disk.regional-first   1       2           0.0844 gCO2eq/h        
+  google_sql_database_instance.instance       1       2           2.0550 gCO2eq/h        
+  google_compute_subnetwork.first                                unsupported             
+  google_compute_network.vpc_network                             unsupported             
+ ------------------------------------------- ------- ---------- ------------------------ 
+  Total                                       7                   38.3433 gCO2eq/h       
+ ------------------------------------------- ------- ---------- ------------------------ 
 
 ```
 
