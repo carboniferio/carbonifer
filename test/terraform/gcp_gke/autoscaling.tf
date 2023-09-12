@@ -40,7 +40,7 @@ resource "google_container_cluster" "my_cluster_autoscaled_monozone" {
   project = var.project_id
   remove_default_node_pool = true
   initial_node_count       = 1
-  location = var.region
+  location = "${var.region}-a"
 
   network    = module.network.vpc_name
   subnetwork = module.network.subnet_name
