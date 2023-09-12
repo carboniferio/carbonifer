@@ -137,7 +137,7 @@ func getItem(context tfContext, itemMappingProperties *ResourceMapping, jsonResu
 			Resource:        jsonResultI,
 			Mapping:         itemMappingProperties,
 			ResourceAddress: context.ResourceAddress,
-			ParentContext:   &context,
+			ParentContext:   context.ParentContext,
 			Provider:        context.Provider,
 		}
 		property, err := getValue(key, &itemContext)

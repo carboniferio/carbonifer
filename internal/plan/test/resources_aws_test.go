@@ -40,7 +40,7 @@ func TestGetResource_DiskFromAMI(t *testing.T) {
 				MemoryMb: int32(16384),
 
 				HddStorage: decimal.NewFromInt(80),
-				SsdStorage: decimal.NewFromInt(30),
+				SsdStorage: decimal.NewFromInt(330),
 			},
 		},
 		"aws_ebs_volume.ebs_volume": resources.ComputeResource{

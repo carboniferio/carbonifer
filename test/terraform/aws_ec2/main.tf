@@ -53,6 +53,16 @@ resource "aws_instance" "foo" {
     device_name = "/dev/sdj"
     snapshot_id = data.aws_ebs_snapshot.ebs_snapshot.id
   }
+
+  ephemeral_block_device {
+    device_name  = "/dev/sdk"
+    virtual_name = "ephemeral0"
+  }
+
+  ephemeral_block_device {
+    device_name  = "/dev/sdl"
+    virtual_name = "ephemeral1"
+  }
 }
 
 resource "aws_volume_attachment" "ebs_att" {
