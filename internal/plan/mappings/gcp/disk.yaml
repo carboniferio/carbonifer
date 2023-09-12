@@ -38,7 +38,7 @@ compute_resource:
                     unit: gb
                     reference:
                       paths: .prior_state.values.root_module.resources[] | select(.values.self_link == "${key}") | .values
-                      property: "disk_size_gb"
+                      property: ".disk_size_gb"
                   - default: 10
                     unit: gb
                 type:

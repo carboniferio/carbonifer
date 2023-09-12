@@ -89,6 +89,7 @@ func getSliceItems(context tfContext) ([]interface{}, error) {
 			if err != nil {
 				return nil, err
 			}
+			fmt.Println(path)
 		}
 		jsonResults, err := getJSON(path, context.Resource)
 		if err != nil {
@@ -136,7 +137,7 @@ func getItem(context tfContext, itemMappingProperties *ResourceMapping, jsonResu
 			Resource:        jsonResultI,
 			Mapping:         itemMappingProperties,
 			ResourceAddress: context.ResourceAddress,
-			ParentContext:   &context,
+			ParentContext:   context.ParentContext,
 			Provider:        context.Provider,
 		}
 		property, err := getValue(key, &itemContext)
@@ -398,8 +399,15 @@ func getDefaultValue(key string, context *tfContext) (*valueWithUnit, error) {
 
 }
 
-func getVariable(name string, context *tfContext) (interface{}, error) {
+func getVariable(name string, contextParam *tfContext) (interface{}, error) {
+	context := contextParam
 	variablesMappings := context.Mapping.Variables
+	if variablesMappings == nil {
+		context = contextParam.ParentContext
+		if context != nil {
+			variablesMappings = context.Mapping.Variables
+		}
+	}
 	if variablesMappings == nil {
 		return nil, nil
 	}

@@ -36,7 +36,7 @@ resource "aws_ebs_volume" "ebs_volume" {
 
 resource "aws_instance" "foo" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "m4.large"
+  instance_type = "m5d.xlarge"
 
   network_interface {
     network_interface_id = aws_network_interface.foo.id
@@ -52,6 +52,16 @@ resource "aws_instance" "foo" {
   ebs_block_device {
     device_name = "/dev/sdj"
     snapshot_id = data.aws_ebs_snapshot.ebs_snapshot.id
+  }
+
+  ephemeral_block_device {
+    device_name  = "/dev/sdk"
+    virtual_name = "ephemeral0"
+  }
+
+  ephemeral_block_device {
+    device_name  = "/dev/sdl"
+    virtual_name = "ephemeral1"
   }
 }
 

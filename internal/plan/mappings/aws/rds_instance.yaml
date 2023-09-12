@@ -38,7 +38,7 @@ compute_resource:
             group: 1
           reference:
             json_file: aws_instances
-            property: "VCPU"
+            property: ".VCPU"
       memory:
         - paths: ".values.instance_class"
           unit: mb
@@ -47,7 +47,7 @@ compute_resource:
             group: 1
           reference:
             json_file: aws_instances
-            property: "MemoryMb"
+            property: ".MemoryMb"
       storage:
         - type: list
           item:

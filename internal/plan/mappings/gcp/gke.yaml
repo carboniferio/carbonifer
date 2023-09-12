@@ -33,7 +33,7 @@ compute_resource:
           - "${node_pool}.node_config[].machine_type"
           reference:
             json_file: gcp_machines_types
-            property: "vcpus"
+            property: ".vcpus"
         - paths: 
           - ".values.node_config[].machine_type"
           - "${node_pool}.node_config[].machine_type"
@@ -52,7 +52,7 @@ compute_resource:
           unit: mb
           reference:
             json_file: gcp_machines_types
-            property: "memoryMb"
+            property: ".memoryMb"
         - paths: 
           - ".values.node_config[].machine_type"
           - "${node_pool}.node_config[].machine_type"
