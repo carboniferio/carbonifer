@@ -45,6 +45,7 @@ Data resources:
 | `aws_instance`| No GPU | |
 | `aws_ebs_volume`| if size set, or if snapshot declared as data resource | |
 | `aws_db_instance` | | |
+| `aws_autoscaling_group` | No `mixed_instances_policy` | Takes an average size, uses `aws_launch_configuration` and `aws_launch_template`|
 
 Data resources:
 
