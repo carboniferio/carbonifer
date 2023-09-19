@@ -31,11 +31,13 @@ It can estimate Carbon Emissions of:
   - [x] EC2 (including inline root, elastic, and ephemeral block storages)
   - [x] EBS Volumes
   - [x] RDS
+  - [x] AutoScaling Group
 
 The following will also be supported soon:
 
 - Amazon Web Services
-  - [ ] AutoScaling Group
+  - [ ] Elastic Kubernetes Service (EKS)
+  - [ ] Elastic Container Service (ECS)
 - Azure
   - [ ] Virtual Machines
   - [ ] Virtual Machine Scale Set
