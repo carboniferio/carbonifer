@@ -153,12 +153,14 @@ func GetComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 	if err != nil {
 		return nil, nil
 	}
-	context := &tfContext{
+	contextObject := tfContext{
 		ResourceAddress: resourceAddress,
 		Mapping:         resourceMapping,
 		Resource:        resource,
 		Provider:        provider,
 	}
+	contextObject.RootContext = &contextObject
+	context := &contextObject
 	name, err := getString("name", context)
 	if err != nil {
 		return nil, errors.Wrapf(err, "Cannot get name for resource %v", resourceAddress)

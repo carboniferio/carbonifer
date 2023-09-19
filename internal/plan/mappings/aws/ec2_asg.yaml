@@ -1,0 +1,109 @@
+compute_resource:
+  aws_autoscaling_group: 
+    paths: 
+      - cbf::all_select("type";  "aws_autoscaling_group")
+    type: resource
+    variables:
+      properties:
+        provider_region:
+          - paths:
+            - '.configuration'
+            property: "region"
+        launch_configuration:
+          - paths:
+            - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.launch_configuration?.references[]? | select(endswith(".id") or endswith(".name")) | gsub("\\.(id|name)$"; "")'
+            - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.launch_template[]?.id?.references[]? | select(endswith(".id") or endswith(".name")) | gsub("\\.(id|name)$"; "")'
+            reference:
+              paths:
+                - cbf::all_select("address";  "${key}")
+                - cbf::all_select("address"; ("${key}" | split(".")[0:2] | join("."))) | .resources[] | select(.name",  ("${key}" | split(".")[2]))
+                - .prior_state.values.root_module.resources[] | select(.address == "${key}")
+              return_path: true
+        ami:
+          - paths:
+            - '${launch_configuration}.values.image_id'
+            reference:
+              paths:
+                - cbf::all_select("type"; "aws_ami") | select(.values.image_id == "${key}")
+                - .prior_state.values.root_module.resources[] | select(.type == "aws_ami") | select(.values.image_id == "${key}")
+              return_path: true
+    properties:
+      name:
+        - paths: ".name"
+      address:
+        - paths: ".address"
+      type:
+        - paths: ".type"
+      vCPUs:
+        - paths: "${launch_configuration}.values.instance_type"
+          reference:
+            json_file: aws_instances
+            property: ".VCPU"
+      memory:
+        - paths: "${launch_configuration}.values.instance_type"
+          unit: mb
+          reference:
+            json_file: aws_instances
+            property: ".MemoryMb"
+            zone:
+      zone:
+        - paths: ".values.availability_zone"
+      region:
+        - paths: ".values.availability_zone"
+          regex:
+            pattern: '^(.+-\d+)[a-z]+'
+            group: 1
+        - paths: ".configuration.provider_config.aws.expressions.region"
+      replication_factor:
+        - default: 1
+      count:
+        - paths: 
+          - '.values | if has("max_size") then (.min_size // 1) + ${config.provider.aws.avg_autoscaler_size_percent} * (.max_size - (.min_size? // 1)) else null end'
+      storage:
+        - type: list
+          item:
+            - paths: '${ami}.values.block_device_mappings[].ebs | select(length > 0)'
+              properties:
+                size:
+                  - paths: ".volume_size"
+                    default: 8
+                    unit: gb
+                type:
+                  - paths: ".volume_type"
+                    default: standard
+                    reference:
+                      general: disk_types 
+            - paths: 
+              - '${launch_configuration}.values.ebs_block_device[] | select(length > 0)'
+              - '${launch_configuration}.values.block_device_mappings[] | select(length > 0) | select(.virtual_name == null or (.virtual_name | startswith("ephemeral") | not)) | .ebs'
+              properties:
+                size:
+                  - paths: ".volume_size"
+                    unit: gb
+                  - paths: ".snapshot_id"
+                    reference:
+                      paths: .prior_state.values.root_module.resources[] | select(.values.id == "${key}") | .values
+                      property: ".volume_size"
+                  - default: 8
+                    unit: gb
+                type:
+                  - paths: ".volume_type"
+                    default: standard
+                    reference:
+                      general: disk_types
+            - paths: 
+              - '${launch_configuration}.values.ephemeral_block_device[] | select(length > 0)'
+              - '${launch_configuration}.values.block_device_mappings[] | select(length > 0) | select(.virtual_name != null and (.virtual_name | startswith("ephemeral")))'
+              properties:
+                size:
+                  - paths: '${launch_configuration}.values.instance_type'
+                    unit: gb
+                    reference:
+                      json_file: aws_instances
+                      property: ".InstanceStorage.SizePerDiskGB"
+                type:
+                  - paths: '${launch_configuration}.values.instance_type'
+                    default: standard
+                    reference:
+                      json_file: aws_instances
+                      property: ".InstanceStorage.Type"

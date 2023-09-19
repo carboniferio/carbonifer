@@ -15,3 +15,4 @@ general:
     ignored_resources: 
       - "aws_vpc"
       - "aws_volume_attachment"
+      - "aws_launch_configuration"
