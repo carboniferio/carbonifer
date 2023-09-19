@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetResource_DiskFromAMI(t *testing.T) {
+func TestGetResource_EC2(t *testing.T) {
 
 	testutils.SkipWithCreds(t)
 

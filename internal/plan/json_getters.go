@@ -17,7 +17,7 @@ type tfContext struct {
 	Resource        map[string]interface{} // Json of the terraform plan resource
 	Mapping         *ResourceMapping       // Mapping of the resource type
 	ResourceAddress string                 // Address of the resource in tf plan
-	ParentContext   *tfContext             // Parent context
+	RootContext     *tfContext             // Root context
 	Provider        providers.Provider
 }
 
@@ -60,7 +60,7 @@ func getSlice(key string, context *tfContext) ([]interface{}, error) {
 				Resource:        context.Resource,
 				Mapping:         &itemMapping,
 				ResourceAddress: context.ResourceAddress + "." + key,
-				ParentContext:   context,
+				RootContext:     context.RootContext,
 				Provider:        context.Provider,
 			}
 			itemResults, err := getSliceItems(context)
@@ -85,11 +85,10 @@ func getSliceItems(context tfContext) ([]interface{}, error) {
 	for _, pathRaw := range paths {
 		path := pathRaw
 		if strings.Contains(pathRaw, "${") {
-			path, err = resolvePlaceholders(pathRaw, context.ParentContext)
+			path, err = resolvePlaceholders(pathRaw, &context)
 			if err != nil {
 				return nil, err
 			}
-			fmt.Println(path)
 		}
 		jsonResults, err := getJSON(path, context.Resource)
 		if err != nil {
@@ -137,7 +136,7 @@ func getItem(context tfContext, itemMappingProperties *ResourceMapping, jsonResu
 			Resource:        jsonResultI,
 			Mapping:         itemMappingProperties,
 			ResourceAddress: context.ResourceAddress,
-			ParentContext:   context.ParentContext,
+			RootContext:     context.RootContext,
 			Provider:        context.Provider,
 		}
 		property, err := getValue(key, &itemContext)
@@ -209,6 +208,7 @@ func getValue(key string, context *tfContext) (*valueWithUnit, error) {
 			path := pathRaw
 			if strings.Contains(pathRaw, "${") {
 				path, err = resolvePlaceholders(path, context)
+
 				if err != nil {
 					return nil, errors.Wrapf(err, "Cannot resolve placeholders for %v", path)
 				}
@@ -326,6 +326,9 @@ func resolvePlaceholder(expression string, context *tfContext) (*string, error) 
 		thisProperty := strings.TrimPrefix(expression, "this")
 		resource := context.Resource
 		value, err := utils.GetJSON(thisProperty, resource)
+		if value == nil {
+			log.Debugf("No value found for %v", expression)
+		}
 		if err != nil {
 			return nil, errors.Wrapf(err, "Cannot get value for variable %s", expression)
 		}
@@ -403,7 +406,7 @@ func getVariable(name string, contextParam *tfContext) (interface{}, error) {
 	context := contextParam
 	variablesMappings := context.Mapping.Variables
 	if variablesMappings == nil {
-		context = contextParam.ParentContext
+		context = contextParam.RootContext
 		if context != nil {
 			variablesMappings = context.Mapping.Variables
 		}
@@ -415,7 +418,7 @@ func getVariable(name string, contextParam *tfContext) (interface{}, error) {
 		Resource:        context.Resource,
 		Mapping:         variablesMappings,
 		ResourceAddress: context.ResourceAddress + ".variables",
-		ParentContext:   context.ParentContext,
+		RootContext:     context.RootContext,
 		Provider:        context.Provider,
 	}
 	value, err := getValue(name, &variableContext)
