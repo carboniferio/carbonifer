@@ -5,11 +5,6 @@ compute_resource:
     type: resource
     variables:
       properties:
-        ami:
-          - paths:
-            - cbf::all_select("values.image_id";  "${this.values.ami}")
-            reference:
-              return_path: true
         provider_region:
           - paths:
             - '.configuration'
@@ -34,7 +29,6 @@ compute_resource:
           reference:
             json_file: aws_instances
             property: ".MemoryMb"
-            zone:
       zone:
         - paths: ".values.availability_zone"
       region:
