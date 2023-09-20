@@ -306,7 +306,10 @@ func GetComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 		return nil, errors.Wrapf(err, "Cannot get storages for %v", resourceAddress)
 	}
 
-	processStorages(storages, &computeResource, context)
+	err = processStorages(storages, &computeResource, context)
+	if err != nil {
+		return nil, errors.Wrapf(err, "Cannot process storages for %v", resourceAddress)
+	}
 
 	resourcesResult = append(resourcesResult, computeResource)
 	log.Debugf("    Reading resource '%s'", computeResource.GetAddress())
