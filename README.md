@@ -374,3 +374,7 @@ See the [Scope](doc/scope.md) document for more details.
 | `data.path` | `<arg>` |  | path of carbonifer data files (coefficents...). Default uses embedded [files](./internal/data/data/) in binary 
 | `avg_cpu_use` |  | `0.5` | planned [average percentage of CPU used](doc/methodology.md#cpu)
 | `log` |  | `warn` | level of logs `info`, `debug`, `warn`, `error`
+
+## Extending Carbonifer
+
+In order to add support for a new terraform resource type, there is a [mapping mechanism](doc/terraform_mapping.md) where we can declare JQ filters to query the Terraform file and extract the necessary information.

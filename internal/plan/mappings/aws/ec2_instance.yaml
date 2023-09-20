@@ -51,7 +51,6 @@ compute_resource:
           reference:
             json_file: aws_instances
             property: ".MemoryMb"
-            zone:
       zone:
         - paths: ".values.availability_zone"
       region:
