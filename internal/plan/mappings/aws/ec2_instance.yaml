@@ -5,17 +5,32 @@ compute_resource:
     type: resource
     variables:
       properties:
-        ami:
-          - paths:
-            - cbf::all_select("values.image_id";  "${this.values.ami}")
-            reference:
-              return_path: true
         provider_region:
           - paths:
             - '.configuration'
             property: "region"
         instance_type:
-          - paths: '.values.instance_type'
+          - paths: 
+            - '.values.instance_type'
+            - '${launch_template}.values.instance_type'
+        launch_template:
+          - paths:
+            - '.configuration.root_module.resources[] | select(.address == "${this.address}") | .expressions.launch_template[]?.id?.references[]? | select(endswith(".id") or endswith(".name")) | gsub("\\.(id|name)$"; "")'
+            reference:
+              paths:
+                - cbf::all_select("address";  "${key}")
+                - cbf::all_select("address"; ("${key}" | split(".")[0:2] | join("."))) | .resources[] | select(.name",  ("${key}" | split(".")[2]))
+                - .prior_state.values.root_module.resources[] | select(.address == "${key}")
+              return_path: true
+        ami:
+          - paths:
+            - '"${this.values.ami}"'
+            - '${launch_template}.values.image_id'
+            reference:
+              paths:
+                - cbf::all_select("type"; "aws_ami") | select(.type == "aws_ami") | select(.values.image_id == "${key}")
+                - .prior_state.values.root_module.resources[] | select(.type == "aws_ami") | select(.values.image_id == "${key}")
+              return_path: true
     properties:
       name:
         - paths: ".name"
@@ -24,12 +39,14 @@ compute_resource:
       type:
         - paths: ".type"
       vCPUs:
-        - paths: ".values.instance_type"
+        - paths: 
+          - '"${instance_type}"'
           reference:
             json_file: aws_instances
             property: ".VCPU"
       memory:
-        - paths: ".values.instance_type"
+        - paths: 
+          - '"${instance_type}"'
           unit: mb
           reference:
             json_file: aws_instances
@@ -48,7 +65,8 @@ compute_resource:
       storage:
         - type: list
           item:
-            - paths: '.prior_state.values.root_module.resources[] | select(.values.image_id == "${this.values.ami}") | .values.block_device_mappings[].ebs | select(length > 0)'
+            - paths: 
+              - '${ami}.values.block_device_mappings[] | select(length > 0) | .ebs'
               properties:
                 size:
                   - paths: ".volume_size"
@@ -59,7 +77,9 @@ compute_resource:
                     default: standard
                     reference:
                       general: disk_types 
-            - paths: '.values.ebs_block_device[] | select(length > 0)'
+            - paths: 
+              - '.values.ebs_block_device[] | select(length > 0)'
+              - '${launch_template}.values.block_device_mappings[] | select(length > 0) | select(.virtual_name == null or .virtual_name == "" or (.virtual_name | startswith("ephemeral") | not)) | .ebs'
               properties:
                 size:
                   - paths: ".volume_size"
@@ -75,16 +95,20 @@ compute_resource:
                     default: standard
                     reference:
                       general: disk_types
-            - paths: '.values.ephemeral_block_device[] | select(length > 0)'
+            - paths: 
+              - '.values.ephemeral_block_device[] | select(length > 0)'
+              - '${launch_template}.values.block_device_mappings[] | select(length > 0) | select(.virtual_name != null and (.virtual_name | startswith("ephemeral")))'
               properties:
                 size:
-                  - paths: '"${instance_type}"'
+                  - paths: 
+                    - '"${instance_type}"'
                     unit: gb
                     reference:
                       json_file: aws_instances
                       property: ".InstanceStorage.SizePerDiskGB"
                 type:
-                  - paths: '"${instance_type}"'
+                  - paths: 
+                    - '"${instance_type}"'
                     default: standard
                     reference:
                       json_file: aws_instances

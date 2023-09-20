@@ -16,3 +16,4 @@ general:
       - "aws_vpc"
       - "aws_volume_attachment"
       - "aws_launch_configuration"
+      - "aws_launch_template"
