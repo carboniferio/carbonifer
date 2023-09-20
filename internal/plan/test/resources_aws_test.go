@@ -90,8 +90,26 @@ func TestGetResource_EC2(t *testing.T) {
 				VCPUs:    int32(4),
 				MemoryMb: int32(16384),
 
+				HddStorage: decimal.Zero,
+				SsdStorage: decimal.NewFromInt(180),
+			},
+		},
+		"aws_instance.ec2_with_lt_disk_override": resources.ComputeResource{
+			Identification: &resources.ResourceIdentification{
+				Address:           "aws_instance.ec2_with_lt_disk_override",
+				Name:              "ec2_with_lt_disk_override",
+				ResourceType:      "aws_instance",
+				Provider:          providers.AWS,
+				Region:            "eu-west-3",
+				Count:             1,
+				ReplicationFactor: 1,
+			},
+			Specs: &resources.ComputeResourceSpecs{
+				VCPUs:    int32(4),
+				MemoryMb: int32(16384),
+
 				HddStorage: decimal.NewFromInt(300),
-				SsdStorage: decimal.NewFromInt(30 + 150),
+				SsdStorage: decimal.NewFromInt(150),
 			},
 		},
 	}

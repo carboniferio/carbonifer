@@ -18,6 +18,15 @@ func (*moduleLoader) LoadModule(name string) (*gojq.Query, error) {
 
 			def all_select(a; b):
 				.planned_values | .. | objects | select(has("resources")) | .resources[] | select(.[a] == b);
+
+			def extract_disk_key:
+				if test("^/dev/sd[a-z]+") or test("^/dev/xvd[a-z]+") then
+				  capture("^/dev/(?:sd|xvd)(?<letter>[a-z]+)").letter
+				elif test("^/dev/nvme[0-2]?[0-9]n") then
+				  capture("^/dev/nvme(?<number>[0-2]?[0-9])n").number | tonumber | (96 + .) | [.] | implode
+				else
+				  "Unknown format"
+				end;
 		`)
 	}
 	return nil, fmt.Errorf("module not found: %q", name)

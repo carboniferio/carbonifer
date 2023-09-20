@@ -343,18 +343,36 @@ func processStorages(storagesI []interface{}, computeResource *resources.Compute
 		if err != nil {
 			return errors.Wrapf(err, "Cannot get storage[%v] for %v", i, context.ResourceAddress)
 		}
-		if storagesByKey[*storageItem.Key] == nil {
-			storagesByKey[*storageItem.Key] = []*storage{storageItem}
+		if storagesByKey[storageItem.Key] == nil {
+			storagesByKey[storageItem.Key] = []*storage{storageItem}
 		} else {
-			storagesByKey[*storageItem.Key] = append(storagesByKey[*storageItem.Key], storageItem)
+			storagesByKey[storageItem.Key] = append(storagesByKey[storageItem.Key], storageItem)
 		}
 	}
 
-	for _, storages := range storagesByKey {
-		// Take the storage with the lower priority in the list
-		storages = sortStorages(storages)
-		storageItem := storages[0]
+	// Print the map nicely
+	for key, storages := range storagesByKey {
+		log.Debugf("Storage Key: %v", key)
+		for _, storage := range storages {
+			log.Debugf("    %v\n", storage)
+		}
+	}
+	log.Debug("------")
 
+	storagesOverriden := []*storage{}
+
+	for key, storages := range storagesByKey {
+		// Take the storage with the lower priority in the list
+		if key != "" {
+			storages = sortStorages(storages)
+			storageItem := storages[0]
+			storagesOverriden = append(storagesOverriden, storageItem)
+		} else {
+			storagesOverriden = append(storagesOverriden, storages...)
+		}
+	}
+
+	for _, storageItem := range storagesOverriden {
 		size := storageItem.SizeGb
 		if storageItem.IsSSD {
 			computeResource.Specs.SsdStorage = computeResource.Specs.SsdStorage.Add(size)
@@ -437,11 +455,11 @@ func getStorage(storageMap map[string]interface{}) (*storage, error) {
 		overridePriority = overridePriorityI.(*valueWithUnit).Value.(int)
 	}
 
-	var key *string
+	key := ""
 	keyI := storageMap["key"]
 	if keyI != nil {
 		keyString := keyI.(*valueWithUnit).Value.(string)
-		key = &keyString
+		key = keyString
 	}
 
 	storage := storage{

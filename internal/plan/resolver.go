@@ -16,7 +16,7 @@ type storage struct {
 	SizeGb           decimal.Decimal
 	IsSSD            bool
 	OverridePriority int
-	Key              *string
+	Key              string
 }
 
 func applyReference(valueFound string, propertyMapping *PropertyDefinition, context *tfContext) (interface{}, error) {

@@ -4,6 +4,18 @@ resource "aws_launch_template" "my_launch_template" {
   instance_type = "m5d.xlarge"
 
   block_device_mappings {
+    device_name  = "/dev/sdb"
+    virtual_name = "ephemeral0"
+  }
+
+}
+
+resource "aws_launch_template" "my_launch_template_disk_override" {
+  name_prefix   = "my_launch_template"
+  image_id      = "${data.aws_ami.ubuntu.id}"
+  instance_type = "m5d.xlarge"
+
+  block_device_mappings {
     device_name = "/dev/sda1"
 
     ebs {
@@ -23,6 +35,13 @@ resource "aws_launch_template" "my_launch_template" {
 resource "aws_instance" "ec2_with_lt" {
     launch_template {
         id      = "${aws_launch_template.my_launch_template.id}"
+        version = "$$Latest"
+    }
+}
+
+resource "aws_instance" "ec2_with_lt_disk_override" {
+    launch_template {
+        id      = "${aws_launch_template.my_launch_template_disk_override.id}"
         version = "$$Latest"
     }
 }

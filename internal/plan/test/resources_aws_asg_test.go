@@ -58,7 +58,7 @@ func TestGetResource_AWSASG(t *testing.T) {
 				MemoryMb: int32(16384),
 
 				HddStorage: decimal.NewFromInt(300),
-				SsdStorage: decimal.NewFromInt(30 + 150),
+				SsdStorage: decimal.NewFromInt(150),
 			},
 		},
 	}
