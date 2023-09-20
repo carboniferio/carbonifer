@@ -202,13 +202,12 @@ func getValue(key string, context *tfContext) (*valueWithUnit, error) {
 		unit := propertyMapping.Unit
 
 		for _, pathRaw := range paths {
-			if valueFound != nil {
+			if valueFound != nil && valueFound != ".not_found" {
 				break
 			}
 			path := pathRaw
 			if strings.Contains(pathRaw, "${") {
 				path, err = resolvePlaceholders(path, context)
-
 				if err != nil {
 					return nil, errors.Wrapf(err, "Cannot resolve placeholders for %v", path)
 				}
@@ -408,7 +407,7 @@ func getVariable(name string, contextParam *tfContext) (interface{}, error) {
 	if variablesMappings == nil {
 		context = contextParam.RootContext
 		if context != nil {
-			variablesMappings = context.Mapping.Variables
+			variablesMappings = context.RootContext.Mapping.Variables
 		}
 	}
 	if variablesMappings == nil {
