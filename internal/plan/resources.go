@@ -3,6 +3,7 @@ package plan
 import (
 	"fmt"
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/carboniferio/carbonifer/internal/providers"
@@ -305,20 +306,9 @@ func GetComputeResource(resourceI interface{}, resourceMapping *ResourceMapping,
 		return nil, errors.Wrapf(err, "Cannot get storages for %v", resourceAddress)
 	}
 
-	for i, storageI := range storages {
-		if storageI == nil {
-			continue
-		}
-		storage, err := getStorage(storageI.(map[string]interface{}))
-		if err != nil {
-			return nil, errors.Wrapf(err, "Cannot get storage[%v] for %v", i, resourceAddress)
-		}
-		size := storage.SizeGb
-		if storage.IsSSD {
-			computeResource.Specs.SsdStorage = computeResource.Specs.SsdStorage.Add(size)
-		} else {
-			computeResource.Specs.HddStorage = computeResource.Specs.HddStorage.Add(size)
-		}
+	err = processStorages(storages, &computeResource, context)
+	if err != nil {
+		return nil, errors.Wrapf(err, "Cannot process storages for %v", resourceAddress)
 	}
 
 	resourcesResult = append(resourcesResult, computeResource)
@@ -344,6 +334,68 @@ func getGPU(gpu map[string]interface{}) ([]string, error) {
 		}
 	}
 	return gpuTypes, nil
+}
+
+func processStorages(storagesI []interface{}, computeResource *resources.ComputeResource, context *tfContext) error {
+	storagesByKey := map[string][]*storage{}
+	for i, storageI := range storagesI {
+		if storageI == nil {
+			continue
+		}
+		storageItem, err := getStorage(storageI.(map[string]interface{}))
+		if err != nil {
+			return errors.Wrapf(err, "Cannot get storage[%v] for %v", i, context.ResourceAddress)
+		}
+		if storagesByKey[storageItem.Key] == nil {
+			storagesByKey[storageItem.Key] = []*storage{storageItem}
+		} else {
+			storagesByKey[storageItem.Key] = append(storagesByKey[storageItem.Key], storageItem)
+		}
+	}
+
+	// Print the map nicely
+	for key, storages := range storagesByKey {
+		log.Debugf("Storage Key: %v", key)
+		for _, storage := range storages {
+			log.Debugf("    %v\n", storage)
+		}
+	}
+	log.Debug("------")
+
+	storagesOverriden := []*storage{}
+
+	for key, storages := range storagesByKey {
+		// Take the storage with the lower priority in the list
+		if key != "" {
+			storages = sortStorages(storages)
+			storageItem := storages[0]
+			storagesOverriden = append(storagesOverriden, storageItem)
+		} else {
+			storagesOverriden = append(storagesOverriden, storages...)
+		}
+	}
+
+	for _, storageItem := range storagesOverriden {
+		size := storageItem.SizeGb
+		if storageItem.IsSSD {
+			computeResource.Specs.SsdStorage = computeResource.Specs.SsdStorage.Add(size)
+		} else {
+			computeResource.Specs.HddStorage = computeResource.Specs.HddStorage.Add(size)
+		}
+	}
+
+	return nil
+}
+
+func sortStorages(storages []*storage) []*storage {
+	if len(storages) == 0 {
+		return storages
+	}
+	// sort by override_priority, lowest priority first
+	sort.Slice(storages, func(i, j int) bool {
+		return storages[i].OverridePriority < storages[j].OverridePriority
+	})
+	return storages
 }
 
 func getStorage(storageMap map[string]interface{}) (*storage, error) {
@@ -400,9 +452,24 @@ func getStorage(storageMap map[string]interface{}) (*storage, error) {
 			isSSD = true
 		}
 	}
+	overridePriority := 0
+	overridePriorityI := storageMap["override_priority"]
+	if overridePriorityI != nil {
+		overridePriority = overridePriorityI.(*valueWithUnit).Value.(int)
+	}
+
+	key := ""
+	keyI := storageMap["key"]
+	if keyI != nil {
+		keyString := keyI.(*valueWithUnit).Value.(string)
+		key = keyString
+	}
+
 	storage := storage{
-		SizeGb: storageSizeGb,
-		IsSSD:  isSSD,
+		SizeGb:           storageSizeGb,
+		IsSSD:            isSSD,
+		OverridePriority: overridePriority,
+		Key:              key,
 	}
 	return &storage, nil
 }

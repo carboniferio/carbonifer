@@ -65,35 +65,69 @@ compute_resource:
         - type: list
           item:
             - paths: 
-              - '${ami}.values.block_device_mappings[] | select(length > 0) | .ebs'
+              - '${ami}.values.block_device_mappings[] | select(length > 0)'
               properties:
                 size:
-                  - paths: ".volume_size"
+                  - paths: ".ebs.volume_size"
                     default: 8
                     unit: gb
                 type:
-                  - paths: ".volume_type"
+                  - paths: ".ebs.volume_type"
                     default: standard
                     reference:
-                      general: disk_types 
+                      general: disk_types
+                key:
+                  - paths: ".device_name | cbf::extract_disk_key"
+                override_priority: 
+                  - default: 2
             - paths: 
               - '.values.ebs_block_device[] | select(length > 0)'
-              - '${launch_template}.values.block_device_mappings[] | select(length > 0) | select(.virtual_name == null or .virtual_name == "" or (.virtual_name | startswith("ephemeral") | not)) | .ebs'
               properties:
                 size:
-                  - paths: ".volume_size"
+                  - paths: 
+                    - ".volume_size"
                     unit: gb
-                  - paths: ".snapshot_id"
+                  - paths: 
+                    - ".snapshot_id"
                     reference:
                       paths: .prior_state.values.root_module.resources[] | select(.values.id == "${key}") | .values
                       property: ".volume_size"
                   - default: 8
                     unit: gb
                 type:
-                  - paths: ".volume_type"
+                  - paths: 
+                    - ".volume_type"
                     default: standard
                     reference:
                       general: disk_types
+                key:
+                  - paths: ".device_name | cbf::extract_disk_key"
+                override_priority: 
+                  - default : 0
+            - paths:
+              - '${launch_template}.values.block_device_mappings[] | select(length > 0) | select(.virtual_name == null or .virtual_name == "" or (.virtual_name | startswith("ephemeral") | not)) | select(.ebs != null)'
+              properties:
+                size:
+                  - paths: 
+                    - ".ebs[0].volume_size"
+                    unit: gb
+                  - paths: 
+                    - ".ebs[0].snapshot_id"
+                    reference:
+                      paths: .prior_state.values.root_module.resources[] | select(.values.id == "${key}") | .values
+                      property: ".volume_size"
+                  - default: 8
+                    unit: gb
+                type:
+                  - paths: 
+                    - ".ebs[0].volume_type"
+                    default: standard
+                    reference:
+                      general: disk_types
+                key:
+                  - paths: ".device_name | cbf::extract_disk_key"
+                override_priority: 
+                  - default : 1
             - paths: 
               - '.values.ephemeral_block_device[] | select(length > 0)'
               - '${launch_template}.values.block_device_mappings[] | select(length > 0) | select(.virtual_name != null and (.virtual_name | startswith("ephemeral")))'
