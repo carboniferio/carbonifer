@@ -38,6 +38,7 @@ resource "google_compute_instance_group_manager" "my-group-manager" {
 resource "google_compute_autoscaler" "autoscaler" {
   name   = "my-autoscaler"
   target = google_compute_instance_group_manager.my-group-manager.id
+  zone = "europe-west9-a"
 
   autoscaling_policy {
     max_replicas    = 10

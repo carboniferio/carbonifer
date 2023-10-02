@@ -44,7 +44,7 @@ Example usages:
 			log.Fatal(err)
 		}
 
-		input := workdir
+		var input string
 		if len(args) != 0 {
 			input = args[0]
 			if !filepath.IsAbs(input) {

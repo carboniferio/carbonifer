@@ -49,6 +49,7 @@ func (cps *CoefficientsProviders) GetByProvider(provider providers.Provider) Coe
 
 func (cps *CoefficientsProviders) getByProviderName(name string) Coefficients {
 	r := reflect.ValueOf(cps)
-	coefficients := reflect.Indirect(r).FieldByName(name)
-	return coefficients.Interface().(Coefficients)
+	coefficientsVal := reflect.Indirect(r).FieldByName(name)
+	coefficients := coefficientsVal.Interface().(Coefficients)
+	return coefficients
 }

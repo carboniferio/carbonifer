@@ -149,8 +149,8 @@ func TestEstimateResourceKilo(t *testing.T) {
 			args: args{resourceGCPComputeBasic},
 			want: &estimation.EstimationResource{
 				Resource:        &resourceGCPComputeBasic,
-				Power:           decimal.NewFromFloat(5472.56448).RoundFloor(10),
-				CarbonEmissions: decimal.NewFromFloat(232.4745391104).RoundFloor(10),
+				Power:           decimal.NewFromFloat(7.600784).RoundFloor(10),
+				CarbonEmissions: decimal.NewFromFloat(0.3228813043).RoundFloor(10),
 				AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
 				TotalCount:      decimal.NewFromInt(1),
 			},
@@ -160,8 +160,8 @@ func TestEstimateResourceKilo(t *testing.T) {
 			args: args{resourceGCPComputeCPUType},
 			want: &estimation.EstimationResource{
 				Resource:        &resourceGCPComputeCPUType,
-				Power:           decimal.NewFromFloat(6880.7275733647).RoundFloor(10),
-				CarbonEmissions: decimal.NewFromFloat(292.2933073165).RoundFloor(10),
+				Power:           decimal.NewFromFloat(9.5565660741).RoundFloor(10),
+				CarbonEmissions: decimal.NewFromFloat(0.4059629268).RoundFloor(10),
 				AverageCPUUsage: decimal.NewFromFloat(avgCPUUse),
 				TotalCount:      decimal.NewFromInt(1),
 			},

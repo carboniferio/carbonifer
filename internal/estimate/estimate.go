@@ -45,7 +45,7 @@ func EstimateResources(resourceList map[string]resources.Resource) estimation.Es
 	return estimation.EstimationReport{
 		Info: estimation.EstimationInfo{
 			UnitTime:                viper.Get("unit.time").(string),
-			UnitWattTime:            fmt.Sprintf("%s%s", viper.Get("unit.power"), viper.Get("unit.time")),
+			UnitWattTime:            fmt.Sprintf("%s%s", "W", viper.Get("unit.time")),
 			UnitCarbonEmissionsTime: fmt.Sprintf("%sCO2eq/%s", viper.Get("unit.carbon"), viper.Get("unit.time")),
 			DateTime:                time.Now(),
 			InfoByProvider: map[providers.Provider]estimation.InfoByProvider{

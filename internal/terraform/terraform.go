@@ -120,11 +120,23 @@ func CarboniferPlan(input string) (*map[string]interface{}, error) {
 	// If the path points to a file, run show
 	if !fileInfo.IsDir() {
 		parentDir := filepath.Dir(input)
+		// Add the .carbonifer folder in workdir
+		viper.AddConfigPath(filepath.Join(parentDir, ".carbonifer"))
 		fileName := filepath.Base(input)
 		viper.Set("workdir", parentDir)
 		tfPlan, err := terraformShow(fileName)
 		return tfPlan, err
+	} else {
+		viper.AddConfigPath(filepath.Join(input, ".carbonifer"))
 	}
+
+	// Refresh viper config
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			log.Panic(err)
+		}
+	}
+
 	// If the path points to a directory, run plan
 	viper.Set("workdir", input)
 	tfPlan, err := TerraformPlan()
