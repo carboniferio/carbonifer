@@ -111,22 +111,34 @@ func terraformInit() (*tfexec.Terraform, *context.Context, error) {
 }
 
 // CarboniferPlan generates a Terraform plan from a tfplan file or a Terraform directory
-func CarboniferPlan(workdir string) (*map[string]interface{}, error) {
-	fileInfo, err := os.Stat(workdir)
+func CarboniferPlan(input string) (*map[string]interface{}, error) {
+	fileInfo, err := os.Stat(input)
 	if err != nil {
 		return nil, err
 	}
 
 	// If the path points to a file, run show
 	if !fileInfo.IsDir() {
-		parentDir := filepath.Dir(workdir)
-		fileName := filepath.Base(workdir)
+		parentDir := filepath.Dir(input)
+		// Add the .carbonifer folder in workdir
+		viper.AddConfigPath(filepath.Join(parentDir, ".carbonifer"))
+		fileName := filepath.Base(input)
 		viper.Set("workdir", parentDir)
 		tfPlan, err := terraformShow(fileName)
 		return tfPlan, err
+	} else {
+		viper.AddConfigPath(filepath.Join(input, ".carbonifer"))
 	}
+
+	// Refresh viper config
+	if err := viper.ReadInConfig(); err != nil {
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+			log.Panic(err)
+		}
+	}
+
 	// If the path points to a directory, run plan
-	viper.Set("workdir", workdir)
+	viper.Set("workdir", input)
 	tfPlan, err := TerraformPlan()
 	if err != nil {
 		if e, ok := err.(*ProviderAuthError); ok {

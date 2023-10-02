@@ -51,17 +51,9 @@ Example usages:
 				input = filepath.Join(workdir, input)
 			}
 		}
-		workdir = input
-		viper.AddConfigPath(filepath.Join(workdir, ".carbonifer"))
-		// If a config file is found, read it in.
-		if err := viper.ReadInConfig(); err != nil {
-			if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-				log.Panic(err)
-			}
-		}
 
 		// Generate or Read Terraform plan
-		tfPlan, err := terraform.CarboniferPlan(workdir)
+		tfPlan, err := terraform.CarboniferPlan(input)
 		if err != nil {
 			log.Fatal(err)
 		}
