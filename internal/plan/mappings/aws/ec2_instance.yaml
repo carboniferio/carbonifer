@@ -65,7 +65,7 @@ compute_resource:
         - type: list
           item:
             - paths: 
-              - '${ami}.values.block_device_mappings[] | select(length > 0)'
+              - '${ami}.values.block_device_mappings[] | select(.ebs | length > 0)'
               properties:
                 size:
                   - paths: ".ebs.volume_size"
@@ -105,7 +105,7 @@ compute_resource:
                 override_priority: 
                   - default : 0
             - paths:
-              - '${launch_template}.values.block_device_mappings[] | select(length > 0) | select(.virtual_name == null or .virtual_name == "" or (.virtual_name | startswith("ephemeral") | not)) | select(.ebs != null)'
+              - '${launch_template}.values.block_device_mappings[] | select(.ebs | length > 0) | select(.virtual_name == null or .virtual_name == "" or (.virtual_name | startswith("ephemeral") | not)) | select(.ebs != null)'
               properties:
                 size:
                   - paths: 

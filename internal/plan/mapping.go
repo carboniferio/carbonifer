@@ -2,7 +2,6 @@ package plan
 
 import (
 	"embed"
-	"fmt"
 	"io/fs"
 	"path/filepath"
 
@@ -44,7 +43,6 @@ func loadMappings() error {
 	for _, file := range files {
 		// Check if it's a directory
 		if file.IsDir() {
-			fmt.Println(file.Name())
 			// Get the relative path
 			relativePath := filepath.Join(mappingsPath, file.Name())
 
