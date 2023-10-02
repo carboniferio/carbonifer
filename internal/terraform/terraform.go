@@ -111,22 +111,22 @@ func terraformInit() (*tfexec.Terraform, *context.Context, error) {
 }
 
 // CarboniferPlan generates a Terraform plan from a tfplan file or a Terraform directory
-func CarboniferPlan(input string) (*map[string]interface{}, error) {
-	fileInfo, err := os.Stat(input)
+func CarboniferPlan(workdir string) (*map[string]interface{}, error) {
+	fileInfo, err := os.Stat(workdir)
 	if err != nil {
 		return nil, err
 	}
 
 	// If the path points to a file, run show
 	if !fileInfo.IsDir() {
-		parentDir := filepath.Dir(input)
-		fileName := filepath.Base(input)
+		parentDir := filepath.Dir(workdir)
+		fileName := filepath.Base(workdir)
 		viper.Set("workdir", parentDir)
 		tfPlan, err := terraformShow(fileName)
 		return tfPlan, err
 	}
 	// If the path points to a directory, run plan
-	viper.Set("workdir", input)
+	viper.Set("workdir", workdir)
 	tfPlan, err := TerraformPlan()
 	if err != nil {
 		if e, ok := err.(*ProviderAuthError); ok {

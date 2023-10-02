@@ -18,7 +18,8 @@ func estimateWattHour(resource *resources.ComputeResource) decimal.Decimal {
 	log.Debugf("%v.%v Storage in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, storageInWh)
 	gpuEstimationInWh := EstimateWattGPU(resource)
 	log.Debugf("%v.%v GPUs in Wh: %v", resource.Identification.ResourceType, resource.Identification.Name, gpuEstimationInWh)
-	pue := coefficients.GetEnergyCoefficients().GCP.PueAverage
+	pue := coefficients.GetEnergyCoefficients().GetByProvider(resource.Identification.Provider).PueAverage
+
 	log.Debugf("%v.%v PUE %v", resource.Identification.ResourceType, resource.Identification.Name, pue)
 	rawWattEstimate := decimal.Sum(
 		cpuEstimationInWh,

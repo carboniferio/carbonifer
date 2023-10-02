@@ -44,16 +44,24 @@ Example usages:
 			log.Fatal(err)
 		}
 
-		input := workdir
+		var input string
 		if len(args) != 0 {
 			input = args[0]
 			if !filepath.IsAbs(input) {
 				input = filepath.Join(workdir, input)
 			}
 		}
+		workdir = input
+		viper.AddConfigPath(filepath.Join(workdir, ".carbonifer"))
+		// If a config file is found, read it in.
+		if err := viper.ReadInConfig(); err != nil {
+			if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+				log.Panic(err)
+			}
+		}
 
 		// Generate or Read Terraform plan
-		tfPlan, err := terraform.CarboniferPlan(input)
+		tfPlan, err := terraform.CarboniferPlan(workdir)
 		if err != nil {
 			log.Fatal(err)
 		}

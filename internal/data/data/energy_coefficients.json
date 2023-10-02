@@ -1,7 +1,7 @@
 {
     "AWS": {
         "cpu_min_wh": 0.74,
-        "cpu_max_wh": 3.5,
+        "cpu_max_wh": 5.23,
         "storage_hdd_wh_tb": 0.65,
         "storage_ssd_wh_tb": 1.2,
         "networking_wh_gb": 1,

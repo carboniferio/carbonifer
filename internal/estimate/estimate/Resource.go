@@ -1,6 +1,8 @@
 package estimate
 
 import (
+	"strings"
+
 	"github.com/carboniferio/carbonifer/internal/estimate/coefficients"
 	"github.com/carboniferio/carbonifer/internal/estimate/estimation"
 
@@ -15,56 +17,55 @@ func EstimateSupportedResource(resource resources.Resource) *estimation.Estimati
 
 	var computeResource resources.ComputeResource = resource.(resources.ComputeResource)
 	// Electric power used per unit of time
-	avgWatt := estimateWattHour(&computeResource) // Watt hour
-	if viper.Get("unit.power").(string) == "kW" {
-		avgWatt = avgWatt.Div(decimal.NewFromInt(1000))
-	}
-	if viper.Get("unit.time").(string) == "m" {
-		avgWatt = avgWatt.Mul(decimal.NewFromInt(24 * 30))
-	}
-	if viper.Get("unit.time").(string) == "y" {
-		avgWatt = avgWatt.Mul(decimal.NewFromInt(24 * 365))
-	}
-	avgWattStr := avgWatt.String()
+	// It's computed first in watt per hour
+	avgWattHour := estimateWattHour(&computeResource) // Watt hour
+	avgKWattHour := avgWattHour.Div(decimal.NewFromInt(1000))
 
 	// Regional grid emission per unit of time
+	// regionEmissions are in gCO2/kWh
 	regionEmissions, err := coefficients.RegionEmission(resource.GetIdentification().Provider, resource.GetIdentification().Region) // gCO2eq /kWh
 	if err != nil {
 		log.Fatalf("Error while getting region emissions for %v: %v", resource.GetAddress(), err)
 	}
-	if viper.Get("unit.power").(string) == "W" {
-		regionEmissions.GridCarbonIntensity = regionEmissions.GridCarbonIntensity.Div(decimal.NewFromInt(1000))
-	}
-	if viper.Get("unit.time").(string) == "m" {
-		regionEmissions.GridCarbonIntensity = regionEmissions.GridCarbonIntensity.Mul(decimal.NewFromInt(24 * 30))
-	}
-	if viper.Get("unit.time").(string) == "y" {
-		regionEmissions.GridCarbonIntensity = regionEmissions.GridCarbonIntensity.Mul(decimal.NewFromInt(24 * 365))
-	}
-	if viper.Get("unit.carbon").(string) == "kg" {
-		regionEmissions.GridCarbonIntensity = regionEmissions.GridCarbonIntensity.Div(decimal.NewFromInt(1000))
-	}
 
 	// Carbon Emissions
-	carbonEmissionPerTime := avgWatt.Mul(regionEmissions.GridCarbonIntensity)
+	carbonEmissionInGCO2PerH := avgKWattHour.Mul(regionEmissions.GridCarbonIntensity)
+	carbonEmissionPerTime := carbonEmissionInGCO2PerH
+	if strings.ToLower(viper.GetString("unit.time")) == "d" {
+		carbonEmissionPerTime = carbonEmissionPerTime.Mul(decimal.NewFromInt(24))
+	}
+	if strings.ToLower(viper.GetString("unit.time")) == "m" {
+		carbonEmissionPerTime = carbonEmissionPerTime.Mul(decimal.NewFromInt(24 * 30))
+	}
+	if strings.ToLower(viper.GetString("unit.time")) == "y" {
+		carbonEmissionPerTime = carbonEmissionPerTime.Mul(decimal.NewFromInt(24 * 365))
+	}
+	if strings.ToLower(viper.GetString("unit.carbon")) == "kg" {
+		carbonEmissionPerTime = carbonEmissionPerTime.Div(decimal.NewFromInt(1000))
+	}
 	carbonEmissionPerTimeStr := carbonEmissionPerTime.String()
 
 	log.Debugf(
-		"estimating resource %v.%v (%v): %v %v%v * %v %vCO2/%v%v = %v %vCO2/%v%v * %v",
+		"estimating resource %v.%v (%v): %v %v%v * %v %vCO2/%v%v = %v %vCO2/%v%v * %v = %v %vCO2/%v%v * %v",
 		computeResource.Identification.ResourceType,
 		computeResource.Identification.Name,
 		regionEmissions.Region,
-		avgWattStr,
-		viper.Get("unit.power").(string),
-		viper.Get("unit.time").(string),
+		avgKWattHour.String(),
+		"kW",
+		"h",
 		regionEmissions.GridCarbonIntensity,
-		viper.Get("unit.carbon").(string),
-		viper.Get("unit.power").(string),
-		viper.Get("unit.time").(string),
+		"g",
+		"kW",
+		"h",
+		carbonEmissionInGCO2PerH,
+		"g",
+		"kW",
+		"h",
+		resource.GetIdentification().Count,
 		carbonEmissionPerTimeStr,
-		viper.Get("unit.carbon").(string),
-		viper.Get("unit.power").(string),
-		viper.Get("unit.time").(string),
+		viper.GetString("unit.carbon"),
+		viper.GetString("unit.power"),
+		viper.GetString("unit.time"),
 		resource.GetIdentification().Count,
 	)
 
@@ -77,7 +78,7 @@ func EstimateSupportedResource(resource resources.Resource) *estimation.Estimati
 
 	est := &estimation.EstimationResource{
 		Resource:        &computeResource,
-		Power:           avgWatt.RoundFloor(10),
+		Power:           avgWattHour.RoundFloor(10),
 		CarbonEmissions: carbonEmissionPerTime.RoundFloor(10),
 		AverageCPUUsage: decimal.NewFromFloat(viper.GetFloat64("provider.gcp.avg_cpu_use")).RoundFloor(10),
 		TotalCount:      decimal.NewFromInt(count * replicationFactor),

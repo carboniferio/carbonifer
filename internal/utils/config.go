@@ -56,6 +56,8 @@ func basePath() string {
 	return filepath.Join(d, "../..")
 }
 
+var WorkDir string
+
 func initViper(configFilePath string) {
 	loadViperDefaults()
 
