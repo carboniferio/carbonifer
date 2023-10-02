@@ -1,5 +1,6 @@
 provider "google" {
   region = local.common_region
+  project = "dummy-project"
 }
 
 locals {
