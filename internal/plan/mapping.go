@@ -1,7 +1,9 @@
 package plan
 
 import (
-	"os"
+	"embed"
+	"fmt"
+	"io/fs"
 	"path/filepath"
 
 	"github.com/carboniferio/carbonifer/internal/providers"
@@ -24,13 +26,16 @@ func GetMapping() (*Mappings, error) {
 	return globalMappings, nil
 }
 
+//go:embed mappings/*
+var mappingFS embed.FS
+
 func loadMappings() error {
 	globalMappings = &Mappings{
 		General:         &map[providers.Provider]GeneralConfig{},
 		ComputeResource: &map[string]ResourceMapping{},
 	}
-	mappingsPath := "internal/plan/mappings"
-	files, err := os.ReadDir(mappingsPath)
+	mappingsPath := "mappings"
+	files, err := fs.ReadDir(mappingFS, mappingsPath)
 	if err != nil {
 		return err
 	}
@@ -39,6 +44,7 @@ func loadMappings() error {
 	for _, file := range files {
 		// Check if it's a directory
 		if file.IsDir() {
+			fmt.Println(file.Name())
 			// Get the relative path
 			relativePath := filepath.Join(mappingsPath, file.Name())
 
@@ -53,7 +59,7 @@ func loadMappings() error {
 }
 
 func loadMapping(providerMappingFolder string) error {
-	files, err := os.ReadDir(providerMappingFolder)
+	files, err := fs.ReadDir(mappingFS, providerMappingFolder)
 	if err != nil {
 		return err
 	}
@@ -67,7 +73,7 @@ func loadMapping(providerMappingFolder string) error {
 		if file.IsDir() {
 			continue
 		}
-		yamlFile, err := os.ReadFile(filepath.Join(providerMappingFolder, file.Name()))
+		yamlFile, err := fs.ReadFile(mappingFS, filepath.Join(providerMappingFolder, file.Name()))
 		if err != nil {
 			return err
 		}
